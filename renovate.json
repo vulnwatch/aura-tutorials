@@ -24,9 +24,10 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "Playwright: the npm package and the image of the Containerfile move together, so that the browsers of the image are the ones that Playwright expects",
+      "description": "Playwright: the npm package and the image of the Containerfile in one pull request, so that the browsers of the image are the ones that Playwright expects; Renovate raises the image at once (below) and adds the package once that version is seven days old, as Aura does, so the checks pass only once both have the same version",
       "matchPackageNames": ["playwright", "mcr.microsoft.com/playwright"],
-      "groupName": "Playwright"
+      "groupName": "Playwright",
+      "groupSingleUpdates": true
     },
     {
       "description": "Every other dependency of the tooling, weekly, in one pull request; an update that leaves the screens unchanged needs no new video (docs/authoring.md, Update the Tools)",
@@ -39,6 +40,11 @@
       "description": "The Renovate image of the validation workflow",
       "matchPackageNames": ["renovate/renovate"],
       "groupName": "tooling"
+    },
+    {
+      "description": "mcr.microsoft.com publishes no release times, so the minimum release age would hold the Playwright image forever and leave its package alone in the Playwright pull request, with browsers it does not expect; the image is exempt, as in Aura",
+      "matchPackageNames": ["mcr.microsoft.com/playwright"],
+      "minimumReleaseAge": null
     }
   ],
   "customManagers": [
