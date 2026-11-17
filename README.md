@@ -47,5 +47,37 @@ One video of 30 to 60 seconds, without audio: signing in and opening a Ticket.
 ## Environment
 
 Node.js commands run in containers, never on the host, as in Aura. The
-container image provides Node.js 22 or later, Playwright's Chromium, and
-FFmpeg.
+container image (`Containerfile`) is the Playwright image that Aura's tooling
+uses, pinned by version and digest, with FFmpeg: it provides Node.js 22 or
+later, Playwright's Chromium, whose headless shell HyperFrames also renders
+with, and FFmpeg. `scripts/tooling.sh` builds it and runs every command in it;
+its header lists the commands, and `scripts/tooling.sh versions` prints the
+versions of the tools. The dependencies of `package.json` live outside the
+repository, in the user's cache directory. HyperFrames runs without
+telemetry, update checks, skills, or installations of its own, and renders
+without a network.
+
+## Usage
+
+A tutorial script, `tutorials/<id>.json`, names the title, the steps, and the
+closing title of a video. Each step has an action (`goto`, `fill`, `click`, or
+`show`), the target of the action as a Playwright locator by role, label, or
+text, a caption, and the narration that a voice will read. Then:
+
+```sh
+aura/scripts/dev-env.sh start &   # the backend and the development server
+scripts/video.sh tutorials/sign-in-and-open-ticket.json
+```
+
+writes, under `out/<id>/`, which Git ignores:
+
+- `capture/`: the screenshots, at 1440x900 CSS pixels and a device scale
+  factor of 2, and `capture.json`, the steps with the bounding boxes of their
+  targets (`src/capture.mjs`);
+- `composition/`: the HyperFrames composition (`src/compose.mjs`);
+- `<id>.mp4`: the video, 1920x1080 at 30 fps.
+
+`scripts/tooling.sh preview <script>` serves the composition in HyperFrames
+Studio on `http://localhost:3002`; `scripts/tooling.sh hyperframes <script>
+check` and `snapshot` check it without a render. `aura/scripts/dev-env.sh stop`
+removes the backend.
