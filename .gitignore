@@ -1,3 +1,6 @@
 node_modules/
 # Screenshots, compositions, and videos that a run produces.
 /out/
+# The local model selection of the OpenCode agents (.opencode/README.md).
+/.opencode/opencode.json
+/.opencode/opencode.jsonc

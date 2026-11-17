@@ -1,8 +1,9 @@
 # Authoring Tutorials
 
-This document owns the format of the tutorial scripts, their style, and the
-workflows that add, change, and refresh the videos. `README.md` describes the
-approach and the isolation from Aura; `AGENTS.md` holds the rules for agents.
+This document owns the format of the tutorial scripts, their style, the
+workflows that add, change, and refresh the videos, and their review.
+`README.md` describes the approach and the isolation from Aura; `AGENTS.md`
+holds the rules for agents.
 
 ## Contents
 
@@ -18,6 +19,10 @@ approach and the isolation from Aura; `AGENTS.md` holds the rules for agents.
   - [Change the Look of Every Video](#change-the-look-of-every-video)
   - [Update the Tools](#update-the-tools)
   - [Move to a New Version of Aura](#move-to-a-new-version-of-aura)
+- [Review](#review)
+  - [Checks of the Composition](#checks-of-the-composition)
+  - [Frames](#frames)
+  - [Reviewers](#reviewers)
 - [Publication](#publication)
 
 ## The Pieces
@@ -178,10 +183,14 @@ it.
    to the same workflow (Extend a Tutorial).
 3. Write `tutorials/<id>.json`, reusing the flows; take the locators from
    Aura's end-to-end tests and the wording from its screen documents.
-4. `scripts/tutorials.sh validate`, then `scripts/tutorials.sh render <id>`.
-   A failing capture leaves `out/<id>/capture/failure.png`.
-5. Look at the screenshots and the video, then commit the script, the
-   catalog, and `tutorials.lock.json`; CI renders and publishes the video.
+4. `scripts/tutorials.sh validate`, then
+   `scripts/tutorials.sh render --strict <id>`. A failing capture leaves
+   `out/<id>/capture/failure.png`; a finding of the checks of the
+   composition names the step to fix (Review).
+5. Look at the screenshots and at the frames of the video
+   (`scripts/tutorials.sh frames <id>`), and have the reviewers look at them
+   (Review). Then commit the script, the catalog, and `tutorials.lock.json`;
+   CI renders and publishes the video.
 
 The `tutorial-author` skill (`.opencode/skills/`) guides an agent through
 these steps.
@@ -196,7 +205,8 @@ steps continue its workflow; start a new one when they are another task.
 
 The look lives in `src/compose.mjs`. A change of it, or of the capture
 (`src/capture.mjs`), changes the hash of the generator, so every video
-becomes stale: `scripts/tutorials.sh render --stale` renders them all.
+becomes stale: `scripts/tutorials.sh render --stale` renders them all, and
+the frames of every video are reviewed again (Review).
 
 ### Update the Tools
 
@@ -206,7 +216,8 @@ actions, and the lockfile, weekly, each version once it is seven days old.
 An update of the tooling needs no new video while the screens stay the same:
 its pull request passes once `check` finds every fingerprint unchanged, and
 CI renders every tutorial with the new tooling as an artifact, to see that
-it still renders them well; look at a few frames of each before the merge.
+it still renders them well; look at the contact sheets of each, which the
+artifact holds (Review, Frames), before the merge.
 The videos keep the tooling that rendered them until their script, the
 generator, or their screens change. When a new version of a tool changes the
 screens, such as the rendering of Chromium, `check` reports them changed:
@@ -232,15 +243,77 @@ The submodule pins a release of Aura, whose tag `.gitmodules` names as its
 4. Decide, from the changes of Aura and the catalog: which tasks changed
    status, which need a new tutorial or an extended one, which scripts need a
    fix.
-5. `scripts/tutorials.sh render --stale`, then commit the submodule,
-   `.gitmodules`, the scripts, the catalog, and the lock together.
+5. `scripts/tutorials.sh render --stale`, review what changed (Review), then
+   commit the submodule, `.gitmodules`, the scripts, the catalog, and the lock
+   together.
+
+## Review
+
+Every video is reviewed twice before its script and its lock are committed:
+by checks that need no judgment, which the composition runs, and by
+reviewers, agents that look at what the checks cannot measure.
+
+### Checks of the Composition
+
+`src/compose.mjs` knows the box of each target, the moves of the camera, the
+place of each caption and keycap, and every time. For each shown step, at its
+focus, the moment when the camera has settled on what the step points at, it
+checks:
+
+| Check | Its finding |
+|---|---|
+| `target-outside-view` | The target is not whole in the part of the window that the camera shows |
+| `ring-outside-view` | The ring around the target is cut by the edge of the window or of the video |
+| `caption-covers-target` | The caption covers the target, its ring, or the keycap of a key press |
+| `keycap-outside-view` | The keycap of a key press is not whole in view |
+| `caption-too-long` | The caption has more than eight words (Style) |
+| `caption-unread` | The caption is not whole on screen for 0.5 s plus 0.3 s a word, the time to read it (HyperFrames, `references/motion.md`) |
+
+The width of a caption is an upper estimate, since the composition measures
+no text. The composition reports the findings, and writes them into
+`out/<id>/compose.json` with the start, the focus, and the end of every step
+and the times of the cards. `scripts/tutorials.sh render --strict` fails on
+them once the videos are rendered, as CI does for the tutorials that a pull
+request changes. A finding is fixed in its script, and no step is exempt: a
+lower `zoom` or a smaller `target` for a target out of view, a `zoom` that
+brings the target up for one under the caption, a `hold` for a caption too
+brief, a shorter caption.
+
+### Frames
+
+`scripts/tutorials.sh frames <id>` extracts from the rendered video, into
+`out/<id>/frames/`, a frame of each step at its focus and one just before its
+end, with its caption still on screen; a contact sheet of each chapter,
+`chapter-<n>.png`, with a row for each step; one of the cards, `cards.png`;
+and `frames.md`, which lists them with the captions, the times, and the
+findings of the checks. With times in seconds, it extracts only the frames
+at those times. CI keeps the contact sheets with the videos that it renders.
+
+### Reviewers
+
+Four read-only agents of `.opencode/agents/` review what needs judgment;
+`AGENTS.md` (Reviewers) says when each runs, and `.opencode/README.md`
+catalogs them:
+
+| Reviewer | What it checks |
+|---|---|
+| `@accuracy-reviewer` | Every title, caption, narration, and outro against Aura's screen documents and the screenshots of the capture; the covers of each script and the catalog against Aura |
+| `@visual-reviewer` | The frames as a viewer sees them: the camera frames the target, the caption hides nothing, no screen still loading, no pointer over the UI, readable text, no overlap, pacing |
+| `@consistency-reviewer` | The scripts against the Style and against each other: wording, users, Tickets, flows, data, coverage |
+| `@cicd-reviewer` | The workflows, the scripts, Renovate, and the tooling |
+
+Their findings are hypotheses: the agent that invokes them verifies each
+against its authority, fixes the confirmed ones with the smallest change,
+renders again, and states in the pull request the findings that it discarded
+and why.
 
 ## Publication
 
 CI checks every pull request: it validates the scripts and checks the lock
 against a capture (`scripts/tutorials.sh check --verify-only`), and renders
 the tutorials that the pull request changes, or all of them when it changes
-the tooling, as artifacts to review. After a
+the tooling, as artifacts to review with their contact sheets; the checks of
+their composition fail it (Review). After a
 merge, CI renders the stale videos and publishes a release of this
 repository with every video: the unchanged ones copied from the previous
 release, and `videos.json`, which lists them. The latest video of a tutorial

@@ -70,7 +70,8 @@ Present one report to the user:
 - the videos to render again.
 
 Renovate's other pull requests, which update the tooling, need no skill:
-`docs/authoring.md` (Update the Tools) says how to review them.
+`docs/authoring.md` (Update the Tools) says how to review them, and
+`AGENTS.md` (Reviewers) which reviewers they need.
 
 Wait for the user's decisions. Do not write scripts before they choose.
 
@@ -79,10 +80,16 @@ Wait for the user's decisions. Do not write scripts before they choose.
 1. Update `catalog/tasks.json`: statuses, notes, new tasks, and its `aura`
    field.
 2. Fix, extend, or add scripts with the `tutorial-author` skill.
-3. `scripts/tutorials.sh render --stale`, then look at the frames of every
-   video rendered again.
-4. `scripts/tutorials.sh status`: every tutorial is up to date.
-5. Commit the submodule, `.gitmodules`, the catalog, the scripts, and
+3. `scripts/tutorials.sh render --strict --stale`, then
+   `scripts/tutorials.sh frames <id>` and a look at the contact sheets of
+   every video rendered again.
+4. Run the reviewers that `AGENTS.md` (Reviewers) requires:
+   `@accuracy-reviewer` on the tutorials whose screens changed and on the
+   catalog, `@visual-reviewer` on every video rendered again, and those of
+   `tutorial-author` for the scripts that you fixed, extended, or added.
+   Verify their findings, fix the confirmed ones, and render again.
+5. `scripts/tutorials.sh status`: every tutorial is up to date.
+6. Commit the submodule, `.gitmodules`, the catalog, the scripts, and
    `tutorials.lock.json`, for example
    `build(aura): update Sentinel Aura to v0.10.0`, with the tutorials in
    commits of their own. Push, or update the Renovate pull request, only with

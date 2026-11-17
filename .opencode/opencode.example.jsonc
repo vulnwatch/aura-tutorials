@@ -1,0 +1,26 @@
+// Example local model selection for the OpenCode agents of aura-tutorials.
+//
+// Copy this file to .opencode/opencode.jsonc (ignored by Git) and adjust the
+// models and variants to the providers available in your client. OpenCode
+// merges it over your global and the project configuration, so the values
+// below win over any per-agent model in ~/.config/opencode/opencode.json.
+// Restart OpenCode after editing it. See .opencode/README.md (Models).
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    // Primary agents
+    "plan": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+    "build": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+
+    // Reviewers; accuracy-reviewer and visual-reviewer open screenshots and
+    // frames, so their models must accept images
+    "accuracy-reviewer": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+    "visual-reviewer": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+    "consistency-reviewer": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+    "cicd-reviewer": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+
+    // Built-in subagents, which otherwise inherit the invoking agent's model
+    "general": { "model": "anthropic/claude-opus-5-5", "variant": "high" },
+    "explore": { "model": "anthropic/claude-opus-5-5", "variant": "high" }
+  }
+}
