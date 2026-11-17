@@ -18,13 +18,16 @@
           "action": "show",
           "hold": 3,
           "caption": "Aura lands on the Ticket list",
-          "narration": "Aura opens the Ticket list. Above it, the attention summary counts the Tickets that need attention."
+          "narration": "Aura opens the Ticket list. Next to its heading, the attention summary counts the Tickets that need attention."
         },
         { "include": "open-ticket" },
         {
           "id": "ticket",
           "action": "show",
-          "target": { "role": "heading", "level": 1 },
+          "target": [
+            { "role": "tablist", "name": "Ticket" },
+            { "role": "tab", "name": "Overview" }
+          ],
           "zoom": 1.4,
           "caption": "The Ticket opens on its Overview",
           "narration": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details."

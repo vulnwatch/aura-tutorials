@@ -3,7 +3,7 @@
     "search-for-a-cve": {
       "title": "Find SUSE's status for a CVE",
       "aura": "v0.9.0",
-      "script": "sha256:ea5e0120eb9124f2539583987fe946458e4045661cd8073891e9e850d78ea679",
+      "script": "sha256:aa28af3e598cd5972cabc5eb3d089dd1af2e0a58a4a62dbc54241ebac2491fc9",
       "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 28.42,
@@ -45,7 +45,7 @@
     "sign-in-and-open-ticket": {
       "title": "Sign in and open a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:88b837d25bd2982b852935756a4d03ebd32be115f06c3fde20c4b45c15366239",
+      "script": "sha256:c4100d5426348a8095ac5b13f91d1e079f88a5453305a80f79cc372dce428fc7",
       "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 34.95,
@@ -104,10 +104,10 @@
     "work-on-a-ticket": {
       "title": "Work on a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:a06a59cb342bd16fcd0422091286bb579a815663fe0729af4d4ce2017995aee7",
+      "script": "sha256:902356f5ed6528de62e453f82699896ea0935e4ba00fa5b93671a3a40badaf3c",
       "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 95.8,
+      "duration": 99.25,
       "chapters": [
         {
           "title": "Sign in",
@@ -119,15 +119,15 @@
         },
         {
           "title": "Understand its priority",
-          "start": 36.1
+          "start": 39.55
         },
         {
           "title": "Add a reference",
-          "start": 54.1
+          "start": 57.55
         },
         {
           "title": "Trace every change",
-          "start": 80.3
+          "start": 83.75
         }
       ],
       "covers": [
@@ -175,6 +175,7 @@
         "sha256:73571e42df0a6e0b4cc95d427755cbfbd8c566f9e7ed821c1755f213c187a2a4",
         "sha256:5f113e55ca9a0a7839bbd4ba576767e92acc99274e6859db68b7defa9002dd2a",
         "sha256:5f113e55ca9a0a7839bbd4ba576767e92acc99274e6859db68b7defa9002dd2a",
+        "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:15c70d38512a2c1cd7ca3753f2d267de575c4c757d9c1d4b3e6f9389b2201b84",

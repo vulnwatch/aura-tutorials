@@ -18,6 +18,13 @@
       "title": "Find your Tickets",
       "steps": [
         {
+          "id": "landing",
+          "action": "show",
+          "hold": 3,
+          "caption": "Analysts land on the New view",
+          "narration": "As an analyst, you land on the New view, the queue of new Tickets."
+        },
+        {
           "id": "assigned-to-me",
           "action": "click",
           "target": [
@@ -29,7 +36,7 @@
             { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
           ],
           "caption": "Open the view Assigned to me",
-          "narration": "You land on the New view, the queue of new Tickets. To see your Tickets in Analysis or Analyzed, open the view Assigned to me."
+          "narration": "To see your Tickets in Analysis or Analyzed, open the view Assigned to me."
         },
         {
           "id": "attention",
@@ -76,7 +83,7 @@
           "id": "close",
           "action": "press",
           "key": "Escape",
-          "waitFor": { "role": "region", "name": "Details" },
+          "waitFor": { "role": "region", "name": "Details", "exact": true },
           "caption": "Press Escape to close it",
           "narration": "Press Escape to close the explanation."
         }

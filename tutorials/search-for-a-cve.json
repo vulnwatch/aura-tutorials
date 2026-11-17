@@ -47,7 +47,7 @@
           "id": "packages",
           "action": "show",
           "target": [
-            { "role": "region", "name": "Packages" },
+            { "role": "region", "name": "Packages", "exact": true },
             { "role": "listitem", "nth": 0 }
           ],
           "zoom": 1.4,
