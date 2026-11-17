@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "labels": ["dependencies"],
+  "git-submodules": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Sentinel Aura: the submodule follows the release tags of Aura, which .gitmodules names as its branch, one pull request for each release; the aura-bump skill completes it with the tutorials that the release changes (docs/authoring.md, Move to a New Version of Aura)",
+      "matchManagers": ["git-submodules"],
+      "versioning": "semver-coerced",
+      "commitMessagePrefix": "build(aura):",
+      "commitMessageTopic": "Sentinel Aura",
+      "addLabels": ["aura"]
+    },
+    {
+      "description": "Playwright: the npm package and the image of the Containerfile move together, so that the browsers of the image are the ones that Playwright expects",
+      "matchPackageNames": ["playwright", "mcr.microsoft.com/playwright"],
+      "groupName": "Playwright"
+    },
+    {
+      "description": "Every other dependency changes the generator, and so every video: weekly, in one pull request",
+      "matchManagers": ["npm", "dockerfile", "github-actions", "custom.regex"],
+      "matchPackageNames": ["!playwright", "!mcr.microsoft.com/playwright"],
+      "groupName": "tooling",
+      "schedule": ["* 0-5 * * 1"]
+    },
+    {
+      "description": "The Renovate image of the validation workflow",
+      "matchPackageNames": ["renovate/renovate"],
+      "groupName": "tooling"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The Renovate image of renovate-validation.yml, by version and digest",
+      "managerFilePatterns": ["/^\\.github/workflows/renovate-validation\\.yml$/"],
+      "matchStrings": [
+        "RENOVATE_IMAGE: renovate/renovate:(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "renovate/renovate"
+    }
+  ]
+}
