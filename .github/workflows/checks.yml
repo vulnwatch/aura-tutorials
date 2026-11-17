@@ -3,7 +3,8 @@ name: Checks
 # Every pull request and every push to main: the shell scripts, the scripts of
 # the tutorials, and the lock against a capture of the pinned Aura
 # (docs/authoring.md, Publication). On a pull request, the tutorials whose
-# entry of the lock changed, or all of them when the tooling changes, are
+# entry of the lock changed, or all of them when the tooling or
+# src/tutorials.mjs changes, are
 # rendered too, with the checks of their composition, which fail the job, and
 # kept with their contact sheets as an artifact to review (docs/authoring.md,
 # Review).
@@ -67,19 +68,21 @@ jobs:
       # The tutorials whose entry of the lock changed; every tutorial when the
       # tooling changes, which needs no new video when the screens are
       # unchanged, so that the videos show that the new tooling still renders
-      # them well (docs/authoring.md, Update the Tools). The findings of the
-      # checks of their composition fail the step once the videos and their
-      # contact sheets are made, so that the artifact shows them.
+      # them well (docs/authoring.md, Update the Tools), and when
+      # src/tutorials.mjs changes, which reports the checks and extracts the
+      # frames without making a video stale. The findings of the checks of
+      # their composition fail the step once the videos and their contact
+      # sheets are made, so that the artifact shows them.
       - name: Render the tutorials that the pull request changes
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          if git diff --quiet "origin/${BASE_REF}" -- Containerfile package.json package-lock.json; then
+          if git diff --quiet "origin/${BASE_REF}" -- Containerfile package.json package-lock.json src/tutorials.mjs; then
             mapfile -t changed < <(scripts/release.sh changed "origin/${BASE_REF}")
           else
             mapfile -t changed < <(find tutorials -maxdepth 1 -name '*.json' -printf '%f\n' | sed 's/\.json$//' | sort)
-            echo "The tooling changes: every tutorial is rendered with it." >>"${GITHUB_STEP_SUMMARY}"
+            echo "The tooling or src/tutorials.mjs changes: every tutorial is rendered with it." >>"${GITHUB_STEP_SUMMARY}"
           fi
           if ((${#changed[@]} > 0)); then
             status=0

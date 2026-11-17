@@ -441,7 +441,7 @@ async function frames([id, ...times]) {
   const lines = [
     `# Frames of ${id}`,
     "",
-    `The video \`out/${id}/${id}.mp4\`, ${composed.duration} s, from the current script; the times are in seconds of the video. Each step has a frame at its focus, when the camera has settled on what it points at, and one ${BEFORE_END} s before its end, with its caption still on screen.`,
+    `The video \`out/${id}/${id}.mp4\`, ${composed.duration} s, from the current script; the times are in seconds of the video. Each step has a frame at its focus, when the camera has settled on what it points at, and one ${BEFORE_END} s before its end, with its caption still on screen. The contact sheets hold every frame below at a smaller size, each labeled with its step, moment, and time, for where only they are kept, as in the artifact of CI.`,
     "",
     "## Cards (`cards.png`)",
     "",

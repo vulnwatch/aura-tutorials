@@ -6,7 +6,8 @@ description: >
   nothing overlaps, and the pacing lets a viewer follow. Use after a render
   that changes the frames of a video: a new or changed script, a change of
   src/compose.mjs or src/capture.mjs, or screens that a new version of Aura or
-  of the tooling changes. Read-only, but extracts frames into out/<id>/frames/.
+  of the tooling changes. Read-only, but extracts frames into out/<id>/frames/
+  (and installs the dependencies of the tooling when they are stale).
 mode: subagent
 permission:
   edit: deny

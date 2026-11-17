@@ -37,8 +37,10 @@ and the scripts of `scripts/`, except the commands of `scripts/tutorials.sh`
 that only read: `list`, `validate`, `status`, and `coverage`. Git and `gh`
 are denied, then allowed in read-only forms, under OpenCode's rule that the
 last matching pattern wins. `@visual-reviewer` may also run
-`scripts/tutorials.sh frames`, which writes only `out/<id>/frames/`, and
-`@cicd-reviewer` `actionlint` and `shellcheck`. These denies are defense in
+`scripts/tutorials.sh frames`, which writes only `out/<id>/frames/`, apart
+from installing the dependencies of the tooling when they are stale, as every
+command of `scripts/tooling.sh` does; and `@cicd-reviewer` `actionlint` and
+`shellcheck`. These denies are defense in
 depth, not a sandbox: `AGENTS.md` keeps the reviewers read-only. No check
 keeps the shared block of permissions the same in every definition: change
 them together.
