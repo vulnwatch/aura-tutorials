@@ -7,6 +7,7 @@
   },
   "user": "jdoe",
   "covers": ["sign-in", "open-ticket"],
+  "vars": { "ticket": "SNTL-12" },
   "chapters": [
     {
       "title": "Sign in and open a Ticket",
@@ -17,30 +18,16 @@
           "action": "show",
           "hold": 3,
           "caption": "Aura lands on the Ticket list",
-          "narration": "Aura opens the Ticket list, with the Tickets that need your attention first."
+          "narration": "Aura opens the Ticket list. Above it, the attention summary counts the Tickets that need attention."
         },
-        {
-          "id": "open-ticket",
-          "action": "click",
-          "target": [
-            { "role": "grid", "name": "Tickets" },
-            { "role": "link", "name": "SNTL-12", "exact": true }
-          ],
-          "waitForUrl": "^/tickets/SNTL-12$",
-          "waitFor": [
-            { "role": "region", "name": "Details" },
-            { "role": "region", "name": "Participants" }
-          ],
-          "caption": "Select a Ticket by its identifier",
-          "narration": "To open a Ticket, select its identifier."
-        },
+        { "include": "open-ticket" },
         {
           "id": "ticket",
           "action": "show",
           "target": { "role": "heading", "level": 1 },
           "zoom": 1.4,
           "caption": "The Ticket opens on its Overview",
-          "narration": "The Ticket opens on its overview: its status, its priority, and its details."
+          "narration": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details."
         }
       ]
     }

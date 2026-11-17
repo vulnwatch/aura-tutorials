@@ -49,7 +49,8 @@ published link of its video, so never rename one without the user's consent.
   dataset have what.
 - A step that changes data needs `"changesData": true` on the script.
 - Sign in through the `sign-in` flow: shown when signing in is part of the
-  story, in `setup` otherwise.
+  story, in `setup` otherwise. Open a Ticket from the list through the
+  `open-ticket` flow, with the variable `ticket`.
 - Every shown step has a caption and a narration (`docs/authoring.md`,
   Style).
 

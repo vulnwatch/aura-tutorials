@@ -3,8 +3,8 @@
     "search-for-a-cve": {
       "title": "Find SUSE's status for a CVE",
       "aura": "v0.9.0",
-      "script": "sha256:6beba81224d3235bf83b91a357b34c0d3c6c13d73c23b7be6d9611ca713d1617",
-      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
+      "script": "sha256:ea5e0120eb9124f2539583987fe946458e4045661cd8073891e9e850d78ea679",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 28.42,
       "chapters": [
@@ -15,7 +15,8 @@
       ],
       "covers": [
         "search",
-        "cve-status"
+        "cve-status",
+        "open-ticket"
       ],
       "frames": [
         "sha256:c7818a3f02af3b9fc2497ca06830ceed1cb942e673c7e6d363b41d7cff7a1d46",
@@ -44,8 +45,8 @@
     "sign-in-and-open-ticket": {
       "title": "Sign in and open a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:28c1374aaf2074a577ed551c6ecb641417ad0a27a6e82eb992722e49ffc2c64b",
-      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
+      "script": "sha256:88b837d25bd2982b852935756a4d03ebd32be115f06c3fde20c4b45c15366239",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 34.95,
       "chapters": [
@@ -103,8 +104,8 @@
     "work-on-a-ticket": {
       "title": "Work on a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:054fa9ff11414fefb2ac745085b4949e20c179e0c2addbb34c025912465b4eba",
-      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
+      "script": "sha256:a06a59cb342bd16fcd0422091286bb579a815663fe0729af4d4ce2017995aee7",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 95.8,
       "chapters": [
@@ -131,6 +132,7 @@
       ],
       "covers": [
         "sign-in",
+        "open-ticket",
         "follow-deadlines",
         "maintain-assessments",
         "maintain-references",

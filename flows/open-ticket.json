@@ -1,0 +1,22 @@
+{
+  "description": "Open the Ticket of the variable ticket from the Ticket list by its identifier, and wait until every part of its Overview has arrived, as Aura's end-to-end tests do (expectOverviewShown): its details, the CVSS assessments and the sources of its CVE, and its participants.",
+  "steps": [
+    {
+      "id": "select",
+      "action": "click",
+      "target": [
+        { "role": "grid", "name": "Tickets" },
+        { "role": "link", "name": "{ticket}", "exact": true }
+      ],
+      "waitForUrl": "^/tickets/{ticket}$",
+      "waitFor": [
+        { "role": "region", "name": "Details" },
+        { "role": "region", "name": "CVSS assessments", "child": { "role": "grid", "name": "CVSS assessments" } },
+        { "role": "region", "name": "Sources of the CVE", "child": { "role": "listitem" } },
+        { "role": "region", "name": "Participants", "child": { "role": "toolbar", "name": "Participants" } }
+      ],
+      "caption": "Open the Ticket",
+      "narration": "To open the Ticket, select its identifier."
+    }
+  ]
+}

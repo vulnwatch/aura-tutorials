@@ -157,8 +157,14 @@ the example dataset. An unknown variable fails the validation.
   imperative for an action ("Select Sign in") and as a statement for what a
   screen shows ("The Ticket opens on its Overview"). Name controls as the UI
   does, and use Aura's words: "select", not "click"; "Ticket", capitalized.
+- **Verbs**: one verb for each kind of action, in captions and narrations:
+  "Select" for a button or a link that the text names ("Select Sign in");
+  "Open" for a tab, a view, or a Ticket ("Open the tab References", "Open the
+  Ticket"); "Enter" for a value typed into a field ("Enter your username");
+  and "Press" for a key, with its purpose ("Press Escape to close it").
 - **Narration**: one or two full sentences that the caption shortens, written
-  to be read aloud.
+  to be read aloud, and addressed to the viewer as "you", whatever the
+  profile.
 - **One idea per step**: a step that both acts and explains becomes two, an
   action and a `show`.
 - **Chapters**: a tutorial of several chapters gives each a title of two to
@@ -205,8 +211,8 @@ steps continue its workflow; start a new one when they are another task.
 
 The look lives in `src/compose.mjs`. A change of it, or of the capture
 (`src/capture.mjs`), changes the hash of the generator, so every video
-becomes stale: `scripts/tutorials.sh render --stale` renders them all, and
-the frames of every video are reviewed again (Review).
+becomes stale: `scripts/tutorials.sh render --strict --stale` renders them
+all, and the frames of every video are reviewed again (Review).
 
 ### Update the Tools
 
@@ -221,8 +227,8 @@ artifact holds (Review, Frames), before the merge.
 The videos keep the tooling that rendered them until their script, the
 generator, or their screens change. When a new version of a tool changes the
 screens, such as the rendering of Chromium, `check` reports them changed:
-render them again (`scripts/tutorials.sh render --stale` after `check`) and
-commit the lock in the pull request.
+render them again (`scripts/tutorials.sh render --strict --stale` after
+`check`) and commit the lock in the pull request.
 
 ### Move to a New Version of Aura
 
@@ -243,9 +249,9 @@ The submodule pins a release of Aura, whose tag `.gitmodules` names as its
 4. Decide, from the changes of Aura and the catalog: which tasks changed
    status, which need a new tutorial or an extended one, which scripts need a
    fix.
-5. `scripts/tutorials.sh render --stale`, review what changed (Review), then
-   commit the submodule, `.gitmodules`, the scripts, the catalog, and the lock
-   together.
+5. `scripts/tutorials.sh render --strict --stale`, review what changed
+   (Review), then commit the submodule, `.gitmodules`, the scripts, the
+   catalog, and the lock together.
 
 ## Review
 
@@ -312,8 +318,9 @@ and why.
 CI checks every pull request: it validates the scripts and checks the lock
 against a capture (`scripts/tutorials.sh check --verify-only`), and renders
 the tutorials that the pull request changes, or all of them when it changes
-the tooling, as artifacts to review with their contact sheets; the checks of
-their composition fail it (Review). After a
+the tooling or `src/tutorials.mjs`, which reports the checks and extracts the
+frames, as artifacts to review with their contact sheets; the checks of their
+composition fail it (Review). After a
 merge, CI renders the stale videos and publishes a release of this
 repository with every video: the unchanged ones copied from the previous
 release, and `videos.json`, which lists them. The latest video of a tutorial
