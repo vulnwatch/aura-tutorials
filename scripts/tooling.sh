@@ -147,7 +147,9 @@ install_dependencies() {
     stamp="$(install_stamp)"
     echo "tooling.sh: installing the dependencies in ${DEPS_DIR}" >&2
     rm -f "${STAMP_FILE}"
-    run_container -- npm ci
+    # On stderr, so that the output of the command that needed the
+    # installation stays its own.
+    run_container -- npm ci >&2
     printf '%s\n' "${stamp}" >"${STAMP_FILE}"
 }
 

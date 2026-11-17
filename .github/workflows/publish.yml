@@ -26,6 +26,9 @@ jobs:
         with:
           persist-credentials: false
           submodules: true
+          # The whole history, with the tags of the submodule, which name the
+          # version of Aura (scripts/lib/common.sh, aura_version).
+          fetch-depth: 0
 
       - name: Render and publish
         env:
