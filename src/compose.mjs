@@ -92,8 +92,8 @@ const CAPTION_BOX = { top: 960, bottom: 1036, perCharacter: 0.52 * 36, frame: 16
 const READING = { base: 0.5, perWord: 0.3 };
 const CAPTION_WORDS = 8;
 // The ring around a target, outside its box, in CSS pixels of the page: its
-// padding and its border.
-const RING = { pad: 6, border: 3 };
+// padding, its border, and its halo, the spread of its shadow (.ring).
+const RING = { pad: 6, border: 3, halo: 6 };
 // An upper estimate of the box of a keycap, in CSS pixels of the page.
 const KEYCAP_BOX = { height: 48, perCharacter: 0.62 * 22, frame: 2 * 16 + 2 * 2 };
 
@@ -203,7 +203,7 @@ function checkStep(step, number, timing, cameraAt) {
     const transform = cameraAt(timing.focus);
     const view = viewOf(transform);
     const target = onCanvas(transform, rectOf(step.box));
-    const ring = timing.ring ? onCanvas(transform, rectOf(step.box, RING.pad + RING.border)) : target;
+    const ring = timing.ring ? onCanvas(transform, rectOf(step.box, RING.pad + RING.border + RING.halo)) : target;
     if (!inside(target, view)) {
       add("target-outside-view", timing.focus, "the target is not whole in the view of the camera; lower the zoom, or point at a smaller target");
     } else if (!inside(ring, view)) {
@@ -469,9 +469,9 @@ const CHAPTER_STYLES = `${CARD_STYLES}
     }
     .ring {
       position: absolute;
-      border: 3px solid ${ACCENT};
+      border: ${RING.border}px solid ${ACCENT};
       border-radius: 10px;
-      box-shadow: 0 0 0 6px rgba(9, 105, 218, 0.18);
+      box-shadow: 0 0 0 ${RING.halo}px rgba(9, 105, 218, 0.18);
       opacity: 0;
     }
     .ripple {
@@ -772,7 +772,7 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("fromTo", `#${p}-card-inner`, { opacity: 0, y: 24 }, 0.1, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
     tween("to", `#${p}-card-inner`, { opacity: 0, y: -24, duration: 0.45, ease: "power2.in" }, CHAPTER_CARD - 0.55);
   }
-  const pad = 6;
+  const pad = RING.pad;
   const markup = `${cardMarkup}    <div id="${p}-world" class="world" data-layout-allow-overflow>
       <div id="${p}-window" class="window">
         <div class="title-bar">
