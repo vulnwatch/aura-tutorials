@@ -1,0 +1,189 @@
+{
+  "description": "The tasks that the tutorials cover: the frequent tasks of each profile of Aura's docs/screen-map.md (Users and Frequent Tasks), and the basics that every task needs. A tutorial names the tasks that it shows in its covers; scripts/tutorials.sh coverage lists the tasks without one. The status of a task says how much of it the pinned Aura can show: available, partial (the notes say what is missing), or not-in-aura; scripts and the aura-bump skill update it with each version of Aura.",
+  "aura": "v0.9.0",
+  "profiles": [
+    { "id": "every-user", "name": "Every user", "source": "aura/docs/screen-map.md#every-user", "user": "jdoe" },
+    { "id": "analysts", "name": "Vulnerability analysts", "source": "aura/docs/screen-map.md#vulnerability-analysts", "user": "asmith" },
+    { "id": "maintainers", "name": "Package maintainers", "source": "aura/docs/screen-map.md#package-maintainers", "user": "dbrown" },
+    { "id": "readers", "name": "Readers", "source": "aura/docs/screen-map.md#readers", "user": "jdoe" },
+    { "id": "administrators", "name": "Administrators", "source": "aura/docs/screen-map.md#administrators", "user": "jdoe" },
+    { "id": "restricted-analysts", "name": "Restricted analysts", "source": "aura/docs/screen-map.md#restricted-analysts", "user": "cwhite" }
+  ],
+  "tasks": [
+    {
+      "id": "sign-in",
+      "profile": "every-user",
+      "task": "Sign in to Sentinel Aura, and land on the Ticket list",
+      "source": "aura/docs/screens/sign-in.md#purpose",
+      "status": "available"
+    },
+    {
+      "id": "open-ticket",
+      "profile": "every-user",
+      "task": "Open a Ticket from the Ticket list, and read its Overview",
+      "source": "aura/docs/screens/ticket-list.md#navigation",
+      "status": "available"
+    },
+    {
+      "id": "own-account",
+      "profile": "every-user",
+      "task": "See their own profile, manage their own API keys, and review the identity events of their own account",
+      "source": "aura/docs/screen-map.md#every-user",
+      "status": "not-in-aura",
+      "notes": "Account has no screen document yet."
+    },
+    {
+      "id": "user-directory",
+      "profile": "every-user",
+      "task": "Find the other users in the directory, with the Tickets assigned to them and those of their packages",
+      "source": "aura/docs/screen-map.md#every-user",
+      "status": "not-in-aura",
+      "notes": "Users has no screen document yet."
+    },
+    {
+      "id": "work-new-tickets",
+      "profile": "analysts",
+      "task": "Work the queue of new Tickets: take them, or ignore them, or mark them as duplicates",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "The New view lists the queue; taking, ignoring, and marking duplicates are not in Aura yet."
+    },
+    {
+      "id": "analyze-packages",
+      "profile": "analysts",
+      "task": "Analyze the packages, tracks, and Product eligibility of their Tickets",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "The package tree and the affected versions show on the Ticket; changing tracks and eligibility is not in Aura yet."
+    },
+    {
+      "id": "maintain-references",
+      "profile": "analysts",
+      "task": "Maintain the references of a Ticket: add, edit, and delete them",
+      "source": "aura/docs/screens/ticket.md#actions",
+      "status": "available"
+    },
+    {
+      "id": "maintain-assessments",
+      "profile": "analysts",
+      "task": "Maintain severities, SUSE CVSS assessments, and priority overrides",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "The Ticket shows them, and the explanation of a priority; changing them is not in Aura yet."
+    },
+    {
+      "id": "follow-deadlines",
+      "profile": "analysts",
+      "task": "Follow the deadlines of their Tickets, and see which deliveries are late",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "available"
+    },
+    {
+      "id": "manage-confidentiality",
+      "profile": "analysts",
+      "task": "Manage the confidentiality of embargoed Tickets, their Coordinated Release Dates, and their access grants",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "Access grants are granted and revoked on the Ticket; the Coordinated Release Date and confidentiality are not editable yet."
+    },
+    {
+      "id": "create-tickets-and-refetch",
+      "profile": "analysts",
+      "task": "Create Tickets manually and refetch CVE data",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "Refetch is on the Ticket, but the example dataset disables every fetcher, so it never shows; creating a Ticket is not in Aura yet."
+    },
+    {
+      "id": "check-pending-work",
+      "profile": "maintainers",
+      "task": "Check their pending fixes and their submission deadlines",
+      "source": "aura/docs/screen-map.md#package-maintainers",
+      "status": "not-in-aura",
+      "notes": "My packages has no screen document yet."
+    },
+    {
+      "id": "follow-deliveries",
+      "profile": "maintainers",
+      "task": "Follow their deliveries in progress, with their submission and release requests",
+      "source": "aura/docs/screen-map.md#package-maintainers",
+      "status": "not-in-aura",
+      "notes": "My packages has no screen document yet."
+    },
+    {
+      "id": "open-shared-ticket",
+      "profile": "maintainers",
+      "task": "Open a Ticket that an analyst shares, and find in its package tree the tracks that wait for their submission",
+      "source": "aura/docs/screen-map.md#package-maintainers",
+      "status": "available"
+    },
+    {
+      "id": "search",
+      "profile": "readers",
+      "task": "Search for a CVE, a Ticket, or a package",
+      "source": "aura/docs/screen-map.md#readers",
+      "status": "available"
+    },
+    {
+      "id": "cve-status",
+      "profile": "readers",
+      "task": "See SUSE's status for a CVE: its Ticket, the affected Products and codestreams, and whether the fix is released",
+      "source": "aura/docs/screen-map.md#readers",
+      "status": "available"
+    },
+    {
+      "id": "open-shared-links",
+      "profile": "readers",
+      "task": "Open the links that colleagues share",
+      "source": "aura/docs/screen-map.md#readers",
+      "status": "available"
+    },
+    {
+      "id": "manage-users",
+      "profile": "administrators",
+      "task": "Manage users: create local users, assign roles, unlock accounts, reset passwords, and deactivate and reactivate users",
+      "source": "aura/docs/screen-map.md#administrators",
+      "status": "not-in-aura",
+      "notes": "Users has no screen document yet."
+    },
+    {
+      "id": "review-api-keys-and-identity-log",
+      "profile": "administrators",
+      "task": "Review and revoke the API keys of every user, and review the identity audit log",
+      "source": "aura/docs/screen-map.md#administrators",
+      "status": "not-in-aura",
+      "notes": "Administration has no screen document yet."
+    },
+    {
+      "id": "operate-fetchers",
+      "profile": "administrators",
+      "task": "Operate the fetchers: trigger, enable, disable, and configure them",
+      "source": "aura/docs/screen-map.md#administrators",
+      "status": "not-in-aura",
+      "notes": "Fetchers has no screen document yet."
+    },
+    {
+      "id": "work-non-confidential-tickets",
+      "profile": "restricted-analysts",
+      "task": "Work the non-confidential Tickets as vulnerability analysts do, without access to embargoed data",
+      "source": "aura/docs/screen-map.md#restricted-analysts",
+      "status": "partial",
+      "notes": "As for the analysts' tasks: the Ticket list and the Ticket show the work; most of its actions are not in Aura yet."
+    },
+    {
+      "id": "bot-api-keys",
+      "profile": "restricted-analysts",
+      "task": "Create and rotate the API keys of bot accounts",
+      "source": "aura/docs/screen-map.md#restricted-analysts",
+      "status": "not-in-aura",
+      "notes": "Account has no screen document yet."
+    },
+    {
+      "id": "investigate-history",
+      "profile": "analysts",
+      "task": "Reconstruct who changed what on a Ticket, and what Sentinel did by itself, from its audit log",
+      "source": "aura/docs/screens/ticket.md#purpose",
+      "status": "available"
+    }
+  ]
+}

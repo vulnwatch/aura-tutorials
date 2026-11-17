@@ -1,16 +1,21 @@
-// Captures the steps of a tutorial script from the UI under capture: for each
-// step, high-resolution screenshots of the window and the bounding box of the
-// element that the step acts on, in CSS pixels of the window. It records no
-// video. Writes <out>/capture/*.png and <out>/capture/capture.json.
+// Captures a tutorial from the UI under capture: runs its setup without
+// screenshots, then, for each step of its chapters, takes high-resolution
+// screenshots of the window and the bounding box of the element that the step
+// acts on, in CSS pixels of the window. It records no video. Each screenshot
+// also has a fingerprint: the hash of a screenshot whose dates and generated
+// avatars are masked, which change with each load of the example dataset, so
+// that two captures of the same screens have the same fingerprints. Writes
+// <out>/capture/*.png and <out>/capture/capture.json.
 //
-// Usage: node src/capture.mjs <script> <out>
+// Usage: node src/capture.mjs <id> <out>
 //
 // The UI is on http://localhost:5173 (scripts/tooling.sh capture runs this in
 // the network namespace of the development server).
 
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { loadTutorial, sha256 } from "./lib/script.mjs";
 
 const BASE_URL = "http://localhost:5173";
 const VIEWPORT = { width: 1440, height: 900 };
@@ -20,25 +25,27 @@ const DEVICE_SCALE_FACTOR = 2;
 const POINTER_REST = { x: 100, y: 500 };
 const TIMEOUT = 15_000;
 
-const [scriptPath, outDir] = process.argv.slice(2);
-if (!scriptPath || !outDir) {
-  console.error("usage: node src/capture.mjs <script> <out>");
+// What the fingerprints mask, as the reference screenshots of Aura's
+// end-to-end tests do (Aura test/e2e/fixtures.ts, avatars, dateTimes, and
+// DATE_TIMES_STYLE; keep in sync): the generated avatars, the dates and
+// times, whose texts take fixed widths while masked so that the layout around
+// them does not depend on the date of the load.
+const AVATARS = 'svg[viewBox="0 0 6 6"]';
+const DATE_TIMES = "time, [role=spinbutton][data-type]:not([data-placeholder])";
+const DATE_TIMES_STYLE = `
+  time { display: inline-block; width: 7em; white-space: nowrap; color: transparent; }
+  time[datetime*="T"] { width: 10em; }
+  time:not([datetime*="-"]) { width: 3.5em; }
+`;
+
+const [id, outDir] = process.argv.slice(2);
+if (!id || !outDir) {
+  console.error("usage: node src/capture.mjs <id> <out>");
   process.exit(2);
 }
 
-const script = JSON.parse(await readFile(scriptPath, "utf8"));
+const tutorial = await loadTutorial(id);
 const captureDir = join(outDir, "capture");
-
-// Replaces each {path.to.value} of a text with the value of the script.
-function interpolate(text) {
-  return text.replace(/\{([\w.]+)\}/g, (_, path) => {
-    const value = path.split(".").reduce((object, key) => object?.[key], script);
-    if (typeof value !== "string") {
-      throw new Error(`the script has no value ${path}`);
-    }
-    return value;
-  });
-}
 
 // Resolves a locator spec of the script, an object or a chain of objects,
 // each found inside the previous one: by role (name, level, exact), by label,
@@ -56,10 +63,8 @@ function locate(root, spec) {
     locator = root.getByRole(spec.role, options);
   } else if (spec.label) {
     locator = root.getByLabel(spec.label, { exact: spec.exact });
-  } else if (spec.text) {
-    locator = root.getByText(spec.text, { exact: spec.exact });
   } else {
-    throw new Error(`a locator needs a role, a label, or a text: ${JSON.stringify(spec)}`);
+    locator = root.getByText(spec.text, { exact: spec.exact });
   }
   return spec.nth !== undefined ? locator.nth(spec.nth) : locator;
 }
@@ -97,8 +102,14 @@ async function settle(page) {
   await page.waitForTimeout(400);
 }
 
-async function boxOf(locator) {
+// The bounding box of a target, scrolled into view first, so that the
+// screenshot shows it.
+async function boxOf(page, locator) {
   await locator.waitFor({ state: "visible", timeout: TIMEOUT });
+  if (!(await locator.isVisible()) || !(await inViewport(locator))) {
+    await locator.scrollIntoViewIfNeeded();
+    await settle(page);
+  }
   const box = await locator.boundingBox();
   if (!box) throw new Error("the target has no bounding box");
   return {
@@ -109,18 +120,49 @@ async function boxOf(locator) {
   };
 }
 
+async function inViewport(locator) {
+  const box = await locator.boundingBox();
+  return Boolean(box) && box.y >= 0 && box.y + box.height <= VIEWPORT.height;
+}
+
+// The fingerprint of the window as it shows: the hash of a screenshot at one
+// pixel per CSS pixel with the dates and the avatars masked. The style of the
+// dates comes from a stylesheet of the CSS object model, which Aura's Content
+// Security Policy allows, and goes before the next action.
+async function fingerprint(page) {
+  const sheet = await page.evaluateHandle((style) => {
+    const added = new CSSStyleSheet();
+    added.replaceSync(style);
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, added];
+    return added;
+  }, DATE_TIMES_STYLE);
+  try {
+    const image = await page.screenshot({
+      scale: "css",
+      caret: "hide",
+      animations: "disabled",
+      mask: [page.locator(AVATARS), page.locator(DATE_TIMES)],
+      maskColor: "#FF00FF",
+    });
+    return sha256(image);
+  } finally {
+    await sheet.evaluate((added) => {
+      document.adoptedStyleSheets = document.adoptedStyleSheets.filter((adopted) => adopted !== added);
+    });
+    await sheet.dispose();
+  }
+}
+
 let shots = 0;
 
-// Takes a screenshot of the window and returns its record.
-async function shoot(page, step, kind) {
+// Takes a screenshot of the window and returns its record, or nothing while
+// the setup runs.
+async function shoot(page, step, kind, recording) {
+  if (!recording) return null;
   shots += 1;
   const file = `${String(shots).padStart(3, "0")}-${step.id}-${kind}.png`;
-  await page.screenshot({
-    path: join(captureDir, file),
-    caret: "hide",
-    animations: "disabled",
-  });
-  return { file, kind, path: new URL(page.url()).pathname };
+  await page.screenshot({ path: join(captureDir, file), caret: "hide", animations: "disabled" });
+  return { file, kind, path: new URL(page.url()).pathname, fingerprint: await fingerprint(page) };
 }
 
 async function waitForStep(page, step) {
@@ -128,64 +170,74 @@ async function waitForStep(page, step) {
     const pattern = new RegExp(step.waitForUrl);
     await page.waitForURL((url) => pattern.test(url.pathname), { timeout: TIMEOUT });
   }
-  const conditions = [step.waitFor ?? []].flat();
-  for (const condition of conditions) {
+  for (const condition of [step.waitFor ?? []].flat()) {
     await waitFor(page, condition);
   }
   await settle(page);
 }
 
-async function captureStep(page, step) {
+// Runs a step: with screenshots when `recording`, without during the setup.
+async function runStep(page, step, recording) {
   const frames = [];
+  const record = async (kind) => {
+    const frame = await shoot(page, step, kind, recording);
+    if (frame) frames.push(frame);
+  };
   let box = null;
   const target = step.target ? locate(page, step.target).first() : null;
   switch (step.action) {
     case "goto": {
       await page.goto(step.path);
       await waitForStep(page, step);
-      if (target) box = await boxOf(target);
-      frames.push(await shoot(page, step, "after"));
+      if (target) box = await boxOf(page, target);
+      await record("after");
       break;
     }
     case "fill": {
-      box = await boxOf(target);
-      frames.push(await shoot(page, step, "before"));
+      box = await boxOf(page, target);
+      await record("before");
       await target.click();
       await settle(page);
-      frames.push(await shoot(page, step, "focus"));
+      await record("focus");
       // One screenshot for each character, so that the video types with the
       // pixels of the UI.
-      for (const character of interpolate(step.value)) {
+      for (const character of step.value) {
         await target.pressSequentially(character);
-        frames.push(await shoot(page, step, `type-${frames.length - 1}`));
+        await record(`type-${frames.length - 1}`);
       }
+      if (!recording) await settle(page);
       break;
     }
     case "click": {
-      box = await boxOf(target);
-      frames.push(await shoot(page, step, "before"));
+      box = await boxOf(page, target);
+      await record("before");
       await target.click();
       await waitForStep(page, step);
-      frames.push(await shoot(page, step, "after"));
+      await record("after");
+      break;
+    }
+    case "press": {
+      if (target) {
+        box = await boxOf(page, target);
+        await target.focus();
+        await settle(page);
+      }
+      await record("before");
+      await page.keyboard.press(step.key);
+      await waitForStep(page, step);
+      await record("after");
       break;
     }
     case "show": {
       await waitForStep(page, step);
-      if (target) box = await boxOf(target);
-      frames.push(await shoot(page, step, "current"));
+      if (target) box = await boxOf(page, target);
+      await record("current");
       break;
     }
     default:
       throw new Error(`unknown action ${step.action} of step ${step.id}`);
   }
-  return {
-    id: step.id,
-    action: step.action,
-    caption: step.caption,
-    narration: step.narration,
-    box,
-    frames,
-  };
+  return { box, frames };
 }
 
 await rm(captureDir, { recursive: true, force: true });
@@ -203,9 +255,28 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const steps = [];
 try {
-  for (const step of script.steps) {
-    console.error(`capture: ${step.id}`);
-    steps.push(await captureStep(page, step));
+  for (const step of tutorial.setup) {
+    console.error(`capture: setup ${step.id}`);
+    await runStep(page, step, false);
+  }
+  for (const [chapterIndex, chapter] of tutorial.chapters.entries()) {
+    for (const step of chapter.steps) {
+      console.error(`capture: ${step.id}`);
+      const { box, frames } = await runStep(page, step, true);
+      steps.push({
+        id: step.id,
+        chapter: chapterIndex,
+        action: step.action,
+        key: step.key,
+        zoom: step.zoom,
+        duration: step.duration,
+        hold: step.hold,
+        caption: step.caption,
+        narration: step.narration,
+        box,
+        frames,
+      });
+    }
   }
 } catch (error) {
   await page.screenshot({ path: join(captureDir, "failure.png") }).catch(() => {});
@@ -217,6 +288,17 @@ try {
 
 await writeFile(
   join(captureDir, "capture.json"),
-  `${JSON.stringify({ viewport: VIEWPORT, deviceScaleFactor: DEVICE_SCALE_FACTOR, steps }, null, 2)}\n`,
+  `${JSON.stringify(
+    {
+      tutorial: id,
+      script: tutorial.hash,
+      aura: process.env.AURA_VERSION ?? null,
+      viewport: VIEWPORT,
+      deviceScaleFactor: DEVICE_SCALE_FACTOR,
+      steps,
+    },
+    null,
+    2,
+  )}\n`,
 );
 console.error(`capture: ${shots} screenshots in ${captureDir}`);

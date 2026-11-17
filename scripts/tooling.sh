@@ -15,51 +15,42 @@
 # the Chromium of the image, and renders without a network.
 #
 # Usage:
-#   scripts/tooling.sh install                 Install the dependencies (npm ci)
-#   scripts/tooling.sh npm <args>              Run npm, with write access to
-#                                              package.json and package-lock.json
-#   scripts/tooling.sh versions                Print the versions of Node.js,
-#                                              FFmpeg, Chromium, and HyperFrames;
-#                                              fails below Node.js 22
-#   scripts/tooling.sh capture <script>        Capture the steps of a tutorial
-#                                              script from the development
-#                                              server of the submodule aura/,
-#                                              into out/<id>/capture/
-#   scripts/tooling.sh compose <script>        Generate the HyperFrames
-#                                              composition of a captured
-#                                              tutorial, in out/<id>/composition/
-#   scripts/tooling.sh render <script> [args]  Render the composition to
-#                                              out/<id>/<id>.mp4
-#   scripts/tooling.sh preview <script>        Serve the composition in
-#                                              HyperFrames Studio on
-#                                              http://localhost:3002
-#   scripts/tooling.sh hyperframes <script> <command> [args]
-#                                              Run another HyperFrames command,
-#                                              such as lint, check, or snapshot,
-#                                              on the composition, offline
-#   scripts/tooling.sh ffmpeg <args>           Run FFmpeg in out/, offline
-#   scripts/tooling.sh clean                   Remove the dependencies and the
-#                                              cache of HyperFrames
+#   scripts/tooling.sh install               Install the dependencies (npm ci)
+#   scripts/tooling.sh npm <args>            Run npm, with write access to
+#                                            package.json and package-lock.json
+#   scripts/tooling.sh versions              Print the versions of Node.js,
+#                                            FFmpeg, Chromium, and HyperFrames;
+#                                            fails below Node.js 22
+#   scripts/tooling.sh tutorials <args>      Run src/tutorials.mjs, offline,
+#                                            with write access to
+#                                            tutorials.lock.json
+#   scripts/tooling.sh capture <id>          Capture the tutorial <id> from the
+#                                            development server of aura/, into
+#                                            out/<id>/capture/
+#   scripts/tooling.sh compose <id>          Generate its HyperFrames
+#                                            composition, in
+#                                            out/<id>/composition/
+#   scripts/tooling.sh render <id> [args]    Render the composition to
+#                                            out/<id>/<id>.mp4, with its title
+#                                            and chapters
+#   scripts/tooling.sh preview <id>          Serve the composition in
+#                                            HyperFrames Studio on
+#                                            http://localhost:3002
+#   scripts/tooling.sh hyperframes <id> <command> [args]
+#                                            Run another HyperFrames command,
+#                                            such as lint, check, or snapshot,
+#                                            on the composition, offline
+#   scripts/tooling.sh ffmpeg <args>         Run FFmpeg in out/, offline
+#   scripts/tooling.sh clean                 Remove the dependencies and the
+#                                            cache of HyperFrames
 #
-# <script> is a tutorial script such as tutorials/sign-in-and-open-ticket.json;
-# its id is its file name without .json.
+# <id> is the id of a tutorial, the name of its script in tutorials/ without
+# .json. scripts/tutorials.sh runs these commands in the order that a video
+# needs.
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-readonly REPO_ROOT
-
-warn() {
-    echo "${0##*/}: $*" >&2
-}
-
-die() {
-    warn "$@"
-    exit 1
-}
-
-usage() {
-    awk 'NR == 1 { next } !/^#/ { exit } { sub(/^# ?/, ""); print }' "$0" >&2
-}
+# shellcheck source=scripts/lib/common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
 # The image that the Containerfile builds, tagged with the hash of the
 # Containerfile, so that a change of it builds a new one.
@@ -70,19 +61,11 @@ readonly IMAGE
 # path, and the file that records the installation.
 CACHE_HOME="${XDG_CACHE_HOME:-}"
 [[ "${CACHE_HOME}" == /* ]] || CACHE_HOME="${HOME:?HOME is not set}/.cache"
-CLONE_ID="$(printf '%s' "${REPO_ROOT}" | sha256sum | cut -c1-12)"
-readonly CLONE_ID
 readonly DEPS_DIR="${CACHE_HOME}/aura-tutorials/node-modules-${CLONE_ID}"
 readonly STAMP_FILE="${DEPS_DIR}.stamp"
 readonly HF_CACHE_DIR="${CACHE_HOME}/aura-tutorials/hyperframes-${CLONE_ID}"
 readonly DEPENDENCY_FILES=(package.json package-lock.json)
-
-# The development server of the submodule: Aura's scripts/dev-env.sh names
-# its backend after the path of the clone (scripts/lib/common.sh, clone_id),
-# and scripts/tooling.sh dev names the container of the server after the
-# network of the backend.
-AURA_ID="$(printf '%s' "$(cd "${REPO_ROOT}/aura" && pwd -P)" | sha256sum | cut -c1-12)"
-readonly DEV_SERVER="sentinel-aura-${AURA_ID}_default-dev-server"
+readonly LOCK_FILE="tutorials.lock.json"
 
 # The port of HyperFrames Studio.
 readonly PREVIEW_PORT=3002
@@ -148,6 +131,7 @@ run_container() {
         --env=HOME=/tmp \
         --env=NPM_CONFIG_UPDATE_NOTIFIER=false \
         --env=PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
+        --env=AURA_VERSION="$(aura_version)" \
         "${HF_ENV[@]}" \
         --volume="${REPO_ROOT}:/work:ro,z" \
         --volume="${DEPS_DIR}:/work/node_modules:rw,z" \
@@ -180,12 +164,10 @@ ensure_installed() {
 # shellcheck disable=SC2016  # expanded in the container
 readonly WITH_BROWSER='export HYPERFRAMES_BROWSER_PATH="$(ls -d /ms-playwright/chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell | head -n 1)"; exec "$@"'
 
-# Prints the id of the tutorial script $1 after checking it.
-tutorial_id() {
-    local script="$1"
-    [[ "${script}" == tutorials/*.json && -f "${REPO_ROOT}/${script}" ]] ||
-        die "no tutorial script ${script}; give a path such as tutorials/<id>.json"
-    basename "${script}" .json
+# Fails unless $1 is the id of a tutorial.
+check_id() {
+    [[ "$1" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ && -f "${REPO_ROOT}/tutorials/$1.json" ]] ||
+        die "no tutorial '$1'; give the name of a script of tutorials/ without .json"
 }
 
 composition_dir() {
@@ -194,7 +176,7 @@ composition_dir() {
 
 require_composition() {
     [[ -f "${REPO_ROOT}/$(composition_dir "$1")/index.html" ]] ||
-        die "no composition of $1; run 'scripts/tooling.sh compose tutorials/$1.json'"
+        die "no composition of $1; run 'scripts/tooling.sh compose $1'"
 }
 
 cmd_install() {
@@ -233,61 +215,75 @@ cmd_versions() {
         ((major >= 22)) || { echo "Node.js 22 or later is required" >&2; exit 1; }'
 }
 
+cmd_tutorials() {
+    [[ $# -ge 1 ]] || die "tutorials: missing the command of src/tutorials.mjs"
+    ensure_installed
+    # The mount needs the file.
+    [[ -f "${REPO_ROOT}/${LOCK_FILE}" ]] || printf '{\n  "tutorials": {}\n}\n' >"${REPO_ROOT}/${LOCK_FILE}"
+    run_container --network=none \
+        --volume="${REPO_ROOT}/${LOCK_FILE}:/work/${LOCK_FILE}:rw,z" -- \
+        node src/tutorials.mjs "$@"
+}
+
 # The capture shares the network namespace of the development server, where
 # the UI is on http://localhost:5173, the origin from which Chromium accepts
 # the Secure session cookie.
 cmd_capture() {
-    [[ $# -eq 1 ]] || die "capture: takes a tutorial script"
-    local id
-    id="$(tutorial_id "$1")"
-    [[ "$(docker container inspect --format '{{.State.Running}}' "${DEV_SERVER}" 2>/dev/null)" == true ]] ||
-        die "no running development server ${DEV_SERVER}; start it with 'aura/scripts/dev-env.sh start'"
+    [[ $# -eq 1 ]] || die "capture: takes the id of a tutorial"
+    check_id "$1"
+    dev_server_running ||
+        die "no running development server ${DEV_SERVER}; start it with 'scripts/backend.sh start'"
     ensure_installed
-    run_container --network="container:${DEV_SERVER}" -- node src/capture.mjs "$1" "out/${id}"
+    run_container --network="container:${DEV_SERVER}" -- node src/capture.mjs "$1" "out/$1"
 }
 
 cmd_compose() {
-    [[ $# -eq 1 ]] || die "compose: takes a tutorial script"
-    local id
-    id="$(tutorial_id "$1")"
+    [[ $# -eq 1 ]] || die "compose: takes the id of a tutorial"
+    check_id "$1"
     ensure_installed
-    run_container --network=none -- node src/compose.mjs "$1" "out/${id}"
+    run_container --network=none -- node src/compose.mjs "$1" "out/$1"
 }
 
+# HyperFrames renders out/<id>/render.mp4; FFmpeg then writes the title and
+# the chapters of compose.mjs into out/<id>/<id>.mp4, without encoding again.
 cmd_render() {
-    [[ $# -ge 1 ]] || die "render: takes a tutorial script"
-    local id
-    id="$(tutorial_id "$1")"
+    [[ $# -ge 1 ]] || die "render: takes the id of a tutorial"
+    local id="$1"
     shift
+    check_id "${id}"
     require_composition "${id}"
     ensure_installed
     run_container --network=none --env=PRODUCER_LOW_MEMORY_MODE=false -- \
         bash -c "${WITH_BROWSER}" bash \
         npx --no-install hyperframes render "$(composition_dir "${id}")" \
-        --output "out/${id}/${id}.mp4" --fps 30 "$@"
+        --output "out/${id}/render.mp4" --fps 30 "$@"
+    run_container --network=none -- ffmpeg -hide_banner -loglevel error -y \
+        -i "out/${id}/render.mp4" -i "out/${id}/chapters.ffmeta" \
+        -map 0 -map_metadata 1 -map_chapters 1 -codec copy -movflags +faststart \
+        "out/${id}/${id}.mp4"
+    rm -f "${REPO_ROOT}/out/${id}/render.mp4"
 }
 
 # Studio listens on every interface of its container, which is reachable from
 # the host only through the port published on its loopback interface.
 cmd_preview() {
-    [[ $# -eq 1 ]] || die "preview: takes a tutorial script"
-    local id
-    id="$(tutorial_id "$1")"
-    require_composition "${id}"
+    [[ $# -eq 1 ]] || die "preview: takes the id of a tutorial"
+    check_id "$1"
+    require_composition "$1"
     ensure_installed
     run_container --name="aura-tutorials-preview-${CLONE_ID}" \
         --publish="127.0.0.1:${PREVIEW_PORT}:${PREVIEW_PORT}" \
         --env=HYPERFRAMES_PREVIEW_HOST=0.0.0.0 -- \
         bash -c "${WITH_BROWSER}" bash \
-        npx --no-install hyperframes preview "$(composition_dir "${id}")" \
+        npx --no-install hyperframes preview "$(composition_dir "$1")" \
         --port "${PREVIEW_PORT}" --no-open --foreground
 }
 
 cmd_hyperframes() {
-    [[ $# -ge 2 ]] || die "hyperframes: takes a tutorial script and a HyperFrames command"
-    local id command="$2"
-    id="$(tutorial_id "$1")"
+    [[ $# -ge 2 ]] || die "hyperframes: takes the id of a tutorial and a HyperFrames command"
+    local id="$1" command="$2"
     shift 2
+    check_id "${id}"
     require_composition "${id}"
     ensure_installed
     run_container --network=none -- bash -c "${WITH_BROWSER}" bash \
@@ -313,7 +309,7 @@ main() {
     local command="$1"
     shift
     case "${command}" in
-        install | npm | versions | capture | compose | render | preview | hyperframes | ffmpeg)
+        install | npm | versions | tutorials | capture | compose | render | preview | hyperframes | ffmpeg)
             check_docker
             "cmd_${command}" "$@"
             ;;

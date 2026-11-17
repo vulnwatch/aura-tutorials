@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# The code that the scripts under scripts/ share, which they source after
+# setting their strict mode: their diagnostics and usage, the identity of this
+# clone, and the development server of the submodule aura/.
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+readonly REPO_ROOT
+
+# Writes the message $* to stderr, prefixed with the name of the running
+# script.
+warn() {
+    echo "${0##*/}: $*" >&2
+}
+
+# Writes the message $* like warn, then exits with status 1.
+die() {
+    warn "$@"
+    exit 1
+}
+
+# Writes the header comment of the running script, its purpose and usage,
+# without the comment markers, to stderr.
+usage() {
+    awk 'NR == 1 { next } !/^#/ { exit } { sub(/^# ?/, ""); print }' "$0" >&2
+}
+
+# The identifier of this clone, from the path of its root: its dependencies
+# and its caches are named after it.
+CLONE_ID="$(printf '%s' "${REPO_ROOT}" | sha256sum | cut -c1-12)"
+# shellcheck disable=SC2034  # used by the scripts that source this file
+readonly CLONE_ID
+
+# The development server of the submodule, on http://localhost:5173. Aura's
+# scripts/dev-env.sh names its backend after the path of the clone
+# (scripts/lib/common.sh, clone_id), and its scripts/tooling.sh dev names the
+# container of the server after the network of the backend.
+# shellcheck disable=SC2034  # used by the scripts that source this file
+readonly DEV_PORT=5173
+AURA_ID="$(printf '%s' "$(cd "${REPO_ROOT}/aura" && pwd -P)" | sha256sum | cut -c1-12)"
+readonly AURA_ID
+readonly DEV_SERVER="sentinel-aura-${AURA_ID}_default-dev-server"
+
+# Succeeds when the container of the development server runs.
+dev_server_running() {
+    [[ "$(docker container inspect --format '{{.State.Running}}' "${DEV_SERVER}" 2>/dev/null)" == true ]]
+}
+
+# Prints the version of Aura that the submodule holds: its release tag, or
+# its abbreviated commit when no tag names it.
+aura_version() {
+    git -C "${REPO_ROOT}/aura" describe --tags --exact-match 2>/dev/null ||
+        git -C "${REPO_ROOT}/aura" rev-parse --short HEAD
+}

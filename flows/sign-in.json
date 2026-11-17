@@ -1,0 +1,42 @@
+{
+  "description": "Sign in on Sign in as the user of the tutorial, and wait for the landing, the Ticket list, once the counts of its views have arrived.",
+  "steps": [
+    {
+      "id": "open",
+      "action": "goto",
+      "path": "/login",
+      "waitFor": { "role": "heading", "level": 1, "name": "Sign in" },
+      "caption": "Open Sentinel Aura in your browser",
+      "narration": "Open Sentinel Aura in your browser. If you aren't signed in, it shows Sign in."
+    },
+    {
+      "id": "username",
+      "action": "fill",
+      "target": { "role": "textbox", "name": "Username" },
+      "value": "{user}",
+      "caption": "Enter your username",
+      "narration": "Enter your username."
+    },
+    {
+      "id": "password",
+      "action": "fill",
+      "target": { "label": "Password" },
+      "value": "{password}",
+      "caption": "Then your password",
+      "narration": "Then enter your password."
+    },
+    {
+      "id": "submit",
+      "action": "click",
+      "target": { "role": "button", "name": "Sign in" },
+      "waitForUrl": "^/tickets$",
+      "waitFor": [
+        { "role": "heading", "level": 1, "name": "Tickets" },
+        { "role": "tablist", "name": "Views", "child": { "role": "tab" }, "allHaveText": "\\s\\d[\\d,]*$" },
+        { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
+      ],
+      "caption": "Select Sign in",
+      "narration": "Select Sign in."
+    }
+  ]
+}

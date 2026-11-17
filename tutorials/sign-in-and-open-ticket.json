@@ -5,75 +5,45 @@
     "title": "You're all set",
     "subtitle": "Every Ticket opens the same way: from the list, by its identifier."
   },
-  "user": { "username": "jdoe", "password": "example-dataset-password" },
-  "steps": [
+  "user": "jdoe",
+  "covers": ["sign-in", "open-ticket"],
+  "chapters": [
     {
-      "id": "open",
-      "action": "goto",
-      "path": "/login",
-      "waitFor": { "role": "heading", "level": 1, "name": "Sign in" },
-      "caption": "Open Sentinel Aura in your browser",
-      "narration": "Open Sentinel Aura in your browser. If you aren't signed in, it shows Sign in."
-    },
-    {
-      "id": "username",
-      "action": "fill",
-      "target": { "role": "textbox", "name": "Username" },
-      "value": "{user.username}",
-      "caption": "Enter your username",
-      "narration": "Enter your username."
-    },
-    {
-      "id": "password",
-      "action": "fill",
-      "target": { "label": "Password" },
-      "value": "{user.password}",
-      "caption": "Then your password",
-      "narration": "Then enter your password."
-    },
-    {
-      "id": "sign-in",
-      "action": "click",
-      "target": { "role": "button", "name": "Sign in" },
-      "waitForUrl": "^/tickets$",
-      "waitFor": [
-        { "role": "heading", "level": 1, "name": "Tickets" },
-        { "role": "tablist", "name": "Views", "child": { "role": "tab" }, "allHaveText": "\\s\\d[\\d,]*$" },
-        { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
-      ],
-      "caption": "Select Sign in",
-      "narration": "Select Sign in."
-    },
-    {
-      "id": "ticket-list",
-      "action": "show",
-      "target": { "role": "grid", "name": "Tickets" },
-      "zoom": 1.15,
-      "caption": "Aura lands on the Ticket list",
-      "narration": "Aura opens the Ticket list, with the Tickets that need your attention first."
-    },
-    {
-      "id": "open-ticket",
-      "action": "click",
-      "target": [
-        { "role": "grid", "name": "Tickets" },
-        { "role": "link", "name": "SNTL-12", "exact": true }
-      ],
-      "waitForUrl": "^/tickets/SNTL-\\d+$",
-      "waitFor": [
-        { "role": "region", "name": "Details" },
-        { "role": "region", "name": "Participants" }
-      ],
-      "caption": "Select a Ticket by its identifier",
-      "narration": "To open a Ticket, select its identifier."
-    },
-    {
-      "id": "ticket",
-      "action": "show",
-      "target": { "role": "heading", "level": 1 },
-      "zoom": 1.4,
-      "caption": "The Ticket opens on its Overview",
-      "narration": "The Ticket opens on its overview: its status, its priority, and its details."
+      "title": "Sign in and open a Ticket",
+      "steps": [
+        { "include": "sign-in" },
+        {
+          "id": "ticket-list",
+          "action": "show",
+          "target": { "role": "grid", "name": "Tickets" },
+          "zoom": 1.15,
+          "caption": "Aura lands on the Ticket list",
+          "narration": "Aura opens the Ticket list, with the Tickets that need your attention first."
+        },
+        {
+          "id": "open-ticket",
+          "action": "click",
+          "target": [
+            { "role": "grid", "name": "Tickets" },
+            { "role": "link", "name": "SNTL-12", "exact": true }
+          ],
+          "waitForUrl": "^/tickets/SNTL-12$",
+          "waitFor": [
+            { "role": "region", "name": "Details" },
+            { "role": "region", "name": "Participants" }
+          ],
+          "caption": "Select a Ticket by its identifier",
+          "narration": "To open a Ticket, select its identifier."
+        },
+        {
+          "id": "ticket",
+          "action": "show",
+          "target": { "role": "heading", "level": 1 },
+          "zoom": 1.4,
+          "caption": "The Ticket opens on its Overview",
+          "narration": "The Ticket opens on its overview: its status, its priority, and its details."
+        }
+      ]
     }
   ]
 }

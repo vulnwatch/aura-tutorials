@@ -1,0 +1,62 @@
+{
+  "tutorials": {
+    "sign-in-and-open-ticket": {
+      "title": "Sign in and open a Ticket",
+      "aura": "v0.9.0",
+      "script": "sha256:9f38e7ab5045bd076ac2a01ce2c62e86d8bd1591fa81d2d1ab74fac41677012c",
+      "generator": "sha256:7fddb0c4e87e8c95e59f86cf0d7b0dfd95619ec0916930d4e01bd6655c1ed7df",
+      "duration": 35.7,
+      "chapters": [
+        {
+          "title": "Sign in and open a Ticket",
+          "start": 0
+        }
+      ],
+      "covers": [
+        "sign-in",
+        "open-ticket"
+      ],
+      "frames": [
+        "sha256:913ba3d584ee974e14b43424c162e2735e52fbfe340dfe7172729a41bddb9fa2",
+        "sha256:913ba3d584ee974e14b43424c162e2735e52fbfe340dfe7172729a41bddb9fa2",
+        "sha256:b06d71641a81d44a7ead934c7a4462d2b30c238f45f6cc6b055e2935d6afd0da",
+        "sha256:89e943afb52d3980df0ef26f57234c6db0fb1559475317ba4999b9eba06a1d38",
+        "sha256:bb873c2bb5aacdc896b3cb06fa9a33b764cd855cc7a49266c65e3df93b3993c8",
+        "sha256:8e1531cebf447d511f556989d2a156c32394dc4571bb92c10ca67128aeb97399",
+        "sha256:9fcbdd359156c29fdc949d365a5ec5e6e37afd0b3547c0d502cbe598226e4c4c",
+        "sha256:9fcbdd359156c29fdc949d365a5ec5e6e37afd0b3547c0d502cbe598226e4c4c",
+        "sha256:52e5efe511199cd3eb01777dd3b61cc85d542ff6e81250af8aed8c3c4a6f3ddf",
+        "sha256:6e555f8cb9f75b67531f709d701b8c622172332e3650ecfdff6aad095759730d",
+        "sha256:5ec337d4125864d72a5a774952e5b3ab0c6aa5b4e9f6eb345c49ba3799391326",
+        "sha256:7de2bbec2305e999e47a286c31a9f6a82fdac029897f2f12b2fd96bf51e704e5",
+        "sha256:5fed25e8fb710fe359afe8b29201ac7def8d6eb824a580bc3a996b7fa4d56b1e",
+        "sha256:b328df5bafdc7a840bd717578b47320f559020972b8403d4e312b031074e945d",
+        "sha256:30f76ed48f1f759232a8b5ec819b0181f430c53fddf9e50146456ecc70a3839d",
+        "sha256:8d043d4426e0c01112fb3169171d112a1ac968da33c5e1394879f6348c027268",
+        "sha256:422109d4ccb2b555651afa87c150c88b76e451f25a52a878396dc20eef5a91ba",
+        "sha256:dbff626502c39161109e1d32d89374a702f51d6950c6fbae8d3b0b8536906b78",
+        "sha256:2ebb06c3f779ef25c2d17e727bba4c6887dcd2d682d81bbf6b2bb6558c86e4ff",
+        "sha256:a599709b40b3b98e79bf529f7afb63d95b1f93e96d786a616e45eb353e5ded19",
+        "sha256:428c374e08f3b49738a21e9f0f6ebe90197c47ec4ccf36a1f04ca7b5f9a551ca",
+        "sha256:452e148535d18cc8f97ccccc2e777bfade8c0c0ae2b0ef7933cdf25de42bf975",
+        "sha256:da3169528fee2415fd2c028ce4b38562fdeda2c9ca422993aaa535eac897dad1",
+        "sha256:44224fdad6158b2d5f278af06b65082db255400f7afe21d1d6c89ddfa1fa70e3",
+        "sha256:e6cbdc2528d7114fc470a1a506235d30cd0b2582a81c5140e3c54c2b1efabcae",
+        "sha256:e68bcdc12ee18c6ac8fef81c7aa9f3c00ca00ec94557a202ededf9db436fc59a",
+        "sha256:960a90cf455aee98fec47913f2b240633b34110844f5c8f71fce03b97d96c89a",
+        "sha256:f84b72e20ec9e2b68c4e4daeac164ec58b36244978ee0c8748948b6abed5412d",
+        "sha256:4a8107e2221de40e0586ae1a1ea09d0e7da2de955858f6e4a57f2f659aa5aa0b",
+        "sha256:41d40cc48c9ef69415673d24fcce9bbe0b472c509bf4901bc985b2e9d333b858",
+        "sha256:69c9d2c20567d46e3cdea09db8b962b71587c6bfb017d4b3f5f8ffa12e0f0bdc",
+        "sha256:47f434988b24fb5ec26c3d62cfff4fcbb4cc97ad0ab3981601011d0dd7a278b0",
+        "sha256:8fa164179b4b27b98d6bc0c78ae9ed3b05bd9b0abf10a4014208c2aa91498cff",
+        "sha256:8fa164179b4b27b98d6bc0c78ae9ed3b05bd9b0abf10a4014208c2aa91498cff",
+        "sha256:c7818a3f02af3b9fc2497ca06830ceed1cb942e673c7e6d363b41d7cff7a1d46",
+        "sha256:c7818a3f02af3b9fc2497ca06830ceed1cb942e673c7e6d363b41d7cff7a1d46",
+        "sha256:c7818a3f02af3b9fc2497ca06830ceed1cb942e673c7e6d363b41d7cff7a1d46",
+        "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23",
+        "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23"
+      ]
+    }
+  }
+}

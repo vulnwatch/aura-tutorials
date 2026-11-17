@@ -1,48 +1,87 @@
 # Aura Tutorials
 
 Video tutorials that show the users of Sentinel Aura (`vulnwatch/sentinel-aura`)
-what they can do and how. This repository is a prototype: it is local only and
-may be discarded.
+what they can do and how. Each video comes from a tutorial script and is made
+again, from the same script, when Aura changes what it shows.
+
+The latest video of each tutorial is at
+`https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`,
+and the release lists them all in `videos.json`.
 
 ## Approach
 
-A tutorial is a script of steps. Each step names an action in the UI and, later,
-the sentence that a voice reads. One command turns the script into an MP4 in
-three stages:
+A tutorial is a script of steps, in chapters. Each step names an action in the
+UI, the caption that the video shows, and the sentence that a voice will read.
+One command turns a script into an MP4 in three stages:
 
 1. **Capture.** Playwright drives the real UI against a local Sentinel backend
    loaded with Sentinel's example dataset, whose data is fictional. For each
-   step it saves a high-resolution screenshot and the bounding box of the
-   element that the step clicks or types into. It records no video.
+   step it saves high-resolution screenshots and the bounding box of the
+   element that the step acts on. It records no video.
 2. **Compose.** HyperFrames (`heygen-com/hyperframes`, Apache 2.0) turns the
-   screenshots into animated scenes: camera zoom and pan towards the target, a
-   synthetic cursor that moves and clicks, highlights, captions, and
-   transitions.
-3. **Render.** HyperFrames renders the composition to an MP4 with headless
-   Chrome and FFmpeg. The same script gives the same video.
+   screenshots into animated scenes, one for each chapter: camera zoom and pan
+   towards the target, a synthetic pointer that moves and clicks, keycaps,
+   highlights, captions, chapter cards, and transitions.
+3. **Render.** HyperFrames renders the composition to an MP4, 1920x1080 at 30
+   fps, with headless Chrome and FFmpeg, which writes its title and chapters.
 
-Narration (text to speech) comes later: each scene will then last as long as
-its audio, and the same text will produce the subtitles.
+A catalog of the tasks that users do in Aura, taken from Aura's own screen
+map, says what the tutorials should cover, and a lock file records what each
+video was made from. When Aura releases a new version, a capture of every
+script tells which videos changed: only those are made again.
+`docs/authoring.md` describes the scripts, their style, and the workflows.
 
-## Prototype Scope
+Narration (text to speech) comes later: each step will then last as long as
+its sentence, and the same text will produce the subtitles.
 
-One video of 30 to 60 seconds, without audio: signing in and opening a Ticket.
+## Repository
+
+| Path | Content |
+|---|---|
+| `tutorials/` | The tutorial scripts, one per video |
+| `flows/` | Steps that several scripts share, such as signing in |
+| `catalog/tasks.json` | The tasks of Aura's users, and which ones Aura can show |
+| `tutorials.lock.json` | What each video was made from |
+| `src/` | The capture, the composition, and the commands of the set of tutorials |
+| `scripts/` | The commands: `tutorials.sh`, `backend.sh`, and `tooling.sh` |
+| `docs/authoring.md` | The format of the scripts, their style, and the workflows |
+| `aura/` | The submodule of Sentinel Aura, pinned to a release |
+| `.opencode/skills/` | The skills that guide agents: `tutorial-author` and `aura-bump` |
+
+## Usage
+
+Clone with `--recurse-submodules`. Then, on Linux with Docker Engine and its
+Compose plugin:
+
+```sh
+scripts/tutorials.sh list              # the tutorials
+scripts/tutorials.sh status            # which videos are up to date
+scripts/tutorials.sh render --stale    # make the stale videos in out/<id>/<id>.mp4
+scripts/tutorials.sh check             # which videos the pinned Aura changes
+scripts/tutorials.sh coverage          # which tasks have a tutorial
+scripts/backend.sh stop                # remove the backend when done
+```
+
+`scripts/tutorials.sh` starts the backend of `aura/` and its development server
+when it needs them (`scripts/backend.sh`). Under `out/<id>/`, which Git
+ignores, a render leaves the screenshots in `capture/`, the composition in
+`composition/`, and the video. `scripts/tutorials.sh preview <id>` serves the
+composition in HyperFrames Studio on `http://localhost:3002`.
 
 ## Isolation From Aura
 
-- The UI under capture runs from the submodule `aura/`, a clone of
-  `vulnwatch/sentinel-aura` that tracks `master`. The submodule pins the
-  commit of Aura that the videos show; moving to a newer one is an explicit
-  `git submodule update --remote aura` and a commit. Clone this repository
-  with `--recurse-submodules`.
+- The UI under capture runs from the submodule `aura/`, which pins a release
+  tag of `vulnwatch/sentinel-aura`, the version that the videos show;
+  `.gitmodules` names the tag as the submodule's `branch`, from which Renovate
+  proposes the next release. Moving to a newer one is a checkout of its tag
+  and a commit (`docs/authoring.md`, Move to a New Version of Aura).
 - The files of the submodule are never modified and no commit is made in it;
   its scripts write only to directories that its `.gitignore` ignores. Its
   `scripts/dev-env.sh` names its backend and its dependency cache after the
-  path of the clone, so they never collide with those of another clone.
-- The working clone of Aura in `../sentinel-aura` is never read for running,
-  modified, or switched: other work may be in progress there.
-- The development server listens on `http://localhost:5173`; check that the
-  port is free before starting it.
+  path of the clone, so they never collide with those of another clone of
+  Aura, which is never read for running, modified, or switched.
+- The development server listens on `http://localhost:5173`;
+  `scripts/backend.sh` checks that the port is free before starting it.
 
 ## Environment
 
@@ -57,27 +96,6 @@ repository, in the user's cache directory. HyperFrames runs without
 telemetry, update checks, skills, or installations of its own, and renders
 without a network.
 
-## Usage
+## License
 
-A tutorial script, `tutorials/<id>.json`, names the title, the steps, and the
-closing title of a video. Each step has an action (`goto`, `fill`, `click`, or
-`show`), the target of the action as a Playwright locator by role, label, or
-text, a caption, and the narration that a voice will read. Then:
-
-```sh
-aura/scripts/dev-env.sh start &   # the backend and the development server
-scripts/video.sh tutorials/sign-in-and-open-ticket.json
-```
-
-writes, under `out/<id>/`, which Git ignores:
-
-- `capture/`: the screenshots, at 1440x900 CSS pixels and a device scale
-  factor of 2, and `capture.json`, the steps with the bounding boxes of their
-  targets (`src/capture.mjs`);
-- `composition/`: the HyperFrames composition (`src/compose.mjs`);
-- `<id>.mp4`: the video, 1920x1080 at 30 fps.
-
-`scripts/tooling.sh preview <script>` serves the composition in HyperFrames
-Studio on `http://localhost:3002`; `scripts/tooling.sh hyperframes <script>
-check` and `snapshot` check it without a render. `aura/scripts/dev-env.sh stop`
-removes the backend.
+Apache License 2.0, for the sources and the videos (`LICENSE`).
