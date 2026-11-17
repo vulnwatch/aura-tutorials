@@ -30,8 +30,13 @@ One video of 30 to 60 seconds, without audio: signing in and opening a Ticket.
 
 ## Isolation From Aura
 
-- The UI under capture runs from a separate clone of `vulnwatch/sentinel-aura`
-  at `origin/master`, in `aura/`, which Git ignores here. Its
+- The UI under capture runs from the submodule `aura/`, a clone of
+  `vulnwatch/sentinel-aura` that tracks `master`. The submodule pins the
+  commit of Aura that the videos show; moving to a newer one is an explicit
+  `git submodule update --remote aura` and a commit. Clone this repository
+  with `--recurse-submodules`.
+- The files of the submodule are never modified and no commit is made in it;
+  its scripts write only to directories that its `.gitignore` ignores. Its
   `scripts/dev-env.sh` names its backend and its dependency cache after the
   path of the clone, so they never collide with those of another clone.
 - The working clone of Aura in `../sentinel-aura` is never read for running,
