@@ -1,0 +1,201 @@
+{
+  "title": "Work on a Ticket",
+  "subtitle": "A day of an analyst in Sentinel Aura",
+  "outro": {
+    "title": "That's the loop",
+    "subtitle": "Find your Tickets, understand them, record what you learn, and trace every change."
+  },
+  "user": "asmith",
+  "covers": ["sign-in", "follow-deadlines", "maintain-assessments", "maintain-references", "investigate-history"],
+  "changesData": true,
+  "vars": { "ticket": "SNTL-12" },
+  "chapters": [
+    {
+      "title": "Sign in",
+      "steps": [{ "include": "sign-in" }]
+    },
+    {
+      "title": "Find your Tickets",
+      "steps": [
+        {
+          "id": "assigned-to-me",
+          "action": "click",
+          "target": [
+            { "role": "tablist", "name": "Views" },
+            { "role": "tab", "name": "Assigned to me" }
+          ],
+          "waitFor": [
+            { "role": "tablist", "name": "Views", "child": { "role": "tab" }, "allHaveText": "\\s\\d[\\d,]*$" },
+            { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
+          ],
+          "caption": "Open the view Assigned to me",
+          "narration": "Analysts land on the New view, the queue of new Tickets. The view Assigned to me lists the Tickets that are yours."
+        },
+        {
+          "id": "attention",
+          "action": "show",
+          "target": { "role": "list", "name": "Tickets that need attention" },
+          "zoom": 1.7,
+          "caption": "The red counts are deadlines already missed",
+          "narration": "Next to the heading, the attention summary counts the active P1 Tickets and the deliveries that are overdue, by phase."
+        },
+        {
+          "id": "deadlines",
+          "action": "show",
+          "target": [
+            { "role": "grid", "name": "Tickets" },
+            { "role": "columnheader", "name": "Deadline" }
+          ],
+          "zoom": 1.5,
+          "caption": "Each row shows its next deadline",
+          "narration": "In the list, the Deadline column shows the next deadline of each Ticket, in red once it has passed."
+        }
+      ]
+    },
+    {
+      "title": "Understand its priority",
+      "steps": [
+        {
+          "id": "open-ticket",
+          "action": "click",
+          "target": [
+            { "role": "grid", "name": "Tickets" },
+            { "role": "link", "name": "{ticket}", "exact": true }
+          ],
+          "waitForUrl": "^/tickets/{ticket}$",
+          "waitFor": [
+            { "role": "region", "name": "Details" },
+            { "role": "region", "name": "Participants" }
+          ],
+          "caption": "Open the Ticket",
+          "narration": "Open the Ticket from its identifier."
+        },
+        {
+          "id": "priority",
+          "action": "click",
+          "target": { "role": "button", "name": "P1, override" },
+          "waitFor": { "role": "dialog", "name": "P1, override" },
+          "caption": "Select the priority to see why",
+          "narration": "The priority in the heading explains itself: select it."
+        },
+        {
+          "id": "explanation",
+          "action": "show",
+          "target": { "role": "dialog", "name": "P1, override" },
+          "zoom": 1.5,
+          "caption": "Who set it, when, and what Sentinel computed",
+          "narration": "This priority is an override: the explanation says who set it and when, and the priority that Sentinel computed from the evidence."
+        },
+        {
+          "id": "close",
+          "action": "press",
+          "key": "Escape",
+          "waitFor": { "role": "region", "name": "Details" },
+          "caption": "Press Escape to close it",
+          "narration": "Press Escape to close the explanation."
+        }
+      ]
+    },
+    {
+      "title": "Add a reference",
+      "steps": [
+        {
+          "id": "references",
+          "action": "click",
+          "target": [
+            { "role": "tablist", "name": "Ticket" },
+            { "role": "tab", "name": "References" }
+          ],
+          "waitForUrl": "^/tickets/{ticket}/references$",
+          "waitFor": { "role": "grid", "name": "References" },
+          "caption": "Open the tab References",
+          "narration": "The tab References lists the advisories, patches, and reports that analysts read about the Ticket."
+        },
+        {
+          "id": "add",
+          "action": "click",
+          "target": [
+            { "role": "tabpanel", "name": "References" },
+            { "role": "button", "name": "Add reference", "exact": true }
+          ],
+          "waitFor": { "role": "dialog", "name": "Add reference" },
+          "caption": "Select Add reference",
+          "narration": "To record a new one, select Add reference."
+        },
+        {
+          "id": "address",
+          "action": "fill",
+          "target": [
+            { "role": "dialog", "name": "Add reference" },
+            { "role": "textbox", "name": "Address", "exact": true }
+          ],
+          "value": "https://security.example.com/advisories/fictional-openssl-2099-0012",
+          "caption": "Paste its address",
+          "narration": "Paste the address of the page."
+        },
+        {
+          "id": "title",
+          "action": "fill",
+          "target": [
+            { "role": "dialog", "name": "Add reference" },
+            { "role": "textbox", "name": "Title (optional)" }
+          ],
+          "value": "Fictional vendor advisory",
+          "caption": "Give it a title",
+          "narration": "A title is optional, and makes the reference easier to find. Sentinel detects its type from the address."
+        },
+        {
+          "id": "save",
+          "action": "click",
+          "target": [
+            { "role": "dialog", "name": "Add reference" },
+            { "role": "button", "name": "Add reference", "exact": true }
+          ],
+          "waitFor": {
+            "role": "grid",
+            "name": "References",
+            "child": { "role": "link", "name": "Fictional vendor advisory (another site)" }
+          },
+          "caption": "Add it to the Ticket",
+          "narration": "Select Add reference in the dialog."
+        },
+        {
+          "id": "added",
+          "action": "show",
+          "target": [
+            { "role": "grid", "name": "References" },
+            { "role": "row", "name": "Fictional vendor advisory" }
+          ],
+          "zoom": 1.4,
+          "caption": "The reference is on the Ticket",
+          "narration": "The new reference shows in the table, as a manual reference, with its type and the time it was added."
+        }
+      ]
+    },
+    {
+      "title": "Trace every change",
+      "steps": [
+        {
+          "id": "audit-log",
+          "action": "click",
+          "target": [
+            { "role": "tablist", "name": "Ticket" },
+            { "role": "tab", "name": "Audit log" }
+          ],
+          "waitForUrl": "^/tickets/{ticket}/audit-log$",
+          "waitFor": { "role": "tabpanel", "name": "Audit log", "child": { "role": "listitem" } },
+          "caption": "Open the tab Audit log",
+          "narration": "The tab Audit log keeps every change of the Ticket, and what Sentinel did by itself."
+        },
+        {
+          "id": "event",
+          "action": "show",
+          "target": { "text": "added the reference", "nth": 0 },
+          "zoom": 1.6,
+          "caption": "Your change is the latest event",
+          "narration": "The reference that you added is the latest event, with who added it and when."
+        }
+      ]
+    }
+  ]
+}

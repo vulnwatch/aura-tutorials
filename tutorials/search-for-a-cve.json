@@ -1,0 +1,72 @@
+{
+  "title": "Find SUSE's status for a CVE",
+  "subtitle": "Search the Tickets, open one, and read its packages",
+  "outro": {
+    "title": "Search finds more than CVEs",
+    "subtitle": "Search for a Ticket or a package the same way."
+  },
+  "user": "jdoe",
+  "covers": ["search", "cve-status"],
+  "setup": [{ "include": "sign-in" }],
+  "chapters": [
+    {
+      "title": "Find SUSE's status for a CVE",
+      "steps": [
+        {
+          "id": "search",
+          "action": "fill",
+          "target": { "role": "searchbox", "name": "Search Tickets" },
+          "value": "{cve}",
+          "caption": "Search for the CVE",
+          "narration": "From the Ticket list, type the identifier of the CVE in the search."
+        },
+        {
+          "id": "submit",
+          "action": "press",
+          "key": "Enter",
+          "target": { "role": "searchbox", "name": "Search Tickets" },
+          "waitFor": {
+            "role": "grid",
+            "name": "Tickets",
+            "child": { "role": "rowheader" },
+            "allHaveText": "^{ticket}\\b"
+          },
+          "caption": "Press Enter to search",
+          "narration": "Press Enter. The list keeps the Tickets that match: here, the Ticket of the CVE."
+        },
+        {
+          "id": "open-ticket",
+          "action": "click",
+          "target": [
+            { "role": "grid", "name": "Tickets" },
+            { "role": "link", "name": "{ticket}", "exact": true }
+          ],
+          "waitForUrl": "^/tickets/{ticket}$",
+          "waitFor": [
+            { "role": "region", "name": "Details" },
+            { "role": "region", "name": "Participants" }
+          ],
+          "caption": "Open its Ticket",
+          "narration": "Select the Ticket to open it."
+        },
+        {
+          "id": "heading",
+          "action": "show",
+          "target": { "role": "heading", "level": 1 },
+          "zoom": 1.5,
+          "caption": "Its status and priority come first",
+          "narration": "The heading of the Ticket shows its CVE, its status, its severity, and its priority."
+        },
+        {
+          "id": "packages",
+          "action": "show",
+          "target": { "role": "region", "name": "Packages" },
+          "zoom": 1.25,
+          "caption": "The packages show SUSE's status for each Product",
+          "narration": "Below, the packages show where SUSE stands for each Product and codestream: affected, and whether the fix is released."
+        }
+      ]
+    }
+  ],
+  "vars": { "cve": "CVE-2099-0012", "ticket": "SNTL-12" }
+}
