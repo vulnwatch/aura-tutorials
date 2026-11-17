@@ -1,9 +1,13 @@
 // The tutorials as a set: their scripts and flows, the catalog of tasks that
 // they cover, and tutorials.lock.json, which records for each video what it
 // was rendered from: the version of Aura, the hash of its resolved script, the
-// hash of the generator, and the fingerprints of its screenshots. A video is
-// up to date while all of them are current; a capture of a new version of Aura
-// whose fingerprints equal the recorded ones needs no new video.
+// hash of the generator, the code that captures and composes, the hash of the
+// tooling, and the fingerprints of its screenshots. A video is up to date
+// while its script, the generator, and the version of Aura are current; a
+// capture of a new version of Aura whose fingerprints equal the recorded ones
+// needs no new video. The tooling, the image and the dependencies, only shows
+// what the video was rendered with: an update of it that leaves the screens
+// unchanged needs no new video either (docs/authoring.md, Update the Tools).
 //
 // Usage: node src/tutorials.mjs <command> [args]
 //   list                 The tutorials, with their chapters, user, and tasks
@@ -38,10 +42,13 @@ import {
 
 const execFileAsync = promisify(execFile);
 const LOCK_PATH = "tutorials.lock.json";
-// What a video depends on besides its resolved script, whose hash covers it,
-// and its screenshots: the image of the tools, the dependencies, and the code
-// that captures and composes.
-const GENERATOR_FILES = ["Containerfile", "package-lock.json", "src/capture.mjs", "src/compose.mjs"];
+// The generator, which decides how a video looks besides its resolved script,
+// whose hash covers it, and its screenshots: the code that captures and
+// composes. A change of it makes every video stale.
+const GENERATOR_FILES = ["src/capture.mjs", "src/compose.mjs"];
+// The tooling, which the lock records without making a video stale: the image
+// of the tools and the dependencies.
+const TOOLING_FILES = ["Containerfile", "package-lock.json"];
 const STATUSES = ["available", "partial", "not-in-aura"];
 
 const aura = process.env.AURA_VERSION;
@@ -65,13 +72,16 @@ async function writeLock(lock) {
   await writeFile(LOCK_PATH, `${JSON.stringify({ tutorials: sorted }, null, 2)}\n`);
 }
 
-async function generatorHash() {
+async function filesHash(files) {
   const parts = [];
-  for (const file of GENERATOR_FILES) {
+  for (const file of files) {
     parts.push(`${file}\n${await readFile(file, "utf8")}`);
   }
   return sha256(parts.join("\n"));
 }
+
+const generatorHash = () => filesHash(GENERATOR_FILES);
+const toolingHash = () => filesHash(TOOLING_FILES);
 
 function requireAura() {
   if (!aura) throw new Error("AURA_VERSION is not set");
@@ -159,12 +169,15 @@ async function status(args) {
   const { tutorials } = await loadAll();
   const lock = await readLock();
   const generator = await generatorHash();
+  const tooling = await toolingHash();
   for (const tutorial of tutorials) {
-    const state = stateOf(tutorial, lock.tutorials[tutorial.id], generator);
+    const entry = lock.tutorials[tutorial.id];
+    const state = stateOf(tutorial, entry, generator);
     if (args.includes("--ids")) {
       if (state !== "up-to-date") console.log(tutorial.id);
     } else {
-      console.log(`${tutorial.id}\t${state}`);
+      const note = state === "up-to-date" && entry.tooling !== tooling ? "\trendered with earlier tooling" : "";
+      console.log(`${tutorial.id}\t${state}${note}`);
     }
   }
   for (const id of Object.keys(lock.tutorials)) {
@@ -256,6 +269,7 @@ async function lockCommand([id]) {
     aura,
     script: tutorial.hash,
     generator: await generatorHash(),
+    tooling: await toolingHash(),
     duration: composed.duration,
     chapters: composed.chapters,
     covers: tutorial.covers,

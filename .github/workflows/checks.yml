@@ -3,7 +3,8 @@ name: Checks
 # Every pull request and every push to main: the shell scripts, the scripts of
 # the tutorials, and the lock against a capture of the pinned Aura
 # (docs/authoring.md, Publication). On a pull request, the tutorials whose
-# entry of the lock changed are rendered too, as an artifact to review.
+# entry of the lock changed, or all of them when the tooling changes, are
+# rendered too, as an artifact to review.
 
 on:
   pull_request:
@@ -61,12 +62,21 @@ jobs:
             cat out/report/check.md >>"${GITHUB_STEP_SUMMARY}"
           fi
 
+      # The tutorials whose entry of the lock changed; every tutorial when the
+      # tooling changes, which needs no new video when the screens are
+      # unchanged, so that the videos show that the new tooling still renders
+      # them well (docs/authoring.md, Update the Tools).
       - name: Render the tutorials that the pull request changes
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          mapfile -t changed < <(scripts/release.sh changed "origin/${BASE_REF}")
+          if git diff --quiet "origin/${BASE_REF}" -- Containerfile package.json package-lock.json; then
+            mapfile -t changed < <(scripts/release.sh changed "origin/${BASE_REF}")
+          else
+            mapfile -t changed < <(find tutorials -maxdepth 1 -name '*.json' -printf '%f\n' | sed 's/\.json$//' | sort)
+            echo "The tooling changes: every tutorial is rendered with it." >>"${GITHUB_STEP_SUMMARY}"
+          fi
           if ((${#changed[@]} > 0)); then
             scripts/tutorials.sh render "${changed[@]}"
             echo "Rendered ${changed[*]}: see the artifact tutorials." >>"${GITHUB_STEP_SUMMARY}"

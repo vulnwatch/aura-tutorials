@@ -69,6 +69,9 @@ Present one report to the user:
   a **fixed** script, or **none** (and why);
 - the videos to render again.
 
+Renovate's other pull requests, which update the tooling, need no skill:
+`docs/authoring.md` (Update the Tools) says how to review them.
+
 Wait for the user's decisions. Do not write scripts before they choose.
 
 ## 5. Apply

@@ -16,6 +16,7 @@ approach and the isolation from Aura; `AGENTS.md` holds the rules for agents.
   - [Add a Tutorial](#add-a-tutorial)
   - [Extend a Tutorial](#extend-a-tutorial)
   - [Change the Look of Every Video](#change-the-look-of-every-video)
+  - [Update the Tools](#update-the-tools)
   - [Move to a New Version of Aura](#move-to-a-new-version-of-aura)
 - [Publication](#publication)
 
@@ -36,7 +37,9 @@ approach and the isolation from Aura; `AGENTS.md` holds the rules for agents.
   its setup, which runs without being shown.
 - **The lock**, `tutorials.lock.json`: for each video, what it was rendered
   from: the version of Aura, the hash of its resolved script (its flows and
-  variables included), the hash of the generator, and the fingerprints of its
+  variables included), the hash of the generator (`src/capture.mjs` and
+  `src/compose.mjs`, which decide how a video looks), the hash of the tooling
+  (the `Containerfile` and `package-lock.json`), and the fingerprints of its
   screenshots. `scripts/tutorials.sh status` compares it with the
   repository; `scripts/tutorials.sh check` compares it with a new capture.
 - **The videos**, `out/<id>/<id>.mp4`, which Git ignores: CI renders them and
@@ -45,7 +48,9 @@ approach and the isolation from Aura; `AGENTS.md` holds the rules for agents.
 A video is up to date while its script, the generator, and the version of
 Aura are those of the lock. A new version of Aura makes every video stale
 until `check` captures it again: a video whose fingerprints are unchanged is
-then current again without a render; the others need one.
+then current again without a render; the others need one. The tooling makes
+no video stale: the lock only records what each video was rendered with, and
+`status` notes a video rendered with earlier tooling (Update the Tools).
 
 ## Script Format
 
@@ -189,9 +194,24 @@ steps continue its workflow; start a new one when they are another task.
 
 ### Change the Look of Every Video
 
-The look lives in `src/compose.mjs`. A change of it, of the capture
-(`src/capture.mjs`), of the dependencies, or of the image changes the hash of
-the generator, so every video becomes stale: `scripts/tutorials.sh render --stale` renders them all.
+The look lives in `src/compose.mjs`. A change of it, or of the capture
+(`src/capture.mjs`), changes the hash of the generator, so every video
+becomes stale: `scripts/tutorials.sh render --stale` renders them all.
+
+### Update the Tools
+
+Renovate proposes the updates of the tooling: Playwright, whose npm package
+and image move in one pull request, HyperFrames and the other packages, the
+actions, and the lockfile, weekly, each version once it is seven days old.
+An update of the tooling needs no new video while the screens stay the same:
+its pull request passes once `check` finds every fingerprint unchanged, and
+CI renders every tutorial with the new tooling as an artifact, to see that
+it still renders them well; look at a few frames of each before the merge.
+The videos keep the tooling that rendered them until their script, the
+generator, or their screens change. When a new version of a tool changes the
+screens, such as the rendering of Chromium, `check` reports them changed:
+render them again (`scripts/tutorials.sh render --stale` after `check`) and
+commit the lock in the pull request.
 
 ### Move to a New Version of Aura
 
@@ -219,7 +239,8 @@ The submodule pins a release of Aura, whose tag `.gitmodules` names as its
 
 CI checks every pull request: it validates the scripts and checks the lock
 against a capture (`scripts/tutorials.sh check --verify-only`), and renders
-the tutorials that the pull request changes as artifacts to review. After a
+the tutorials that the pull request changes, or all of them when it changes
+the tooling, as artifacts to review. After a
 merge, CI renders the stale videos and publishes a release of this
 repository with every video: the unchanged ones copied from the previous
 release, and `videos.json`, which lists them. The latest video of a tutorial
