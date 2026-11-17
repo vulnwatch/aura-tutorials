@@ -5,6 +5,10 @@
   "git-submodules": {
     "enabled": true
   },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 0-5 * * 1"]
+  },
   "packageRules": [
     {
       "description": "Sentinel Aura: the submodule follows the release tags of Aura, which .gitmodules names as its branch, one pull request for each release; the aura-bump skill completes it with the tutorials that the release changes (docs/authoring.md, Move to a New Version of Aura)",
@@ -15,12 +19,17 @@
       "addLabels": ["aura"]
     },
     {
+      "description": "A version of a package, an image, or an action is proposed once it is seven days old, as in Aura, so that a release that its registry withdraws or that turns out compromised in its first days never reaches the tooling; the submodule follows Aura's release tags at once, whose Git tags carry no release time",
+      "matchDatasources": ["npm", "docker", "github-tags"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": "Playwright: the npm package and the image of the Containerfile move together, so that the browsers of the image are the ones that Playwright expects",
       "matchPackageNames": ["playwright", "mcr.microsoft.com/playwright"],
       "groupName": "Playwright"
     },
     {
-      "description": "Every other dependency changes the generator, and so every video: weekly, in one pull request",
+      "description": "Every other dependency of the tooling, weekly, in one pull request; an update that leaves the screens unchanged needs no new video (docs/authoring.md, Update the Tools)",
       "matchManagers": ["npm", "dockerfile", "github-actions", "custom.regex"],
       "matchPackageNames": ["!playwright", "!mcr.microsoft.com/playwright"],
       "groupName": "tooling",
