@@ -60,8 +60,11 @@
         {
           "id": "packages",
           "action": "show",
-          "target": { "role": "region", "name": "Packages" },
-          "zoom": 1.25,
+          "target": [
+            { "role": "region", "name": "Packages" },
+            { "role": "listitem", "nth": 0 }
+          ],
+          "zoom": 1.4,
           "caption": "The packages show SUSE's status for each Product",
           "narration": "Below, the packages show where SUSE stands for each Product and codestream: affected, and whether the fix is released."
         }

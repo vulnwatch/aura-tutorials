@@ -15,8 +15,7 @@
         {
           "id": "ticket-list",
           "action": "show",
-          "target": { "role": "grid", "name": "Tickets" },
-          "zoom": 1.15,
+          "hold": 3,
           "caption": "Aura lands on the Ticket list",
           "narration": "Aura opens the Ticket list, with the Tickets that need your attention first."
         },

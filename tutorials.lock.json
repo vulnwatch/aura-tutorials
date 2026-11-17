@@ -3,8 +3,8 @@
     "search-for-a-cve": {
       "title": "Find SUSE's status for a CVE",
       "aura": "v0.9.0",
-      "script": "sha256:648dc324a6940aaa90feb91f402acd9707c2a6fdd70c003e9ef5a2d22ad9df3b",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "script": "sha256:6beba81224d3235bf83b91a357b34c0d3c6c13d73c23b7be6d9611ca713d1617",
+      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 28.42,
       "chapters": [
@@ -38,16 +38,16 @@
         "sha256:e7268eb8a1885a775e78a9c4bd66fa634c02bbb6126eb32c5f6afb834a0066d7",
         "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23",
         "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23",
-        "sha256:11b3dae583e0d73f05263befdb356d209babfc50d306b234c4a8aad1a0a32547"
+        "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23"
       ]
     },
     "sign-in-and-open-ticket": {
       "title": "Sign in and open a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:9f38e7ab5045bd076ac2a01ce2c62e86d8bd1591fa81d2d1ab74fac41677012c",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "script": "sha256:28c1374aaf2074a577ed551c6ecb641417ad0a27a6e82eb992722e49ffc2c64b",
+      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 35.7,
+      "duration": 34.95,
       "chapters": [
         {
           "title": "Sign in and open a Ticket",
@@ -104,9 +104,9 @@
       "title": "Work on a Ticket",
       "aura": "v0.9.0",
       "script": "sha256:054fa9ff11414fefb2ac745085b4949e20c179e0c2addbb34c025912465b4eba",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "generator": "sha256:82bd19ebe22d2e5919408d2462f1467327f5e26f54a1bf6ccf5cda5b11093cd6",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 95.3,
+      "duration": 95.8,
       "chapters": [
         {
           "title": "Sign in",
@@ -122,11 +122,11 @@
         },
         {
           "title": "Add a reference",
-          "start": 53.6
+          "start": 54.1
         },
         {
           "title": "Trace every change",
-          "start": 79.8
+          "start": 80.3
         }
       ],
       "covers": [

@@ -4,7 +4,9 @@ name: Checks
 # the tutorials, and the lock against a capture of the pinned Aura
 # (docs/authoring.md, Publication). On a pull request, the tutorials whose
 # entry of the lock changed, or all of them when the tooling changes, are
-# rendered too, as an artifact to review.
+# rendered too, with the checks of their composition, which fail the job, and
+# kept with their contact sheets as an artifact to review (docs/authoring.md,
+# Review).
 
 on:
   pull_request:
@@ -65,7 +67,9 @@ jobs:
       # The tutorials whose entry of the lock changed; every tutorial when the
       # tooling changes, which needs no new video when the screens are
       # unchanged, so that the videos show that the new tooling still renders
-      # them well (docs/authoring.md, Update the Tools).
+      # them well (docs/authoring.md, Update the Tools). The findings of the
+      # checks of their composition fail the step once the videos and their
+      # contact sheets are made, so that the artifact shows them.
       - name: Render the tutorials that the pull request changes
         if: github.event_name == 'pull_request'
         env:
@@ -78,17 +82,27 @@ jobs:
             echo "The tooling changes: every tutorial is rendered with it." >>"${GITHUB_STEP_SUMMARY}"
           fi
           if ((${#changed[@]} > 0)); then
-            scripts/tutorials.sh render "${changed[@]}"
+            status=0
+            scripts/tutorials.sh render --strict "${changed[@]}" || status=1
+            for id in "${changed[@]}"; do
+              if [[ -f "out/${id}/${id}.mp4" ]]; then
+                scripts/tutorials.sh frames "${id}" || status=1
+              fi
+            done
             echo "Rendered ${changed[*]}: see the artifact tutorials." >>"${GITHUB_STEP_SUMMARY}"
+            exit "${status}"
           fi
 
-      - name: Keep the videos and the report
+      - name: Keep the videos, their contact sheets, and the report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tutorials
           path: |
             out/*/*.mp4
+            out/*/frames/chapter-*.png
+            out/*/frames/cards.png
+            out/*/frames/frames.md
             out/report/
             out/*/capture/failure.png
           if-no-files-found: ignore
