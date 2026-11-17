@@ -1,0 +1,5 @@
+# The clone of Sentinel Aura under capture (README.md, Isolation From Aura).
+/aura/
+node_modules/
+# Screenshots, compositions, and videos that a run produces.
+/out/
