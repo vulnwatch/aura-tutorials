@@ -36,8 +36,8 @@
           "action": "show",
           "target": { "role": "list", "name": "Tickets that need attention" },
           "zoom": 1.7,
-          "caption": "The red counts are deadlines already missed",
-          "narration": "Next to the heading, the attention summary counts the active P1 Tickets and the deliveries that are overdue, by phase."
+          "caption": "The attention summary counts the urgent work",
+          "narration": "Next to the heading, the attention summary counts the active P1 Tickets, the embargoes that have expired, and the deliveries that are overdue, by phase."
         },
         {
           "id": "deadlines",
