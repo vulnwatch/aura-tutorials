@@ -1,0 +1,59 @@
+name: Renovate Validation
+
+# Read-only validation of renovate.json and of Renovate's dependency lookups,
+# as Aura validates its own: the Mend Renovate App remains the only component
+# that opens Renovate pull requests.
+
+on:
+  pull_request:
+    paths:
+      - renovate.json
+      - .gitmodules
+      - .github/workflows/renovate-validation.yml
+  workflow_dispatch:
+
+concurrency:
+  group: renovate-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  RENOVATE_IMAGE: renovate/renovate:44.222.4@sha256:306316fc9e8c424dde672590699d681f9c8764cc9152141d2c5059956ce1e3b8
+
+jobs:
+  validate:
+    name: Validate Renovate configuration and lookups
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Pull the pinned Renovate image
+        run: docker pull "${RENOVATE_IMAGE}"
+
+      - name: Validate the Renovate configuration
+        run: >-
+          docker run --rm --pull=never
+          -v "${GITHUB_WORKSPACE}:/workspace:ro"
+          -w /workspace
+          "${RENOVATE_IMAGE}"
+          renovate-config-validator --strict --no-global renovate.json
+
+      - name: Run a read-only Renovate lookup
+        env:
+          RENOVATE_GITHUB_COM_TOKEN: ${{ github.token }}
+        run: >-
+          docker run --rm --pull=never
+          -v "${GITHUB_WORKSPACE}:/workspace:ro"
+          -w /workspace
+          -e LOG_LEVEL=debug
+          -e RENOVATE_GITHUB_COM_TOKEN
+          "${RENOVATE_IMAGE}"
+          --platform=local
+          --dry-run=lookup
+          --require-config=required
+          --onboarding=false

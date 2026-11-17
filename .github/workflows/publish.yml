@@ -1,0 +1,33 @@
+name: Publish
+
+# After a merge to main: render the videos that changed since the latest
+# release and publish a release with every video and videos.json
+# (scripts/release.sh; docs/authoring.md, Publication).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Publish the videos
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+
+      - name: Render and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/release.sh publish
