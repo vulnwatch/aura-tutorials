@@ -39,11 +39,10 @@ are denied, then allowed in read-only forms, under OpenCode's rule that the
 last matching pattern wins. `@visual-reviewer` may also run
 `scripts/tutorials.sh frames`, which writes only `out/<id>/frames/`, apart
 from installing the dependencies of the tooling when they are stale, as the
-commands of `scripts/tooling.sh` that run Node.js do; and `@cicd-reviewer` `actionlint` and
-`shellcheck`. These denies are defense in
-depth, not a sandbox: `AGENTS.md` keeps the reviewers read-only. No check
-keeps the shared block of permissions the same in every definition: change
-them together.
+commands of `scripts/tooling.sh` that run Node.js do; and `@cicd-reviewer`
+`actionlint` and `shellcheck`. These denies are defense in depth, not a
+sandbox: `AGENTS.md` keeps the reviewers read-only. No check keeps the shared
+block of permissions the same in every definition: change them together.
 
 ### Models
 
