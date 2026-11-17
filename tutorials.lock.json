@@ -4,7 +4,8 @@
       "title": "Find SUSE's status for a CVE",
       "aura": "v0.9.0",
       "script": "sha256:648dc324a6940aaa90feb91f402acd9707c2a6fdd70c003e9ef5a2d22ad9df3b",
-      "generator": "sha256:7fddb0c4e87e8c95e59f86cf0d7b0dfd95619ec0916930d4e01bd6655c1ed7df",
+      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 28.42,
       "chapters": [
         {
@@ -44,7 +45,8 @@
       "title": "Sign in and open a Ticket",
       "aura": "v0.9.0",
       "script": "sha256:9f38e7ab5045bd076ac2a01ce2c62e86d8bd1591fa81d2d1ab74fac41677012c",
-      "generator": "sha256:7fddb0c4e87e8c95e59f86cf0d7b0dfd95619ec0916930d4e01bd6655c1ed7df",
+      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 35.7,
       "chapters": [
         {
@@ -101,8 +103,9 @@
     "work-on-a-ticket": {
       "title": "Work on a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:a03ff980176c00b3928d5915f60ffe1642e72eb94e1e19dfbe3248c9ba6136c7",
-      "generator": "sha256:7fddb0c4e87e8c95e59f86cf0d7b0dfd95619ec0916930d4e01bd6655c1ed7df",
+      "script": "sha256:054fa9ff11414fefb2ac745085b4949e20c179e0c2addbb34c025912465b4eba",
+      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 95.3,
       "chapters": [
         {
