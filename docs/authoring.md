@@ -45,7 +45,9 @@ holds the rules for agents.
   variables included), the hash of the generator (`src/capture.mjs` and
   `src/compose.mjs`, which decide how a video looks), the hash of the tooling
   (the `Containerfile` and `package-lock.json`), and the fingerprints of its
-  screenshots. `scripts/tutorials.sh status` compares it with the
+  screenshots; and what the website shows of it (Publication): its title and
+  subtitle, its duration, and the times of its chapters and of its steps,
+  with their captions. `scripts/tutorials.sh status` compares it with the
   repository; `scripts/tutorials.sh check` compares it with a new capture.
 - **The videos**, `out/<id>/<id>.mp4`, which Git ignores: CI renders them and
   publishes them (Publication).
@@ -326,3 +328,28 @@ repository with every video: the unchanged ones copied from the previous
 release, and `videos.json`, which lists them. The latest video of a tutorial
 is always at
 `https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`.
+
+Then CI deploys the website of the tutorials to GitHub Pages, at
+`https://vulnwatch.github.io/aura-tutorials/`, also when no video changed,
+so that a change of the catalog shows at once: `src/site.mjs` generates it
+from the lock, the catalog, and the videos of the latest release, and the
+summary of the workflow reports its size, of the 1 GB that Pages allows.
+The site serves the MP4s itself, as `video/mp4` with range requests, which
+the assets of a release lack; the release stays the versioned archive. It
+holds:
+
+- the home page: every tutorial, and the profiles of the catalog, each with
+  its tasks and the tutorials that cover them;
+- a page per tutorial, at `tutorials/<id>/`: its video, with a poster, a
+  frame of its intro card, and its chapters as a WebVTT track; its steps,
+  with their captions and times, each a button that plays the video from
+  its start; the tasks that it covers; and links to its MP4 and to
+  `videos.json` of the latest release;
+- the coverage, at `coverage/`: the tasks without a tutorial, and those that
+  Aura shows in part, with their notes.
+
+A new tutorial, or a change of a script or of the catalog, needs nothing
+more: the site follows the lock and the catalog. Each pull request keeps the
+site as the artifact `site`, with the videos that it renders and those of
+the latest release; `scripts/tutorials.sh site --release --serve` makes the
+same site locally and serves it on `http://localhost:8080`.

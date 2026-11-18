@@ -40,6 +40,13 @@
 #                                            Run another HyperFrames command,
 #                                            such as lint, check, or snapshot,
 #                                            on the composition, offline
+#   scripts/tooling.sh site build <out> <videos>...
+#                                            Generate the website of the
+#                                            tutorials into <out>, offline,
+#                                            with the videos of <videos>
+#                                            (src/site.mjs)
+#   scripts/tooling.sh site serve <dir>      Serve the website in <dir> on
+#                                            http://localhost:8080
 #   scripts/tooling.sh ffmpeg <args>         Run FFmpeg in out/, offline
 #   scripts/tooling.sh clean                 Remove the dependencies and the
 #                                            cache of HyperFrames
@@ -67,8 +74,9 @@ readonly HF_CACHE_DIR="${CACHE_HOME}/aura-tutorials/hyperframes-${CLONE_ID}"
 readonly DEPENDENCY_FILES=(package.json package-lock.json)
 readonly LOCK_FILE="tutorials.lock.json"
 
-# The port of HyperFrames Studio.
+# The port of HyperFrames Studio, and that of the preview of the website.
 readonly PREVIEW_PORT=3002
+readonly SITE_PORT=8080
 
 # The settings of HyperFrames: no telemetry, update checks, skills, or
 # installations on first use; its cache in the mounted directory; the
@@ -292,6 +300,24 @@ cmd_hyperframes() {
         npx --no-install hyperframes "${command}" "$(composition_dir "${id}")" "$@"
 }
 
+# The server of the website listens on every interface of its container,
+# reachable from the host only through the port published on its loopback
+# interface.
+cmd_site() {
+    [[ $# -ge 2 ]] || die "site: takes build <out> <videos>..., or serve <dir>"
+    ensure_installed
+    case "$1" in
+        build) run_container --network=none -- node src/site.mjs "$@" ;;
+        serve)
+            [[ $# -eq 2 ]] || die "site serve: takes the directory of the website"
+            run_container --name="aura-tutorials-site-${CLONE_ID}" \
+                --publish="127.0.0.1:${SITE_PORT}:${SITE_PORT}" -- \
+                node src/site.mjs serve "$2" "${SITE_PORT}"
+            ;;
+        *) die "site: unknown command: $1" ;;
+    esac
+}
+
 cmd_ffmpeg() {
     [[ $# -ge 1 ]] || die "ffmpeg: missing the arguments of FFmpeg"
     run_container --network=none --workdir=/work/out -- ffmpeg -hide_banner "$@"
@@ -311,7 +337,7 @@ main() {
     local command="$1"
     shift
     case "${command}" in
-        install | npm | versions | tutorials | capture | compose | render | preview | hyperframes | ffmpeg)
+        install | npm | versions | tutorials | capture | compose | render | preview | hyperframes | site | ffmpeg)
             check_docker
             "cmd_${command}" "$@"
             ;;

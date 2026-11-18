@@ -47,6 +47,16 @@
 #   scripts/tutorials.sh preview <id>          Serve the composition of a
 #                                              rendered tutorial in HyperFrames
 #                                              Studio on http://localhost:3002
+#   scripts/tutorials.sh site [--release] [--serve]
+#                                              Generate the website of the
+#                                              tutorials into out/site/, with
+#                                              the videos of out/<id>/, then
+#                                              with --release those of the
+#                                              latest release, which it
+#                                              downloads with gh into
+#                                              out/site-videos/; --serve then
+#                                              serves it on
+#                                              http://localhost:8080
 set -euo pipefail
 
 # shellcheck source=scripts/lib/common.sh
@@ -172,6 +182,30 @@ cmd_check() {
     [[ "${failed}" == false ]] || die "some videos need a render or a change of their script; see out/report/check.md"
 }
 
+cmd_site() {
+    local release=false serve=false
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --release) release=true ;;
+            --serve) serve=true ;;
+            *) die "site: unknown argument: $1" ;;
+        esac
+        shift
+    done
+    local -a videos=(out)
+    if [[ "${release}" == true ]]; then
+        command -v gh >/dev/null 2>&1 || die "the GitHub CLI, gh, is required"
+        rm -rf "${REPO_ROOT}/out/site-videos"
+        gh release download --pattern '*.mp4' --dir "${REPO_ROOT}/out/site-videos"
+        videos+=(out/site-videos)
+    fi
+    "${TOOLING}" site build out/site "${videos[@]}"
+    echo "tutorials.sh: the website is in out/site/, $(du -sh "${REPO_ROOT}/out/site" | cut -f 1)" >&2
+    if [[ "${serve}" == true ]]; then
+        "${TOOLING}" site serve out/site
+    fi
+}
+
 main() {
     if [[ $# -eq 0 ]]; then
         usage
@@ -184,6 +218,7 @@ main() {
         render) cmd_render "$@" ;;
         check) cmd_check "$@" ;;
         preview) "${TOOLING}" preview "$@" ;;
+        site) cmd_site "$@" ;;
         -h | --help | help) usage ;;
         *)
             usage

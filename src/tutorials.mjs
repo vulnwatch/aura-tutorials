@@ -2,7 +2,9 @@
 // they cover, and tutorials.lock.json, which records for each video what it
 // was rendered from: the version of Aura, the hash of its resolved script, the
 // hash of the generator, the code that captures and composes, the hash of the
-// tooling, and the fingerprints of its screenshots. A video is up to date
+// tooling, and the fingerprints of its screenshots; and its title, subtitle,
+// duration, chapters, and steps, with their times, which the website shows
+// (src/site.mjs). A video is up to date
 // while its script, the generator, and the version of Aura are current; a
 // capture of a new version of Aura whose fingerprints equal the recorded ones
 // needs no new video. The tooling, the image and the dependencies, only shows
@@ -274,12 +276,15 @@ async function lockCommand([id]) {
   const lock = await readLock();
   lock.tutorials[id] = {
     title: tutorial.title,
+    subtitle: tutorial.subtitle,
     aura,
     script: tutorial.hash,
     generator: await generatorHash(),
     tooling: await toolingHash(),
     duration: composed.duration,
     chapters: composed.chapters,
+    // The times of the steps in the video, which the site seeks to.
+    steps: composed.steps.map(({ id: step, chapter, caption, start, end }) => ({ id: step, chapter, caption, start, end })),
     covers: tutorial.covers,
     frames: framesOf(capture).map((frame) => frame.fingerprint),
   };
