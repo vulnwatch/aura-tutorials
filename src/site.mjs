@@ -1,12 +1,12 @@
 // The website of the tutorials, a static site for GitHub Pages
-// (docs/authoring.md, Publication): a home page with the profiles of
-// catalog/tasks.json, their tasks, and the tutorials that cover them; a page
-// per tutorial, at tutorials/<id>/, with its video, its poster, its chapters as
-// a WebVTT track, and its steps, each a button that seeks the video to its
-// time; and a page of the coverage, with the tasks that have no tutorial yet.
-// The texts of the videos come from tutorials.lock.json, which records the
-// title, chapters, and steps that each video was rendered with. Plain HTML,
-// CSS, and a little JavaScript, with no external resource.
+// (docs/authoring.md, Publication): a directory, where a visitor chooses a
+// role, a profile of catalog/tasks.json, and follows its videos in order, or
+// searches every video; and a page per tutorial, at tutorials/<id>/, which
+// holds only its video, on a dark page, the way back to its role, and the way
+// to the next video of that role, or to the directory after the last one. The
+// texts of the videos come from tutorials.lock.json, which records the title,
+// chapters, and steps that each video was rendered with. Plain
+// HTML, CSS, and a little JavaScript, with no external resource.
 //
 // Usage: node src/site.mjs <command> [args]
 //   build <out> <videos>...  Write the site into <out>, with the video of each
@@ -24,16 +24,14 @@ import { promisify } from "node:util";
 import { loadCatalog } from "./lib/script.mjs";
 
 const execFileAsync = promisify(execFile);
-const REPOSITORY = process.env.GITHUB_REPOSITORY || "vulnwatch/aura-tutorials";
-const RELEASES = `https://github.com/${REPOSITORY}/releases/latest/download`;
+// The application that the videos show, where the link GitHub leads.
+const AURA = "https://github.com/vulnwatch/sentinel-aura";
+// The profile of the tasks that every user does: its videos are the basics,
+// where every role starts.
+const COMMON = "every-user";
 // The poster: a frame of the intro card, which holds the title and the
 // subtitle, from 0 to 3.6 s (src/compose.mjs, INTRO).
 const POSTER_AT = 1.8;
-const STATUS_LABELS = {
-  available: "In Aura",
-  partial: "Partly in Aura",
-  "not-in-aura": "Not in Aura yet",
-};
 
 const escapeHtml = (text) =>
   String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -55,39 +53,47 @@ const plural = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
 // --- Data ---------------------------------------------------------------
 
+// The roles, the profiles of the catalog in its order, each with its path:
+// the tutorials that cover its tasks, in the order of those tasks. A tutorial
+// that covers a task of a specific role belongs to that role only; the common
+// profile keeps the tutorials whose tasks are all common.
 async function loadSite() {
   const catalog = await loadCatalog();
   const lock = JSON.parse(await readFile("tutorials.lock.json", "utf8"));
-  const order = new Map(catalog.tasks.map((task, index) => [task.id, index]));
+  const tasks = new Map(catalog.tasks.map((task, index) => [task.id, { ...task, index }]));
   const tutorials = Object.entries(lock.tutorials ?? {}).map(([id, entry]) => {
     if (!Array.isArray(entry.steps)) {
       throw new Error(`site: the lock has no steps for ${id}; render it again`);
     }
-    return { id, ...entry };
+    const covered = entry.covers.map((task) => tasks.get(task)).filter(Boolean);
+    const specific = new Set(covered.map((task) => task.profile).filter((profile) => profile !== COMMON));
+    return { id, ...entry, covered, profiles: specific.size > 0 ? specific : new Set([COMMON]) };
   });
-  // In the order of the catalog: the first task that each covers.
-  const rank = (tutorial) => Math.min(...tutorial.covers.map((task) => order.get(task) ?? Infinity));
-  tutorials.sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title));
-  const coveredBy = new Map(catalog.tasks.map((task) => [task.id, []]));
+  const roles = catalog.profiles.map((profile) => {
+    const rank = (tutorial) =>
+      Math.min(...tutorial.covered.filter((task) => task.profile === profile.id).map((task) => task.index));
+    const path = tutorials
+      .filter((tutorial) => tutorial.profiles.has(profile.id))
+      .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title));
+    return { id: profile.id, name: profile.name, path };
+  });
+  // The role whose path a tutorial page continues: its first one.
   for (const tutorial of tutorials) {
-    for (const task of tutorial.covers) coveredBy.get(task)?.push(tutorial);
+    tutorial.role = roles.find((role) => role.path.includes(tutorial));
   }
-  const profiles = new Map(catalog.profiles.map((profile) => [profile.id, profile]));
-  return { catalog, tutorials, coveredBy, profiles };
+  return { tutorials, roles };
 }
 
 // --- Pages --------------------------------------------------------------
 
-function layout({ root, title, description, current, main, script = false }) {
-  const link = (href, label, key) =>
-    `<a href="${root}${href}"${current === key ? ' aria-current="page"' : ""}>${label}</a>`;
+function layout({ root, title, description, main, theater = false, script = false }) {
   return `<!doctype html>
 <!-- Generated by src/site.mjs; do not edit. -->
-<html lang="en">
+<html lang="en"${theater ? ' class="theater"' : ""}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="${theater ? "dark" : "light dark"}" />
     <meta name="description" content="${escapeHtml(description)}" />
     <title>${escapeHtml(title)}</title>
     <link rel="icon" href="${root}assets/mark.svg" type="image/svg+xml" />
@@ -98,253 +104,115 @@ function layout({ root, title, description, current, main, script = false }) {
     <header class="site-header">
       <div class="wrap header-inner">
         <a class="brand" href="${root}"><img src="${root}assets/mark.svg" alt="" width="24" height="24" /><span>Sentinel Aura <strong>Tutorials</strong></span></a>
-        <nav aria-label="Site">
-          ${link("", "Tutorials", "home")}
-          ${link("coverage/", "Coverage", "coverage")}
-          <a href="https://github.com/${REPOSITORY}">GitHub</a>
-        </nav>
+        <a class="header-link" href="${AURA}">GitHub</a>
       </div>
     </header>
-    <main id="main">
+    <main id="main" class="wrap">
 ${main}
     </main>
     <footer class="site-footer">
-      <div class="wrap">
-        <p>The videos show Sentinel's example dataset, whose data is fictional. Every video is rendered again from its script when Sentinel Aura changes what it shows.</p>
-        <p><a href="https://github.com/${REPOSITORY}">Source</a> · <a href="${RELEASES}/videos.json">videos.json</a> · Apache License 2.0</p>
-      </div>
+      <p class="wrap">The videos show Sentinel's example dataset, whose data is fictional.</p>
     </footer>${script ? `\n    <script src="${root}assets/site.js" defer></script>` : ""}
   </body>
 </html>
 `;
 }
 
-function tutorialMeta(tutorial) {
-  return `${clock(tutorial.duration)} · ${plural(tutorial.chapters.length, "chapter")} · ${plural(tutorial.steps.length, "step")}`;
+// A video of a path. Its data-search holds what the search looks in: its
+// title, its subtitle, and the captions of its steps.
+function item(tutorial, number) {
+  const text = [tutorial.title, tutorial.subtitle, ...tutorial.steps.map((step) => step.caption)].join(" ").toLowerCase();
+  return `<li data-id="${tutorial.id}" data-search="${escapeHtml(text)}">
+            <a class="item" href="tutorials/${tutorial.id}/">
+              <span class="num">${number}</span>
+              <span class="thumb"><img src="videos/${tutorial.id}.jpg" alt="" width="640" height="360" loading="lazy" /></span>
+              <span class="text"><strong>${escapeHtml(tutorial.title)}</strong><span>${escapeHtml(tutorial.subtitle)}</span></span>
+              <span class="dur">${clock(tutorial.duration)}</span>
+            </a>
+          </li>`;
 }
 
-function card(tutorial, root) {
-  return `<li class="card">
-          <a href="${root}tutorials/${tutorial.id}/">
-            <span class="thumb"><img src="${root}videos/${tutorial.id}.jpg" alt="" width="640" height="360" loading="lazy" /></span>
-            <span class="card-body">
-              <span class="card-title">${escapeHtml(tutorial.title)}</span>
-              <span class="card-subtitle">${escapeHtml(tutorial.subtitle)}</span>
-              <span class="meta">${tutorialMeta(tutorial)}</span>
-            </span>
-          </a>
-        </li>`;
-}
-
-function badge(status) {
-  return `<span class="badge badge-${status}">${STATUS_LABELS[status]}</span>`;
-}
-
-function homePage({ catalog, tutorials, coveredBy, profiles }) {
-  const root = "";
-  const covered = catalog.tasks.filter((task) => coveredBy.get(task.id).length > 0).length;
-  const sections = catalog.profiles.map((profile) => {
-    const tasks = catalog.tasks.filter((task) => task.profile === profile.id);
-    const items = tasks.map((task) => {
-      const by = coveredBy.get(task.id);
-      const right =
-        by.length > 0
-          ? by.map((tutorial) => `<a class="chip" href="tutorials/${tutorial.id}/">${escapeHtml(tutorial.title)}</a>`).join(" ")
-          : `<a class="chip chip-muted" href="coverage/#${task.id}">${task.status === "available" ? "No tutorial yet" : STATUS_LABELS[task.status]}</a>`;
-      return `<li class="task${by.length > 0 ? "" : " task-pending"}"><span class="task-text">${escapeHtml(task.task)}</span><span class="task-links">${right}</span></li>`;
-    });
-    const count = tasks.filter((task) => coveredBy.get(task.id).length > 0).length;
-    return `      <section class="profile" id="${profile.id}" aria-labelledby="${profile.id}-title">
-        <div class="profile-head">
-          <h3 id="${profile.id}-title">${escapeHtml(profile.name)}</h3>
-          <span class="meta">${count} of ${plural(tasks.length, "task")} with a tutorial</span>
-        </div>
-        <ul class="tasks">
-          ${items.join("\n          ")}
-        </ul>
-      </section>`;
+function homePage({ roles }) {
+  const basics = roles.find((role) => role.id === COMMON && role.path.length > 0);
+  // The roles with videos first, then the others, each group in the order of
+  // the catalog.
+  const cards = [...roles.filter((role) => role.path.length > 0), ...roles.filter((role) => role.path.length === 0)].map((role) => {
+    if (role.path.length === 0) {
+      return `<li><span class="role role-off"><strong>${escapeHtml(role.name)}</strong><span>Soon</span></span></li>`;
+    }
+    const count = plural(role.path.length, "video");
+    return `<li><a class="role" href="#${role.id}"><strong>${escapeHtml(role.name)}</strong><span>${role.id === COMMON ? "Start here" : count}</span></a></li>`;
   });
-  const main = `      <div class="hero">
-        <div class="wrap">
-          <p class="eyebrow">Video tutorials · Sentinel Aura ${escapeHtml(catalog.aura)}</p>
-          <h1>Learn Sentinel Aura, one task at a time</h1>
-          <p class="lead">Short videos of the real application, each showing one task from start to finish, step by step.</p>
-          <dl class="stats">
-            <div><dt>Tutorials</dt><dd>${tutorials.length}</dd></div>
-            <div><dt>Tasks covered</dt><dd>${covered} of ${catalog.tasks.length}</dd></div>
-            <div><dt>Profiles</dt><dd>${profiles.size}</dd></div>
-          </dl>
-        </div>
+  const paths = roles
+    .filter((role) => role.path.length > 0)
+    .map(
+      (role) => `      <section class="path" id="${role.id}" aria-labelledby="${role.id}-title">
+        <h2 id="${role.id}-title">${escapeHtml(role.name)}</h2>${
+          basics && role.id !== COMMON
+            ? `\n        <p class="hint">New to Sentinel Aura? Start with <a href="#${COMMON}">the basics</a>.</p>`
+            : ""
+        }
+        <ol class="videos">
+          ${role.path.map((tutorial, index) => item(tutorial, index + 1)).join("\n          ")}
+        </ol>
+      </section>`,
+    );
+  const main = `      <h1>What do you do in Sentinel Aura?</h1>
+      <p class="lead">Choose your role and follow its videos in order.</p>
+      <div class="directory">
+      <nav aria-label="Roles">
+        <ul class="roles">
+          ${cards.join("\n          ")}
+        </ul>
+      </nav>
+      <div class="paths">
+      <input class="search" id="search" type="search" placeholder="Search the videos" aria-label="Search the videos" autocomplete="off" hidden />
+${paths.join("\n")}
+      <section class="path results" id="results" aria-labelledby="results-title" aria-live="polite" hidden>
+        <h2 id="results-title">Search results</h2>
+        <ol class="videos"></ol>
+        <p class="empty" hidden>No video matches your search.</p>
+      </section>
       </div>
-      <div class="wrap">
-        <section aria-labelledby="all-title">
-          <h2 id="all-title">All tutorials</h2>
-          <ul class="cards">
-        ${tutorials.map((tutorial) => card(tutorial, root)).join("\n        ")}
-          </ul>
-        </section>
-        <section aria-labelledby="profiles-title">
-          <h2 id="profiles-title">By profile</h2>
-          <p class="section-lead">What each kind of user does in Sentinel Aura, and the tutorials that show it.</p>
-          <nav class="profile-nav" aria-label="Profiles">
-            ${catalog.profiles.map((profile) => `<a href="#${profile.id}">${escapeHtml(profile.name)}</a>`).join("\n            ")}
-          </nav>
-${sections.join("\n")}
-        </section>
       </div>`;
   return layout({
-    root,
+    root: "",
     title: "Sentinel Aura Tutorials",
-    description: "Video tutorials of Sentinel Aura, by profile and task.",
-    current: "home",
+    description: "Video tutorials of Sentinel Aura: choose your role and follow its videos in order.",
     main,
+    script: true,
   });
 }
 
-function tutorialPage(tutorial, site) {
+function tutorialPage(tutorial) {
   const root = "../../";
-  const { catalog, profiles, tutorials } = site;
-  const tasks = new Map(catalog.tasks.map((task) => [task.id, task]));
-  const withHeadings = tutorial.chapters.length > 1;
-  const groups = tutorial.chapters.map((chapter, index) => {
-    const steps = tutorial.steps.filter((step) => step.chapter === index + 1);
-    const items = steps
-      .map(
-        (step) =>
-          `<li><button type="button" class="step" data-start="${step.start}"><span class="time">${clock(step.start)}</span><span>${escapeHtml(step.caption)}</span></button></li>`,
-      )
-      .join("\n              ");
-    const heading = withHeadings
-      ? `<h3 class="chapter"><span class="chapter-number">${index + 1}</span>${escapeHtml(chapter.title)}</h3>\n            `
-      : "";
-    return `${heading}<ol class="steps">
-              ${items}
-            </ol>`;
-  });
-  const covers = tutorial.covers
-    .map((id) => tasks.get(id))
-    .filter(Boolean)
-    .map(
-      (task) =>
-        `<li><a href="${root}#${task.profile}">${escapeHtml(profiles.get(task.profile)?.name ?? task.profile)}</a>: ${escapeHtml(task.task)}${task.status === "available" ? "" : ` ${badge(task.status)}`}</li>`,
-    );
-  const others = tutorials.filter((other) => other.id !== tutorial.id);
-  const main = `      <div class="wrap">
-        <nav class="crumbs" aria-label="Breadcrumb"><a href="${root}">Tutorials</a> <span aria-hidden="true">/</span> <span aria-current="page">${escapeHtml(tutorial.title)}</span></nav>
-        <header class="page-head">
+  const { role } = tutorial;
+  const position = role.path.indexOf(tutorial);
+  const next = role.path[position + 1];
+  const main = `      <a class="back" href="${root}#${role.id}"><span aria-hidden="true">←</span> ${escapeHtml(role.name)}</a>
+      <div class="video">
+        <video controls preload="metadata" playsinline poster="${root}videos/${tutorial.id}.jpg" width="1920" height="1080">
+          <source src="${root}videos/${tutorial.id}.mp4" type="video/mp4" />
+          <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />
+        </video>
+      </div>
+      <div class="below">
+        <div>
           <h1>${escapeHtml(tutorial.title)}</h1>
-          <p class="lead">${escapeHtml(tutorial.subtitle)}</p>
-          <p class="meta">${tutorialMeta(tutorial)} · Sentinel Aura ${escapeHtml(tutorial.aura)}</p>
-        </header>
-        <div class="player">
-          <div class="video">
-            <video controls preload="metadata" playsinline poster="${root}videos/${tutorial.id}.jpg" width="1920" height="1080" aria-describedby="steps-title">
-              <source src="${root}videos/${tutorial.id}.mp4" type="video/mp4" />
-              <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />
-              <a href="${root}videos/${tutorial.id}.mp4">Download the video</a>
-            </video>
-          </div>
-          <aside class="outline" aria-labelledby="steps-title">
-            <h2 id="steps-title">Steps</h2>
-            <p class="hint">The captions of the video. Select a step to play it.</p>
-            ${groups.join("\n            ")}
-          </aside>
-          <div class="details">
-          <section aria-labelledby="covers-title">
-            <h2 id="covers-title">What it shows</h2>
-            <ul class="plain">
-              ${covers.join("\n              ")}
-            </ul>
-          </section>
-          <section aria-labelledby="files-title">
-            <h2 id="files-title">Files</h2>
-            <ul class="plain">
-              <li><a href="${RELEASES}/${tutorial.id}.mp4">The MP4 of the latest release</a>, 1920×1080, without audio</li>
-              <li><a href="${RELEASES}/videos.json">videos.json</a>, which lists every video with its chapters and steps</li>
-            </ul>
-          </section>
-          </div>
-        </div>${
-          others.length > 0
-            ? `
-        <section aria-labelledby="more-title">
-          <h2 id="more-title">More tutorials</h2>
-          <ul class="cards">
-        ${others.map((other) => card(other, root)).join("\n        ")}
-          </ul>
-        </section>`
-            : ""
+          <p class="lead">Video ${position + 1} of ${role.path.length} · ${escapeHtml(role.name)}</p>
+        </div>
+        ${
+          next
+            ? `<a class="next" href="../${next.id}/">Next: ${escapeHtml(next.title)} <span aria-hidden="true">→</span></a>`
+            : `<a class="next" href="${root}">Choose another role</a>`
         }
       </div>`;
   return layout({
     root,
     title: `${tutorial.title} · Sentinel Aura Tutorials`,
     description: `${tutorial.title}: ${tutorial.subtitle}`,
-    current: "tutorial",
     main,
-    script: true,
-  });
-}
-
-function coveragePage({ catalog, coveredBy, profiles }) {
-  const root = "../";
-  const profileName = (task) => escapeHtml(profiles.get(task.profile)?.name ?? task.profile);
-  const row = (task, extra) =>
-    `<tr id="${task.id}"><th scope="row">${escapeHtml(task.task)}</th><td>${profileName(task)}</td><td>${badge(task.status)}</td><td>${extra}</td></tr>`;
-  const missing = catalog.tasks.filter((task) => coveredBy.get(task.id).length === 0);
-  const partial = catalog.tasks.filter((task) => coveredBy.get(task.id).length > 0 && task.status === "partial");
-  const counts = {
-    covered: catalog.tasks.length - missing.length,
-    ready: missing.filter((task) => task.status === "available").length,
-    waiting: missing.filter((task) => task.status !== "available").length,
-  };
-  const table = (caption, rows, last) => `<div class="table-wrap">
-            <table>
-              <caption class="visually-hidden">${caption}</caption>
-              <thead><tr><th scope="col">Task</th><th scope="col">Profile</th><th scope="col">In Aura</th><th scope="col">${last}</th></tr></thead>
-              <tbody>
-                ${rows.join("\n                ")}
-              </tbody>
-            </table>
-          </div>`;
-  const main = `      <div class="wrap">
-        <header class="page-head">
-          <h1>Coverage</h1>
-          <p class="lead">The tasks of the users of Sentinel Aura ${escapeHtml(catalog.aura)}, and which ones have a tutorial. A task gets its tutorial once Sentinel Aura can show it.</p>
-          <dl class="stats stats-light">
-            <div><dt>With a tutorial</dt><dd>${counts.covered}</dd></div>
-            <div><dt>Coming next</dt><dd>${counts.ready}</dd></div>
-            <div><dt>Waiting for Aura</dt><dd>${counts.waiting}</dd></div>
-          </dl>
-        </header>
-        <section aria-labelledby="missing-title">
-          <h2 id="missing-title">Tasks without a tutorial</h2>
-          ${table("Tasks without a tutorial", missing.map((task) => row(task, escapeHtml(task.notes ?? "Sentinel Aura can show it; its tutorial is coming."))), "Notes")}
-        </section>
-        <section aria-labelledby="partial-title">
-          <h2 id="partial-title">Tasks that Aura shows in part</h2>
-          <p class="section-lead">Their tutorials show what Sentinel Aura can do today.</p>
-          ${table(
-            "Tasks that Aura shows in part",
-            partial.map((task) =>
-              row(
-                task,
-                `${escapeHtml(task.notes ?? "")} ${coveredBy
-                  .get(task.id)
-                  .map((tutorial) => `<a class="chip" href="${root}tutorials/${tutorial.id}/">${escapeHtml(tutorial.title)}</a>`)
-                  .join(" ")}`,
-              ),
-            ),
-            "Notes and tutorials",
-          )}
-        </section>
-      </div>`;
-  return layout({
-    root,
-    title: "Coverage · Sentinel Aura Tutorials",
-    description: "Which tasks of Sentinel Aura have a video tutorial, and which ones are coming.",
-    current: "coverage",
-    main,
+    theater: true,
   });
 }
 
@@ -358,6 +226,18 @@ function chaptersVtt(tutorial) {
 
 // --- Assets -------------------------------------------------------------
 
+// The directory follows the color scheme of the visitor; the page of a video,
+// html.theater, is always dark, as the videos are.
+const DARK = `--bg: #0d1117;
+    --surface: #151b23;
+    --text: #f0f6fc;
+    --muted: #9198a1;
+    --border: #3d444d;
+    --accent: #4493f8;
+    --accent-soft: #12263f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;`;
+
 const CSS = `@font-face {
   font-family: "Inter";
   src: url("inter.woff2") format("woff2");
@@ -367,184 +247,154 @@ const CSS = `@font-face {
 :root {
   --bg: #ffffff;
   --surface: #f6f8fa;
-  --raised: #ffffff;
   --text: #1f2328;
   --muted: #59636e;
   --border: #d1d9e0;
   --accent: #0969da;
   --accent-soft: #ddf4ff;
-  --focus: #0969da;
   --shadow: 0 1px 2px rgba(31, 35, 40, 0.06), 0 8px 24px rgba(31, 35, 40, 0.08);
-  --ok-bg: #dafbe1; --ok-text: #116329;
-  --warn-bg: #fff8c5; --warn-text: #7d4e00;
-  --off-bg: #eff2f5; --off-text: #59636e;
-  --hero-text: #ffffff;
-  --hero-muted: #c3d1e6;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0d1117;
-    --surface: #151b23;
-    --raised: #151b23;
-    --text: #f0f6fc;
-    --muted: #9198a1;
-    --border: #3d444d;
-    --accent: #4493f8;
-    --accent-soft: #12263f;
-    --focus: #4493f8;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-    --ok-bg: #12301c; --ok-text: #6fdd8b;
-    --warn-bg: #3a2a07; --warn-text: #e3b341;
-    --off-bg: #262c36; --off-text: #9198a1;
-    color-scheme: dark;
+    ${DARK}
   }
 }
+:root.theater {
+    ${DARK}
+    --bg: #0b1220;
+    --surface: #151d2e;
+    --border: #2a3550;
+    --muted: #a9b6c9;
+}
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--text);
   font: 16px/1.55 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-feature-settings: "cv11", "ss01";
 }
 a { color: var(--accent); text-underline-offset: 0.15em; }
-a:hover { text-decoration-thickness: 2px; }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
-h1, h2, h3 { line-height: 1.2; letter-spacing: -0.015em; }
-h2 { font-size: 1.5rem; margin: 3rem 0 1rem; }
-.wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
-.skip { position: absolute; left: 1rem; top: -4rem; z-index: 10; padding: 0.5rem 1rem; background: var(--raised); border-radius: 6px; box-shadow: var(--shadow); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+[hidden] { display: none !important; }
+h1, h2 { line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+.wrap { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 10; padding: 0.5rem 1rem; background: var(--surface); border-radius: 6px; }
 .skip:focus { top: 1rem; }
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.meta { color: var(--muted); font-size: 0.875rem; }
 
-.site-header { border-bottom: 1px solid var(--border); background: var(--bg); }
-.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4rem; flex-wrap: wrap; }
+.site-header { border-bottom: 1px solid var(--border); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.75rem; }
 .brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--text); text-decoration: none; font-size: 1.05rem; }
-.brand img { border-radius: 6px; }
-.site-header nav { display: flex; gap: 0.25rem; }
-.site-header nav a { color: var(--text); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 6px; font-weight: 500; font-size: 0.95rem; }
-.site-header nav a:hover { background: var(--surface); }
-.site-header nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.header-link { color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.4rem 0.75rem; border-radius: 6px; }
+.header-link:hover { background: var(--surface); }
+main.wrap { flex: 1; padding-top: 2.5rem; padding-bottom: 3rem; }
+.site-footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 0.875rem; padding: 1.1rem 0; }
+.site-footer p { margin-top: 0; margin-bottom: 0; }
 
-.hero {
-  color: var(--hero-text);
-  background:
-    radial-gradient(900px 500px at 15% 0%, rgba(9, 105, 218, 0.45), transparent 60%),
-    radial-gradient(700px 420px at 90% 100%, rgba(31, 111, 235, 0.28), transparent 60%),
-    linear-gradient(160deg, #0b1220 0%, #101b31 55%, #0a1020 100%);
-  padding: 4rem 0 3.5rem;
+main > h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 0 0 0.5rem; }
+.lead { color: var(--muted); font-size: 1.05rem; margin: 0; }
+.directory { display: grid; gap: 1.5rem 2.5rem; margin-top: 2rem; align-items: start; }
+.paths { min-width: 0; }
+.roles { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.role { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: 999px; color: var(--text); text-decoration: none; transition: border-color 0.15s ease, background-color 0.15s ease; }
+.role strong { font-size: 0.95rem; font-weight: 600; }
+.role span { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+a.role:hover { border-color: var(--accent); }
+a.role[aria-current] { border-color: var(--accent); background: var(--accent-soft); }
+.role-off { border-style: dashed; }
+.role-off strong { color: var(--muted); font-weight: 500; }
+@media (min-width: 820px) {
+  .directory { grid-template-columns: 16.5rem minmax(0, 1fr); }
+  .directory nav { position: sticky; top: 1rem; }
+  .roles { flex-direction: column; flex-wrap: nowrap; gap: 0.25rem; }
+  .role { border-radius: 8px; border-color: transparent; padding: 0.5rem 0.75rem; }
+  a.role:hover { border-color: transparent; background: var(--surface); }
+  a.role[aria-current] { border-color: transparent; background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .role-off { border-style: solid; }
 }
-.hero h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); margin: 0.25rem 0 1rem; max-width: 18ch; }
-.hero .lead { color: var(--hero-muted); font-size: 1.15rem; max-width: 42rem; margin: 0; }
-.eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: #8cc4ff; margin: 0; }
-.stats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 2rem 0 0; }
-.stats div { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 10px; padding: 0.75rem 1.1rem; min-width: 9rem; }
-.stats dt { font-size: 0.8rem; color: var(--hero-muted); }
-.stats dd { margin: 0; font-size: 1.5rem; font-weight: 700; }
-.stats-light div { background: var(--surface); border-color: var(--border); }
-.stats-light dt { color: var(--muted); }
 
-.cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
-.card a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; background: var(--raised); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; }
-.card a:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); }
-.thumb { display: block; overflow: hidden; background: #0b1220; }
-.card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; transform: scale(1.5); }
-.card-body { display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem 1.1rem 1.15rem; }
-.card-title { font-weight: 650; font-size: 1.1rem; }
-.card-subtitle { color: var(--muted); font-size: 0.95rem; }
-.card .meta { margin-top: auto; padding-top: 0.4rem; }
-
-.section-lead { color: var(--muted); margin: -0.5rem 0 1.25rem; }
-.profile-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-.profile-nav a, .chip { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid var(--border); text-decoration: none; font-size: 0.875rem; font-weight: 500; background: var(--raised); }
-.profile-nav a:hover, .chip:hover { border-color: var(--accent); }
-.chip-muted { color: var(--muted); }
-.profile { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; background: var(--raised); scroll-margin-top: 1rem; }
-.profile-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); border-radius: 12px 12px 0 0; }
-.profile-head h3 { margin: 0; font-size: 1.1rem; }
-.tasks { list-style: none; margin: 0; padding: 0; }
-.task { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem 1.5rem; flex-wrap: wrap; padding: 0.8rem 1.25rem; border-top: 1px solid var(--border); }
-.task:first-child { border-top: 0; }
-.task-pending .task-text { color: var(--muted); }
-.task-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-.crumbs { margin: 1.5rem 0 0; font-size: 0.9rem; color: var(--muted); }
-.page-head:first-child { padding-top: 1.5rem; }
-.page-head h1 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin: 0.75rem 0 0.4rem; }
-.page-head .lead { font-size: 1.1rem; color: var(--muted); margin: 0 0 0.4rem; max-width: 46rem; }
-.player { display: grid; gap: 1.5rem; margin-top: 1.5rem; align-items: start; }
-@media (min-width: 1000px) {
-  .player { grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: auto 1fr; }
-  .outline { grid-column: 2; grid-row: 1 / span 2; }
-  .details { grid-column: 1; grid-row: 2; }
+.search { display: block; width: 100%; max-width: 26rem; font: inherit; padding: 0.65rem 0.9rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.path { margin-top: 1.5rem; scroll-margin-top: 1rem; }
+.path h2 { font-size: 1.35rem; margin: 0 0 0.25rem; }
+.hint { color: var(--muted); margin: 0; }
+.videos { list-style: none; padding: 0; margin: 1rem 0 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.item { display: flex; align-items: center; gap: 1rem; padding: 0.65rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); text-decoration: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.item:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.num { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 0.9rem; }
+.results .num { display: none; }
+.thumb { flex: none; width: 168px; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: #0b1220; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.5); }
+.text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.text strong { font-size: 1.05rem; font-weight: 650; }
+.text span { color: var(--muted); font-size: 0.925rem; }
+.dur { margin-left: auto; padding-right: 0.5rem; color: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.empty { color: var(--muted); margin: 1rem 0 0; }
+@media (max-width: 560px) {
+  .thumb { width: 104px; }
+  .dur { display: none; }
+  .item { gap: 0.7rem; }
 }
-.video { border-radius: 12px; overflow: hidden; background: #0b1220; box-shadow: var(--shadow); }
-.video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #0b1220; }
-.outline { border: 1px solid var(--border); border-radius: 12px; background: var(--raised); padding: 1rem; }
-@media (min-width: 1000px) { .outline { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; } }
-.outline h2 { margin: 0; font-size: 1.1rem; }
-.hint { margin: 0.2rem 0 0.75rem; color: var(--muted); font-size: 0.85rem; }
-.chapter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 1rem 0 0.35rem; }
-.chapter-number { display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 0.75rem; font-weight: 700; }
-.steps { list-style: none; margin: 0; padding: 0; }
-.step { display: flex; gap: 0.75rem; width: 100%; text-align: left; font: inherit; font-size: 0.95rem; color: var(--text); background: none; border: 0; border-radius: 8px; padding: 0.5rem 0.6rem; cursor: pointer; }
-.step:hover { background: var(--surface); }
-.step[aria-current] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
-.time { flex: none; min-width: 2.6rem; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.85rem; padding-top: 0.08rem; }
-.step[aria-current] .time { color: var(--accent); font-weight: 600; }
-.details h2 { margin-top: 1rem; font-size: 1.25rem; }
-.plain { padding-left: 1.1rem; margin: 0; }
-.plain li { margin-bottom: 0.5rem; }
 
-.badge { display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
-.badge-available { background: var(--ok-bg); color: var(--ok-text); }
-.badge-partial { background: var(--warn-bg); color: var(--warn-text); }
-.badge-not-in-aura { background: var(--off-bg); color: var(--off-text); }
-.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
-table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
-th, td { text-align: left; vertical-align: top; padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
-thead th { border-top: 0; background: var(--surface); font-size: 0.85rem; color: var(--muted); font-weight: 600; }
-tbody th { font-weight: 500; }
-td .chip { margin-top: 0.4rem; }
-tr:target { background: var(--accent-soft); }
-
-.site-footer { margin-top: 4rem; border-top: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 0.9rem; padding: 1.5rem 0; }
-.site-footer p { margin: 0.3rem 0; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+.theater main.wrap { padding-top: 1.25rem; }
+.back { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.925rem; }
+.back:hover { color: var(--text); }
+.video { width: min(100%, calc((100vh - 15rem) * 16 / 9)); min-width: min(100%, 20rem); margin: 1rem auto 0; border-radius: 12px; overflow: hidden; background: #05080d; box-shadow: var(--shadow); }
+.video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.below { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.below h1 { font-size: 1.35rem; margin: 0 0 0.15rem; }
+.below .lead { font-size: 0.95rem; }
+.next { display: inline-block; padding: 0.6rem 1.1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.next:hover { border-color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 `;
 
-// Seeks the video to a step, and marks the step that plays.
-const JS = `const video = document.querySelector("video");
-const steps = [...document.querySelectorAll(".step[data-start]")];
-const outline = document.querySelector(".outline");
-let current = null;
-function mark() {
-  let active = null;
-  for (const step of steps) if (Number(step.dataset.start) <= video.currentTime + 0.05) active = step;
-  if (active === current) return;
-  current?.removeAttribute("aria-current");
-  active?.setAttribute("aria-current", "step");
-  current = active;
-  // Keeps the step in view in the outline when it scrolls on its own.
-  if (active && outline.scrollHeight > outline.clientHeight) {
-    const top = active.offsetTop - outline.offsetTop;
-    if (top < outline.scrollTop || top + active.offsetHeight > outline.scrollTop + outline.clientHeight) {
-      outline.scrollTop = top - outline.clientHeight / 3;
-    }
+// The directory: shows the path of the chosen role, which the fragment of
+// the address names, or the videos that match the search, of every role.
+const JS = `const paths = [...document.querySelectorAll(".path:not(.results)")];
+const roles = [...document.querySelectorAll("a.role")];
+const search = document.getElementById("search");
+const results = document.getElementById("results");
+function choose() {
+  const id = paths.some((path) => path.id === location.hash.slice(1)) ? location.hash.slice(1) : paths[0]?.id;
+  for (const path of paths) path.hidden = path.id !== id;
+  for (const role of roles) {
+    if (role.hash === "#" + id) role.setAttribute("aria-current", "true");
+    else role.removeAttribute("aria-current");
   }
+  results.hidden = true;
 }
-for (const step of steps) {
-  step.addEventListener("click", () => {
-    video.currentTime = Number(step.dataset.start);
-    video.play().catch(() => {});
-    if (video.getBoundingClientRect().top < 0) video.scrollIntoView({ block: "start" });
+function find() {
+  const query = search.value.trim().toLowerCase();
+  if (!query) return choose();
+  const list = results.querySelector("ol");
+  const seen = new Set();
+  list.replaceChildren();
+  for (const video of document.querySelectorAll(".path:not(.results) li[data-search]")) {
+    if (seen.has(video.dataset.id) || !video.dataset.search.includes(query)) continue;
+    seen.add(video.dataset.id);
+    list.append(video.cloneNode(true));
+  }
+  results.querySelector(".empty").hidden = seen.size > 0;
+  for (const path of paths) path.hidden = true;
+  for (const role of roles) role.removeAttribute("aria-current");
+  results.hidden = false;
+}
+for (const link of document.querySelectorAll('a[href^="#"]:not(.skip)')) {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    history.replaceState(null, "", link.hash);
+    search.value = "";
+    choose();
   });
 }
-video.addEventListener("timeupdate", mark);
-video.addEventListener("seeked", mark);
+search.hidden = false;
+search.addEventListener("input", find);
+addEventListener("hashchange", choose);
+choose();
 `;
 
 // --- Commands -----------------------------------------------------------
@@ -562,7 +412,7 @@ async function build([out, ...videoDirs]) {
   if (!out || videoDirs.length === 0) throw new Error("build: takes the output directory and the directories of the videos");
   const site = await loadSite();
   await rm(out, { recursive: true, force: true });
-  for (const dir of ["assets", "videos", "coverage"]) await mkdir(join(out, dir), { recursive: true });
+  for (const dir of ["assets", "videos"]) await mkdir(join(out, dir), { recursive: true });
 
   await copyFile("node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2", join(out, "assets", "inter.woff2"));
   await copyFile("aura/src/favicon.svg", join(out, "assets", "mark.svg"));
@@ -579,10 +429,9 @@ async function build([out, ...videoDirs]) {
     ]);
     await writeFile(join(out, "videos", `${tutorial.id}.chapters.vtt`), chaptersVtt(tutorial));
     await mkdir(join(out, "tutorials", tutorial.id), { recursive: true });
-    await writeFile(join(out, "tutorials", tutorial.id, "index.html"), tutorialPage(tutorial, site));
+    await writeFile(join(out, "tutorials", tutorial.id, "index.html"), tutorialPage(tutorial));
   }
   await writeFile(join(out, "index.html"), homePage(site));
-  await writeFile(join(out, "coverage", "index.html"), coveragePage(site));
   console.error(`site: ${site.tutorials.length} tutorial(s) in ${out}`);
 }
 

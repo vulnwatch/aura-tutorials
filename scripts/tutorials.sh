@@ -56,7 +56,7 @@
 #                                              downloads with gh into
 #                                              out/site-videos/; --serve then
 #                                              serves it on
-#                                              http://localhost:8080
+#                                              http://localhost:3003
 set -euo pipefail
 
 # shellcheck source=scripts/lib/common.sh

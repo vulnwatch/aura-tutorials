@@ -4,8 +4,8 @@ Video tutorials that show the users of Sentinel Aura (`vulnwatch/sentinel-aura`)
 what they can do and how. Each video comes from a tutorial script and is made
 again, from the same script, when Aura changes what it shows.
 
-The website `https://vulnwatch.github.io/aura-tutorials/` presents them by
-profile and task, each with its video, its chapters, and its steps. The latest
+On the website `https://vulnwatch.github.io/aura-tutorials/`, a visitor chooses
+a role and follows its videos in order, or searches them. The latest
 video of each tutorial is also at
 `https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`,
 and the release lists them all in `videos.json`.
@@ -66,7 +66,7 @@ scripts/tutorials.sh render --stale    # make the stale videos in out/<id>/<id>.
 scripts/tutorials.sh frames <id>       # the frames of a video, to look at
 scripts/tutorials.sh check             # which videos the pinned Aura changes
 scripts/tutorials.sh coverage          # which tasks have a tutorial
-scripts/tutorials.sh site --serve      # the website in out/site/, on http://localhost:8080
+scripts/tutorials.sh site --serve      # the website in out/site/, on http://localhost:3003
 scripts/backend.sh stop                # remove the backend when done
 ```
 
