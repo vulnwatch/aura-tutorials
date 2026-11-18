@@ -19,7 +19,11 @@
 //                        prints only the ids of those that are not up to date
 //   coverage             The tasks of the catalog and the tutorials that cover
 //                        them
+//   hashes               The id of each tutorial and the hash of its resolved
+//                        script, separated by a tab
 //   changes-data <id>    Succeed when the tutorial changes data
+//   captured <id>        Succeed when out/<id>/capture holds a capture of the
+//                        current script and version of Aura
 //   compare <id>         Compare the capture in out/<id>/capture with the
 //                        lock, and with out/<id>/capture.previous when it
 //                        exists; write out/<id>/compare.json
@@ -214,9 +218,21 @@ async function coverage() {
   console.log(`\n${uncovered.length} task(s) that Aura shows, at least in part, have no tutorial.`);
 }
 
+async function hashes() {
+  const { tutorials } = await loadAll();
+  for (const tutorial of tutorials) console.log(`${tutorial.id}\t${tutorial.hash}`);
+}
+
 async function changesData([id]) {
   const tutorial = await loadTutorial(id);
   process.exitCode = tutorial.changesData ? 0 : 1;
+}
+
+async function captured([id]) {
+  requireAura();
+  const tutorial = await loadTutorial(id);
+  const capture = await readJson(join("out", id, "capture", "capture.json"), null);
+  process.exitCode = capture && capture.script === tutorial.hash && capture.aura === aura ? 0 : 1;
 }
 
 // The frames of a capture, keyed by step and kind, in order.
@@ -508,7 +524,9 @@ const commands = {
   validate,
   status,
   coverage,
+  hashes,
   "changes-data": changesData,
+  captured,
   compare,
   verify,
   lock: lockCommand,
@@ -517,7 +535,7 @@ const commands = {
   frames,
 };
 if (!commands[command]) {
-  console.error("usage: node src/tutorials.mjs list|validate|status|coverage|changes-data|compare|verify|lock|report|findings|frames");
+  console.error("usage: node src/tutorials.mjs list|validate|status|coverage|hashes|changes-data|captured|compare|verify|lock|report|findings|frames");
   process.exit(2);
 }
 try {

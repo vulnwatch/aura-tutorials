@@ -2,21 +2,33 @@ name: Checks
 
 # Every pull request and every push to main: the shell scripts, the scripts of
 # the tutorials, and the lock against a capture of the pinned Aura
-# (docs/authoring.md, Publication). On a pull request, the tutorials whose
-# entry of the lock changed, or all of them when the tooling or
-# src/tutorials.mjs changes, are
-# rendered too, with the checks of their composition, which fail the job, and
-# kept with their contact sheets as an artifact to review (docs/authoring.md,
-# Review). The website is generated too, and kept as an artifact.
+# (docs/authoring.md, Publication). The capture is of the tutorials that the
+# change can affect: all of them when it touches what every capture depends
+# on, otherwise those whose script or entry of the lock changed, while the
+# lock must be current for every tutorial. A weekly run on main, and a manual
+# one, capture every tutorial, to catch what no diff shows, such as an image
+# that a tag moved. The job Tutorials against Aura always runs and narrows its
+# scope inside, so that a required check never waits for a job that did not
+# run. On a pull request, the tutorials whose entry of the lock changed, or all
+# of them when the tooling or src/tutorials.mjs changes, are rendered too, with
+# the checks of their composition, which fail the job, and kept with their
+# contact sheets as an artifact to review (docs/authoring.md, Review). The
+# website is generated too, and kept as an artifact.
 
 on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    # Mondays at 04:23 UTC.
+    - cron: "23 4 * * 1"
   workflow_dispatch:
 
+# A new commit of a pull request cancels the run of the earlier one. Every
+# other run has a group of its own and completes: a push to main is checked
+# for what it changes alone, so a later push must not cancel its run.
 concurrency:
-  group: checks-${{ github.ref }}
+  group: checks-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: true
 
 permissions:
@@ -53,10 +65,28 @@ jobs:
           # (scripts/lib/common.sh, aura_version).
           fetch-depth: 0
 
-      # Captures every tutorial, and fails when a video needs a render or a
-      # script a change, or when the lock is not current.
-      - name: Check every tutorial against the lock
-        run: scripts/tutorials.sh check --verify-only
+      # Captures the tutorials that the change can affect (scripts/tutorials.sh,
+      # affected): those of the pull request against its base, or of the push
+      # against the commit that main held before; every tutorial on the weekly
+      # and the manual run, and when that commit is unknown, as after a forced
+      # push. Fails when a video needs a render or a script a change, or when
+      # the lock is not current for any tutorial, captured or not.
+      - name: Check the tutorials against the lock
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          case "${EVENT_NAME}" in
+            pull_request) since="origin/${BASE_REF}" ;;
+            push) since="${BEFORE}" ;;
+            *) since="" ;;
+          esac
+          if [[ -n "${since}" ]] && git rev-parse --verify --quiet "${since}^{commit}" >/dev/null; then
+            scripts/tutorials.sh check --verify-only --since "${since}"
+          else
+            scripts/tutorials.sh check --verify-only
+          fi
 
       - name: Report
         if: always()
@@ -72,7 +102,9 @@ jobs:
       # src/tutorials.mjs changes, which reports the checks and extracts the
       # frames without making a video stale. The findings of the checks of
       # their composition fail the step once the videos and their contact
-      # sheets are made, so that the artifact shows them.
+      # sheets are made, so that the artifact shows them. Each is rendered
+      # from the capture of the check above, which captured it in this job,
+      # since what selects a tutorial here selects it there too.
       - name: Render the tutorials that the pull request changes
         if: github.event_name == 'pull_request'
         env:
@@ -86,7 +118,7 @@ jobs:
           fi
           if ((${#changed[@]} > 0)); then
             status=0
-            scripts/tutorials.sh render --strict "${changed[@]}" || status=1
+            scripts/tutorials.sh render --strict --reuse-capture "${changed[@]}" || status=1
             for id in "${changed[@]}"; do
               if [[ -f "out/${id}/${id}.mp4" ]]; then
                 scripts/tutorials.sh frames "${id}" || status=1
