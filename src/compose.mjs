@@ -8,6 +8,13 @@
 // <out>/composition/, and <out>/compose.json and <out>/chapters.ffmeta, the
 // duration and the chapters, which the render writes into the MP4.
 //
+// It also checks what it knows without judgment, and writes the findings into
+// compose.json with the times of the steps and the cards (docs/authoring.md,
+// Review): each step's target and ring in the view of the camera and clear of
+// the caption, the keycap of a key press in view, and each caption short
+// enough and on screen long enough to read. It reports them on stderr and
+// succeeds; scripts/tutorials.sh render --strict fails on them.
+//
 // Usage: node src/compose.mjs <id> <out>
 
 import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -71,6 +78,25 @@ const ACTION_HOLD = { goto: 3.0, fill: 1.1, click: 1.0, press: 1.0, show: 2.6 };
 // names one: 1 shows the whole window.
 const ACTION_ZOOM = { goto: 1, fill: 1.75, click: 1.6, press: 1.5, show: 1.3 };
 
+// A caption rises in after the start of its step and fades before its end.
+const CAPTION_IN = { delay: 0.1, duration: 0.45 };
+const CAPTION_OUT = 0.32;
+// The box of a caption on the canvas, which its styles below decide: its top
+// and bottom, and an upper estimate of its width, since the composition knows
+// no text metrics: each character of its text takes at most about 0.52 em of
+// Inter at 36 px, beside its number and its paddings.
+const CAPTION_BOX = { top: 960, bottom: 1036, perCharacter: 0.52 * 36, frame: 16 + 18 + 30 };
+// A caption holds about 0.5 s plus 0.3 s a word to be read (HyperFrames,
+// references/motion.md, Holds), and has at most about eight words
+// (docs/authoring.md, Style).
+const READING = { base: 0.5, perWord: 0.3 };
+const CAPTION_WORDS = 8;
+// The ring around a target, outside its box, in CSS pixels of the page: its
+// padding, its border, and its halo, the spread of its shadow (.ring).
+const RING = { pad: 6, border: 3, halo: 6 };
+// An upper estimate of the box of a keycap, in CSS pixels of the page.
+const KEYCAP_BOX = { height: 48, perCharacter: 0.62 * 22, frame: 2 * 16 + 2 * 2 };
+
 const round = (value) => Math.round(value * 1000) / 1000;
 
 function escapeHtml(text) {
@@ -106,6 +132,98 @@ function camera(zoom, point) {
 
 function center(box) {
   return box ? { x: box.x + box.width / 2, y: box.y + box.height / 2 } : null;
+}
+
+// --- Geometry of the checks ----------------------------------------------
+
+// A rectangle { left, top, right, bottom } of the page from a box of the
+// capture, grown by `outset` on every side.
+const rectOf = (box, outset = 0) => ({
+  left: box.x - outset,
+  top: box.y - outset,
+  right: box.x + box.width + outset,
+  bottom: box.y + box.height + outset,
+});
+
+// The rectangle of the canvas where the transform of the camera puts a
+// rectangle of the page.
+function onCanvas(transform, rect) {
+  const x = (pageX) => transform.x + transform.scale * (CONTENT.left + pageX * PAGE_SCALE);
+  const y = (pageY) => transform.y + transform.scale * (CONTENT.top + pageY * PAGE_SCALE);
+  return { left: x(rect.left), top: y(rect.top), right: x(rect.right), bottom: y(rect.bottom) };
+}
+
+// The part of the canvas that shows the page under a transform of the camera:
+// the content of the window, which clips what lies beyond it, within the
+// canvas.
+function viewOf(transform) {
+  const page = onCanvas(transform, { left: 0, top: 0, right: PAGE.width, bottom: PAGE.height });
+  return {
+    left: Math.max(0, page.left),
+    top: Math.max(0, page.top),
+    right: Math.min(CANVAS.width, page.right),
+    bottom: Math.min(CANVAS.height, page.bottom),
+  };
+}
+
+// Half a pixel of the canvas absorbs the rounding of the boxes.
+const inside = (inner, outer) =>
+  inner.left >= outer.left - 0.5 &&
+  inner.top >= outer.top - 0.5 &&
+  inner.right <= outer.right + 0.5 &&
+  inner.bottom <= outer.bottom + 0.5;
+const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+
+// The box of a caption on the canvas, from CAPTION_BOX and the styles of
+// .caption-number.
+function captionBox(number, text) {
+  const numberWidth = Math.max(44, 20 + 13 * String(number).length);
+  const width = CAPTION_BOX.frame + numberWidth + text.length * CAPTION_BOX.perCharacter;
+  return { left: (CANVAS.width - width) / 2, top: CAPTION_BOX.top, right: (CANVAS.width + width) / 2, bottom: CAPTION_BOX.bottom };
+}
+
+// The findings of the checks of a shown step, at the times of its chapter.
+// `timing` holds its start, end, and focus, the moment when the camera has
+// settled on what it points at; whether it rings its target; and its keycap,
+// if any. `cameraAt` gives the transform of the camera at a time.
+function checkStep(step, number, timing, cameraAt) {
+  const findings = [];
+  const add = (check, at, message) => findings.push({ check, step: step.id, number, at, message });
+  const words = step.caption.split(/\s+/).filter(Boolean).length;
+  if (words > CAPTION_WORDS) {
+    add("caption-too-long", timing.start, `the caption has ${words} words, more than the ${CAPTION_WORDS} of the Style; shorten it`);
+  }
+  const shown = timing.end - timing.start - CAPTION_IN.delay - CAPTION_IN.duration - CAPTION_OUT;
+  const needed = READING.base + READING.perWord * words;
+  if (shown < needed - 0.005) {
+    add("caption-unread", timing.start, `the caption is whole on screen ${round(shown)} s, under the ${round(needed)} s that ${words} words need; give the step a longer hold`);
+  }
+  const caption = captionBox(number, step.caption);
+  if (step.box) {
+    const transform = cameraAt(timing.focus);
+    const view = viewOf(transform);
+    const target = onCanvas(transform, rectOf(step.box));
+    const ring = timing.ring ? onCanvas(transform, rectOf(step.box, RING.pad + RING.border + RING.halo)) : target;
+    if (!inside(target, view)) {
+      add("target-outside-view", timing.focus, "the target is not whole in the view of the camera; lower the zoom, or point at a smaller target");
+    } else if (!inside(ring, view)) {
+      add("ring-outside-view", timing.focus, "the ring around the target is cut by the edge of the window or of the video; lower the zoom, or point at a smaller target");
+    }
+    if (overlaps(ring, caption)) {
+      add("caption-covers-target", timing.focus, "the caption covers the target; raise the zoom so that the camera brings the target up, or point at a smaller target");
+    }
+  }
+  if (timing.keycap) {
+    const transform = cameraAt(timing.keycap.at);
+    const keycap = onCanvas(transform, timing.keycap.rect);
+    if (!inside(keycap, viewOf(transform))) {
+      add("keycap-outside-view", timing.keycap.at, "the keycap is not whole in the view of the camera");
+    }
+    if (overlaps(keycap, caption)) {
+      add("caption-covers-target", timing.keycap.at, "the caption covers the keycap");
+    }
+  }
+  return findings;
 }
 
 // The end of a step: its action's end, plus its hold, and at least its
@@ -351,9 +469,9 @@ const CHAPTER_STYLES = `${CARD_STYLES}
     }
     .ring {
       position: absolute;
-      border: 3px solid ${ACCENT};
+      border: ${RING.border}px solid ${ACCENT};
       border-radius: 10px;
-      box-shadow: 0 0 0 6px rgba(9, 105, 218, 0.18);
+      box-shadow: 0 0 0 ${RING.halo}px rgba(9, 105, 218, 0.18);
       opacity: 0;
     }
     .ripple {
@@ -435,7 +553,8 @@ const POINTER_START = { x: PAGE.width * 0.72, y: PAGE.height * 0.82 };
 
 // Builds the scene of a chapter from its captured steps. `numbers` gives the
 // number of each step's caption, which counts across the tutorial. Returns its
-// file and its duration.
+// file and its duration, and the times of its steps and the findings of their
+// checks, at the times of the chapter.
 function chapterScene(chapterIndex, steps, numbers, withCard) {
   const p = `c${chapterIndex + 1}`;
   const compositionId = `chapter-${chapterIndex + 1}`;
@@ -445,12 +564,20 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
   const ripples = [];
   const keycaps = [];
   const tweens = [];
+  // The moves of the camera, in order of time, for the checks.
+  const moves = [];
   let pointerShown = false;
   let pointer = POINTER_START;
 
   const tween = (method, selector, vars, at, extra) => tweens.push({ method, selector, vars, at, extra });
-  const moveCamera = (zoom, point, at, duration = CAMERA_MOVE) =>
-    tween("to", `#${p}-world`, { ...camera(zoom, point), duration, ease: "power3.inOut" }, at);
+  const moveCamera = (zoom, point, at, duration = CAMERA_MOVE) => {
+    const transform = camera(zoom, point);
+    moves.push({ at, transform });
+    tween("to", `#${p}-world`, { ...transform, duration, ease: "power3.inOut" }, at);
+  };
+  // Where the camera is, or goes, by the time `at`: the last move that has
+  // started.
+  const cameraAt = (at) => moves.filter((move) => move.at <= at + 1e-6).at(-1)?.transform ?? { x: 0, y: 0, scale: 1 };
   // Hides the pointer, which the next move shows again where it was.
   const hidePointer = (at) => {
     if (!pointerShown) return;
@@ -478,6 +605,7 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("to", `#${ringId}`, { opacity: 0, duration: 0.3 }, end - 0.3);
   };
   // A keycap below the end of the target, or above the caption without one.
+  // Returns its box for the checks, at the time that it is pressed.
   const keycap = (step, at, end) => {
     const keyId = `${p}-key-${step.id}`;
     const position = step.box
@@ -487,6 +615,11 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("fromTo", `#${keyId}`, { opacity: 0, y: 10 }, at, { opacity: 1, y: 0, duration: 0.25, ease: "back.out(2)" });
     tween("fromTo", `#${keyId}`, { scale: 1 }, at + 0.35, { scale: 0.9, duration: 0.08, yoyo: true, repeat: 1 });
     tween("to", `#${keyId}`, { opacity: 0, duration: 0.25 }, end - 0.25);
+    const width = KEYCAP_BOX.frame + step.key.length * KEYCAP_BOX.perCharacter;
+    return {
+      at: at + 0.35,
+      rect: { left: position.x, top: position.y, right: position.x + width, bottom: position.y + KEYCAP_BOX.height },
+    };
   };
   // Shows a frame from `at`: a cut, or a crossfade over the previous one.
   const showFrame = (frame, at, fade = 0) => {
@@ -498,11 +631,17 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
   const start = withCard ? CHAPTER_CARD - 0.3 : 0.3;
   tween("fromTo", `#${p}-window`, { opacity: 0, scale: 0.9, y: 60 }, start - 0.3, { opacity: 1, scale: 1, y: 0, duration: WINDOW_RISE, ease: "power3.out" });
   let time = start;
+  const timings = [];
   for (const step of steps) {
     const zoom = step.zoom ?? ACTION_ZOOM[step.action];
     const target = center(step.box);
     const stepStart = time;
     const files = step.frames;
+    // The moment when the camera has settled on what the step points at,
+    // whether it rings its target, and its keycap.
+    let focus;
+    let ringed = false;
+    let pressed = null;
     switch (step.action) {
       case "goto": {
         showFrame(files[0], time, frames.length ? CROSSFADE : 0);
@@ -512,20 +651,22 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
           moveCamera(zoom, target, time + 0.6, 1.4);
           actionEnd = time + 2.0;
         }
+        focus = actionEnd;
         time = stepEnd(step, stepStart, actionEnd);
         break;
       }
       case "fill": {
-        const [before, focus, ...typed] = files;
+        const [before, focused, ...typed] = files;
         showFrame(before, time);
         moveCamera(zoom, target, time);
         movePointer(target, time + 0.2);
         const clickAt = time + 0.2 + POINTER_MOVE + 0.05;
         click(clickAt);
-        showFrame(focus, clickAt + 0.05);
+        showFrame(focused, clickAt + 0.05);
         const typing = Math.min(TYPING_TIME.max, Math.max(TYPING_TIME.min, typed.length * TYPING_TIME.perCharacter));
         const typingStart = clickAt + 0.35;
         typed.forEach((frame, character) => showFrame(frame, typingStart + (typing * character) / typed.length));
+        focus = typingStart + typing;
         time = stepEnd(step, stepStart, typingStart + typing);
         break;
       }
@@ -536,20 +677,25 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         movePointer(target, time + 0.2);
         const clickAt = time + 0.2 + POINTER_MOVE + 0.15;
         ring(step, step.box, time + 0.5, clickAt + 0.25);
+        ringed = true;
         click(clickAt);
         showFrame(after, clickAt + 0.3, CROSSFADE);
         moveCamera(1, null, clickAt + 0.4, 1.1);
+        focus = clickAt;
         time = stepEnd(step, stepStart, clickAt + 1.5);
         break;
       }
       case "press": {
         const [before, after] = files;
         showFrame(before, time);
-        if (target) moveCamera(zoom, target, time);
-        const pressAt = time + (target ? 0.9 : 0.4);
-        keycap(step, pressAt - 0.35, pressAt + 1.0);
+        // Without a target, the keycap shows above the caption, which the
+        // whole window frames, whatever the step before left in view.
+        moveCamera(target ? zoom : 1, target, time);
+        const pressAt = time + 0.9;
+        pressed = keycap(step, pressAt - 0.35, pressAt + 1.0);
         showFrame(after, pressAt + 0.15, CROSSFADE);
         moveCamera(1, null, pressAt + 0.4, 1.1);
+        focus = time + CAMERA_MOVE;
         time = stepEnd(step, stepStart, pressAt + 1.5);
         break;
       }
@@ -563,7 +709,12 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
           actionEnd = time + 1.6;
         }
         const end = stepEnd(step, stepStart, actionEnd);
-        if (step.box) ring(step, step.box, time + 1.2, end);
+        focus = actionEnd;
+        if (step.box) {
+          ring(step, step.box, time + 1.2, end);
+          ringed = true;
+          focus = Math.max(actionEnd, time + 1.55);
+        }
         time = end;
         break;
       }
@@ -571,7 +722,9 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         throw new Error(`unknown action ${step.action} of step ${step.id}`);
     }
     captions.push({ id: `${p}-caption-${step.id}`, number: numbers.get(step.id), step, start: stepStart, end: time });
+    timings.push({ step, start: stepStart, focus, end: time, ring: ringed, keycap: pressed });
   }
+  const findings = timings.flatMap((timing) => checkStep(timing.step, numbers.get(timing.step.id), timing, cameraAt));
   // The chapter ends with the whole window, which recedes.
   const stepsEnd = time;
   moveCamera(1, null, stepsEnd, 0.6);
@@ -582,8 +735,8 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
 
   // The captions: each rises in as its step starts and fades before it ends.
   for (const caption of captions) {
-    tween("fromTo", `#${caption.id} .caption-inner`, { opacity: 0, y: 24 }, caption.start + 0.1, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" });
-    tween("to", `#${caption.id} .caption-inner`, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, caption.end - 0.32);
+    tween("fromTo", `#${caption.id} .caption-inner`, { opacity: 0, y: 24 }, caption.start + CAPTION_IN.delay, { opacity: 1, y: 0, duration: CAPTION_IN.duration, ease: "power3.out" });
+    tween("to", `#${caption.id} .caption-inner`, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, caption.end - CAPTION_OUT);
   }
   // The crossfades of the frames.
   frames.forEach((frame, index) => {
@@ -619,7 +772,7 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("fromTo", `#${p}-card-inner`, { opacity: 0, y: 24 }, 0.1, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
     tween("to", `#${p}-card-inner`, { opacity: 0, y: -24, duration: 0.45, ease: "power2.in" }, CHAPTER_CARD - 0.55);
   }
-  const pad = 6;
+  const pad = RING.pad;
   const markup = `${cardMarkup}    <div id="${p}-world" class="world" data-layout-allow-overflow>
       <div id="${p}-window" class="window">
         <div class="title-bar">
@@ -671,7 +824,24 @@ ${captions
     </div>`,
   )
   .join("\n")}`;
-  return { compositionId, file: sceneFile(compositionId, CHAPTER_STYLES, markup, tweens), duration, frames };
+  return {
+    compositionId,
+    file: sceneFile(compositionId, CHAPTER_STYLES, markup, tweens),
+    duration,
+    frames,
+    card: withCard ? { title: `Chapter ${chapterIndex + 1}: ${chapter.title}`, start: 0, end: CHAPTER_CARD } : null,
+    steps: timings.map(({ step, start: stepStart, focus, end }) => ({
+      id: step.id,
+      number: numbers.get(step.id),
+      chapter: chapterIndex + 1,
+      action: step.action,
+      caption: step.caption,
+      start: stepStart,
+      focus,
+      end,
+    })),
+    findings,
+  };
 }
 
 // --- The film -----------------------------------------------------------
@@ -680,19 +850,30 @@ const withCards = tutorial.chapters.length > 1;
 const numbers = new Map(capture.steps.map((step, index) => [step.id, index + 1]));
 const scenes = [{ compositionId: "intro", file: introScene(), duration: INTRO }];
 const chapters = [];
+// The times of the cards and of the steps in the film, and the findings of
+// the checks, which compose.json records for the review (docs/authoring.md,
+// Review).
+const cards = [{ title: tutorial.title, start: 0, end: INTRO }];
+const steps = [];
+const findings = [];
+const shift = (offset, item, keys) => ({ ...item, ...Object.fromEntries(keys.map((key) => [key, round(offset + item[key])])) });
 let time = INTRO;
 for (const [index, chapter] of tutorial.chapters.entries()) {
-  const steps = capture.steps.filter((step) => step.chapter === index);
-  if (steps.length !== chapter.steps.length) {
+  const captured = capture.steps.filter((step) => step.chapter === index);
+  if (captured.length !== chapter.steps.length) {
     throw new Error(`the capture of ${id} lacks steps of chapter ${index + 1}; capture it again`);
   }
-  const scene = chapterScene(index, steps, numbers, withCards);
+  const scene = chapterScene(index, captured, numbers, withCards);
   scenes.push(scene);
   chapters.push({ title: chapter.title, start: index === 0 ? 0 : round(time) });
+  if (scene.card) cards.push(shift(time, scene.card, ["start", "end"]));
+  steps.push(...scene.steps.map((step) => shift(time, step, ["start", "focus", "end"])));
+  findings.push(...scene.findings.map((finding) => shift(time, finding, ["at"])));
   time += scene.duration;
 }
 scenes.push({ compositionId: "outro", file: outroScene(), duration: OUTRO });
 const duration = round(time + OUTRO);
+cards.push({ title: tutorial.outro?.title ?? "That's it", start: round(time), end: duration });
 
 // --- Files --------------------------------------------------------------
 
@@ -777,8 +958,17 @@ if (chapters.length > 1) {
   });
 }
 await writeFile(join(outDir, "chapters.ffmeta"), `${ffmeta.join("\n")}\n`);
-await writeFile(join(outDir, "compose.json"), `${JSON.stringify({ tutorial: id, script: tutorial.hash, duration, chapters }, null, 2)}\n`);
+await writeFile(
+  join(outDir, "compose.json"),
+  `${JSON.stringify({ tutorial: id, script: tutorial.hash, duration, chapters, cards, steps, findings }, null, 2)}\n`,
+);
 
 console.error(
   `compose: ${capture.steps.length} steps in ${chapters.length} chapter(s), ${duration} s, in ${compositionDir}`,
 );
+for (const finding of findings) {
+  console.error(`compose: ${id}: step ${finding.number} (${finding.step}) at ${finding.at} s: ${finding.check}: ${finding.message}`);
+}
+if (findings.length > 0) {
+  console.error(`compose: ${id}: ${findings.length} finding(s) of the checks (docs/authoring.md, Review)`);
+}

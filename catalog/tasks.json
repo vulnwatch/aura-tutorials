@@ -107,8 +107,8 @@
       "profile": "maintainers",
       "task": "Follow their deliveries in progress, with their submission and release requests",
       "source": "aura/docs/screen-map.md#package-maintainers",
-      "status": "not-in-aura",
-      "notes": "My packages has no screen document yet."
+      "status": "partial",
+      "notes": "The package tree of a Ticket shows the delivery of a track and, on an IBS track of a Ticket with a CVE, its latest submission and release requests (aura/docs/screens/ticket.md, Content, Packages); My packages, which lists the deliveries in progress, has no screen document yet."
     },
     {
       "id": "open-shared-ticket",

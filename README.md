@@ -28,8 +28,12 @@ One command turns a script into an MP4 in three stages:
 A catalog of the tasks that users do in Aura, taken from Aura's own screen
 map, says what the tutorials should cover, and a lock file records what each
 video was made from. When Aura releases a new version, a capture of every
-script tells which videos changed: only those are made again.
-`docs/authoring.md` describes the scripts, their style, and the workflows.
+script tells which videos changed: only those are made again. The
+composition checks what needs no judgment, such as a caption that covers the
+target of its step, and reviewer agents look at the rest: whether the texts
+tell the truth about Aura, how the frames look, and whether the tutorials
+agree with each other. `docs/authoring.md` describes the scripts, their
+style, the workflows, and the review.
 
 Narration (text to speech) comes later: each step will then last as long as
 its sentence, and the same text will produce the subtitles.
@@ -44,9 +48,9 @@ its sentence, and the same text will produce the subtitles.
 | `tutorials.lock.json` | What each video was made from |
 | `src/` | The capture, the composition, and the commands of the set of tutorials |
 | `scripts/` | The commands: `tutorials.sh`, `backend.sh`, and `tooling.sh` |
-| `docs/authoring.md` | The format of the scripts, their style, and the workflows |
+| `docs/authoring.md` | The format of the scripts, their style, the workflows, and the review |
 | `aura/` | The submodule of Sentinel Aura, pinned to a release |
-| `.opencode/skills/` | The skills that guide agents: `tutorial-author` and `aura-bump` |
+| `.opencode/` | The skills that guide agents, `tutorial-author` and `aura-bump`, and the reviewers (`.opencode/README.md`) |
 
 ## Usage
 
@@ -57,6 +61,7 @@ Compose plugin:
 scripts/tutorials.sh list              # the tutorials
 scripts/tutorials.sh status            # which videos are up to date
 scripts/tutorials.sh render --stale    # make the stale videos in out/<id>/<id>.mp4
+scripts/tutorials.sh frames <id>       # the frames of a video, to look at
 scripts/tutorials.sh check             # which videos the pinned Aura changes
 scripts/tutorials.sh coverage          # which tasks have a tutorial
 scripts/backend.sh stop                # remove the backend when done
@@ -65,7 +70,8 @@ scripts/backend.sh stop                # remove the backend when done
 `scripts/tutorials.sh` starts the backend of `aura/` and its development server
 when it needs them (`scripts/backend.sh`). Under `out/<id>/`, which Git
 ignores, a render leaves the screenshots in `capture/`, the composition in
-`composition/`, and the video. `scripts/tutorials.sh preview <id>` serves the
+`composition/`, and the video, and `frames` its frames and contact sheets in
+`frames/`. `scripts/tutorials.sh preview <id>` serves the
 composition in HyperFrames Studio on `http://localhost:3002`.
 
 ## Isolation From Aura

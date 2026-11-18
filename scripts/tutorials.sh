@@ -16,11 +16,21 @@
 #                                              against tutorials.lock.json
 #   scripts/tutorials.sh coverage              Which tasks of the catalog the
 #                                              tutorials cover
-#   scripts/tutorials.sh render [--stale | --all | <id>...]
+#   scripts/tutorials.sh render [--strict] [--stale | --all | <id>...]
 #                                              Capture, compose, and render the
 #                                              tutorials (the stale ones by
 #                                              default) to out/<id>/<id>.mp4,
-#                                              and record them in the lock
+#                                              and record them in the lock; the
+#                                              composition reports the findings
+#                                              of its checks, and --strict
+#                                              fails on them once every video
+#                                              is rendered, as CI runs it
+#   scripts/tutorials.sh frames <id> [<s>...]  Extract the frames of each step
+#                                              of a rendered video, and a
+#                                              contact sheet of each chapter,
+#                                              into out/<id>/frames/, which
+#                                              frames.md lists; with times in
+#                                              seconds, only those frames
 #   scripts/tutorials.sh check [--verify-only] [<id>...]
 #                                              Capture the tutorials (all by
 #                                              default) again and compare their
@@ -91,6 +101,11 @@ capture() {
 }
 
 cmd_render() {
+    local strict=false
+    if [[ "${1:-}" == --strict ]]; then
+        strict=true
+        shift
+    fi
     local -a ids=()
     case "${1:---stale}" in
         --stale) mapfile -t ids < <(tutorials status --ids) ;;
@@ -111,6 +126,10 @@ cmd_render() {
         tutorials lock "${id}"
     done < <(capture_order "${ids[@]}")
     echo "tutorials.sh: rendered ${ids[*]} into out/<id>/<id>.mp4" >&2
+    if [[ "${strict}" == true ]]; then
+        tutorials findings "${ids[@]}" ||
+            die "the checks of the composition found problems; see docs/authoring.md (Review)"
+    fi
 }
 
 cmd_check() {
@@ -161,7 +180,7 @@ main() {
     local command="$1"
     shift
     case "${command}" in
-        list | validate | status | coverage) tutorials "${command}" "$@" ;;
+        list | validate | status | coverage | frames) tutorials "${command}" "$@" ;;
         render) cmd_render "$@" ;;
         check) cmd_check "$@" ;;
         preview) "${TOOLING}" preview "$@" ;;

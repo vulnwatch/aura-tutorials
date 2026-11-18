@@ -24,11 +24,19 @@
 //                        Aura, once compare found its screens unchanged
 //   lock <id>            Record the video just rendered from out/<id>/
 //   report <id>...       Write out/report/check.md from the comparisons
+//   findings <id>...     Print the findings of the checks of the composition
+//                        of each tutorial, from out/<id>/compose.json; fails
+//                        when there is one
+//   frames <id> [<s>...] Extract frames of the video out/<id>/<id>.mp4 into
+//                        out/<id>/frames/: each step at its focus and before
+//                        its end, a contact sheet of each chapter, one of the
+//                        cards, and frames.md, which lists them; with times in
+//                        seconds, only the frames at those times, at-<s>.png
 //
 // AURA_VERSION names the version of Aura that the submodule holds.
 
 import { execFile } from "node:child_process";
-import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import {
@@ -336,6 +344,157 @@ async function report(ids) {
   if (groups.changed.length + groups.new.length + groups.broken.length > 0) process.exitCode = 1;
 }
 
+// --- The review of a video ------------------------------------------------
+
+// The composition of a tutorial, out/<id>/compose.json, which must be of its
+// current script and hold the times and the findings of src/compose.mjs.
+async function composedOf(id) {
+  const tutorial = await loadTutorial(id);
+  const composed = await readJson(join("out", id, "compose.json"));
+  if (composed.script !== tutorial.hash) {
+    throw new Error(`the composition of ${id} is of another version of its script; render it again`);
+  }
+  if (!Array.isArray(composed.steps) || !Array.isArray(composed.findings)) {
+    throw new Error(`the composition of ${id} has no times or findings; render it again`);
+  }
+  return composed;
+}
+
+async function findings(ids) {
+  if (ids.length === 0) throw new Error("findings: name the tutorials");
+  let count = 0;
+  for (const id of ids) {
+    for (const finding of (await composedOf(id)).findings) {
+      console.error(`${id}: step ${finding.number} (${finding.step}) at ${finding.at} s: ${finding.check}: ${finding.message}`);
+      count += 1;
+    }
+  }
+  if (count > 0) {
+    console.error(`findings: ${count} finding(s) of the checks (docs/authoring.md, Review)`);
+    process.exitCode = 1;
+  } else {
+    console.error(`findings: the checks found nothing in ${ids.join(", ")}`);
+  }
+}
+
+// The tiles of a contact sheet, two to a row.
+const TILE = { width: 800, height: 450 };
+// How long before the end of a step its last frame is taken: its caption
+// still shows, since it fades in the last 0.32 s (src/compose.mjs,
+// CAPTION_OUT).
+const BEFORE_END = 0.5;
+
+const round = (value) => Math.round(value * 1000) / 1000;
+
+function ffmpeg(args) {
+  return execFileAsync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...args]);
+}
+
+function extractFrame(video, at, output) {
+  return ffmpeg(["-ss", String(at), "-i", video, "-frames:v", "1", "-update", "1", output]);
+}
+
+// Writes a contact sheet of the frames, two to a row, each with its label,
+// which holds only letters, digits, spaces, hyphens, and periods.
+function contactSheet(frames, output) {
+  const tiles = frames.map(
+    (frame, index) =>
+      `[${index}]scale=${TILE.width}:${TILE.height},drawtext=text='${frame.label}':x=14:y=14:fontsize=26:fontcolor=white:box=1:boxcolor=black@0.7:boxborderw=8[t${index}]`,
+  );
+  const layout = frames.map((_, index) => `${(index % 2) * TILE.width}_${Math.floor(index / 2) * TILE.height}`).join("|");
+  const sheet =
+    frames.length === 1
+      ? "[t0]null[sheet]"
+      : `${frames.map((_, index) => `[t${index}]`).join("")}xstack=inputs=${frames.length}:layout=${layout}:fill=black[sheet]`;
+  return ffmpeg([
+    ...frames.flatMap((frame) => ["-i", frame.file]),
+    "-filter_complex", [...tiles, sheet].join(";"),
+    "-map", "[sheet]", "-frames:v", "1", "-update", "1", output,
+  ]);
+}
+
+async function frames([id, ...times]) {
+  if (!id) throw new Error("frames: name a tutorial");
+  const composed = await composedOf(id);
+  const video = join("out", id, `${id}.mp4`);
+  const rendered = await stat(video).catch(() => null);
+  if (!rendered || rendered.mtimeMs < (await stat(join("out", id, "compose.json"))).mtimeMs) {
+    throw new Error(`the video of ${id} is missing or older than its composition; render it again`);
+  }
+  const dir = join("out", id, "frames");
+  if (times.length > 0) {
+    await mkdir(dir, { recursive: true });
+    for (const time of times) {
+      const at = Number(time);
+      if (!Number.isFinite(at) || at < 0 || at > composed.duration) {
+        throw new Error(`frames: ${time} is not a time of the video, from 0 to ${composed.duration} s`);
+      }
+      await extractFrame(video, at, join(dir, `at-${at}.png`));
+    }
+    console.error(`frames: ${times.length} frame(s) of ${id} in ${dir}/at-<s>.png`);
+    return;
+  }
+
+  await rm(dir, { recursive: true, force: true });
+  await mkdir(dir, { recursive: true });
+  const pad = (number) => String(number).padStart(2, "0");
+  const lines = [
+    `# Frames of ${id}`,
+    "",
+    `The video \`out/${id}/${id}.mp4\`, ${composed.duration} s, from the current script; the times are in seconds of the video. Each step has a frame at its focus, when the camera has settled on what it points at, and one ${BEFORE_END} s before its end, with its caption still on screen. The contact sheets hold every frame below at a smaller size, each labeled with its step, moment, and time, for where only they are kept, as in the artifact of CI.`,
+    "",
+    "## Cards (`cards.png`)",
+    "",
+    "| Card | Start | End | Frame |",
+    "|---|---|---|---|",
+  ];
+  const cardFrames = [];
+  for (const [index, card] of composed.cards.entries()) {
+    const kind = index === 0 ? "intro" : index === composed.cards.length - 1 ? "outro" : `chapter-${index}`;
+    const file = join(dir, `card-${kind}.png`);
+    const at = round((card.start + card.end) / 2);
+    await extractFrame(video, at, file);
+    cardFrames.push({ file, label: `${kind.replace("-", " ")} ${at}s` });
+    lines.push(`| ${card.title} | ${card.start} | ${card.end} | \`card-${kind}.png\` |`);
+  }
+  await contactSheet(cardFrames, join(dir, "cards.png"));
+
+  for (const [index, chapter] of composed.chapters.entries()) {
+    const steps = composed.steps.filter((step) => step.chapter === index + 1);
+    lines.push(
+      "",
+      `## Chapter ${index + 1}: ${chapter.title} (\`chapter-${index + 1}.png\`)`,
+      "",
+      "| Step | Caption | Start | Focus | End | Frames |",
+      "|---|---|---|---|---|---|",
+    );
+    const sheet = [];
+    for (const step of steps) {
+      const moments = [
+        ["focus", step.focus],
+        ["end", round(step.end - BEFORE_END)],
+      ];
+      const names = [];
+      for (const [moment, at] of moments) {
+        const name = `${pad(step.number)}-${step.id}-${moment}.png`;
+        await extractFrame(video, at, join(dir, name));
+        sheet.push({ file: join(dir, name), label: `${step.number} ${step.id} ${moment} ${at}s` });
+        names.push(`\`${name}\``);
+      }
+      lines.push(`| ${step.number} \`${step.id}\` | ${step.caption} | ${step.start} | ${step.focus} | ${step.end} | ${names.join(", ")} |`);
+    }
+    await contactSheet(sheet, join(dir, `chapter-${index + 1}.png`));
+  }
+
+  lines.push("", "## Findings of the checks", "");
+  if (composed.findings.length === 0) lines.push("None.");
+  for (const finding of composed.findings) {
+    lines.push(`- Step ${finding.number} (\`${finding.step}\`) at ${finding.at} s: \`${finding.check}\`: ${finding.message}`);
+  }
+  await writeFile(join(dir, "frames.md"), `${lines.join("\n")}\n`);
+  console.error(`frames: the frames and contact sheets of ${id} are in ${dir}; ${dir}/frames.md lists them`);
+}
+
 const [command, ...args] = process.argv.slice(2);
 const commands = {
   list,
@@ -347,9 +506,11 @@ const commands = {
   verify,
   lock: lockCommand,
   report,
+  findings,
+  frames,
 };
 if (!commands[command]) {
-  console.error("usage: node src/tutorials.mjs list|validate|status|coverage|changes-data|compare|verify|lock|report");
+  console.error("usage: node src/tutorials.mjs list|validate|status|coverage|changes-data|compare|verify|lock|report|findings|frames");
   process.exit(2);
 }
 try {

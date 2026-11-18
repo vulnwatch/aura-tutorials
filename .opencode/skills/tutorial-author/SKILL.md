@@ -49,29 +49,44 @@ published link of its video, so never rename one without the user's consent.
   dataset have what.
 - A step that changes data needs `"changesData": true` on the script.
 - Sign in through the `sign-in` flow: shown when signing in is part of the
-  story, in `setup` otherwise.
+  story, in `setup` otherwise. Open a Ticket from the list through the
+  `open-ticket` flow, with the variable `ticket`.
 - Every shown step has a caption and a narration (`docs/authoring.md`,
   Style).
 
 ## 4. Render and look
 
 1. `scripts/tutorials.sh validate`.
-2. `scripts/tutorials.sh render <id>`. When a capture fails, look at
+2. `scripts/tutorials.sh render --strict <id>`. When a capture fails, look at
    `out/<id>/capture/failure.png`, fix the locator or the wait, and render
-   again.
+   again. When the checks of the composition report a finding, fix the step
+   that it names, with a `zoom`, a `hold`, another `target`, or a shorter
+   caption (`docs/authoring.md`, Review), and render again: CI fails on them.
 3. Look at the screenshots of `out/<id>/capture/`: each shows its step's
    state, nothing still loading, no pointer hovering over the UI.
-4. Extract frames of the video and look at them, a few per chapter:
-   `scripts/tooling.sh ffmpeg -ss <s> -i <id>/<id>.mp4 -frames:v 1 -update 1 <id>/frame.png`
-   writes `out/<id>/frame.png`. Check that the camera frames the target, the
-   caption fits, and nothing overlaps.
-5. `scripts/tooling.sh hyperframes <id> check` must report no error; the
-   warning `timeline_track_too_dense` is expected.
+4. `scripts/tutorials.sh frames <id>`, then look at the contact sheets of
+   `out/<id>/frames/`, one per chapter, and at the frames that they leave in
+   doubt: the camera frames the target, the caption hides nothing, nothing
+   overlaps. `frames.md` lists them with the times of the steps.
+5. `scripts/tooling.sh hyperframes <id> check` must report no error. Its
+   warnings `timeline_track_too_dense` and `film_silent`, the video having no
+   sound yet, are expected.
 
-## 5. Finish
+## 5. Review
+
+Run the reviewers that `AGENTS.md` (Reviewers) requires, from your own
+session: for a new tutorial `@accuracy-reviewer`, `@consistency-reviewer`, and
+`@visual-reviewer`; for a changed script or flow the first two, and
+`@visual-reviewer` when its frames change. Give each the ids of the
+tutorials, the changed files, and the issue, if any. Verify each finding
+against its authority, fix the confirmed ones, render again, and resume the
+same reviewer for the follow-up.
+
+## 6. Finish
 
 - Update `catalog/tasks.json` if a task's status changed.
-- Show the user the frames, the duration, and the coverage, and take their
+- Show the user the frames, the duration, the coverage, and the verdicts of
+  the reviewers with the findings that you discarded, and take their
   feedback.
 - Commit the script, its flows, the catalog, and `tutorials.lock.json`
   together, for example `feat(tutorials): add search-for-a-cve`. Do not push

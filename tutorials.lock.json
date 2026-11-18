@@ -3,8 +3,8 @@
     "search-for-a-cve": {
       "title": "Find SUSE's status for a CVE",
       "aura": "v0.9.0",
-      "script": "sha256:648dc324a6940aaa90feb91f402acd9707c2a6fdd70c003e9ef5a2d22ad9df3b",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "script": "sha256:aa28af3e598cd5972cabc5eb3d089dd1af2e0a58a4a62dbc54241ebac2491fc9",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 28.42,
       "chapters": [
@@ -15,7 +15,8 @@
       ],
       "covers": [
         "search",
-        "cve-status"
+        "cve-status",
+        "open-ticket"
       ],
       "frames": [
         "sha256:c7818a3f02af3b9fc2497ca06830ceed1cb942e673c7e6d363b41d7cff7a1d46",
@@ -38,16 +39,16 @@
         "sha256:e7268eb8a1885a775e78a9c4bd66fa634c02bbb6126eb32c5f6afb834a0066d7",
         "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23",
         "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23",
-        "sha256:11b3dae583e0d73f05263befdb356d209babfc50d306b234c4a8aad1a0a32547"
+        "sha256:70276220db9257497dcad855aa6d751be2a8a123b862b6ae4f1489a5d8438b23"
       ]
     },
     "sign-in-and-open-ticket": {
       "title": "Sign in and open a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:9f38e7ab5045bd076ac2a01ce2c62e86d8bd1591fa81d2d1ab74fac41677012c",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "script": "sha256:c4100d5426348a8095ac5b13f91d1e079f88a5453305a80f79cc372dce428fc7",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 35.7,
+      "duration": 34.95,
       "chapters": [
         {
           "title": "Sign in and open a Ticket",
@@ -103,10 +104,10 @@
     "work-on-a-ticket": {
       "title": "Work on a Ticket",
       "aura": "v0.9.0",
-      "script": "sha256:054fa9ff11414fefb2ac745085b4949e20c179e0c2addbb34c025912465b4eba",
-      "generator": "sha256:9cbf93a495a54987c991858be8461c204a5958b61db0860d618b89e6509cc4a3",
+      "script": "sha256:902356f5ed6528de62e453f82699896ea0935e4ba00fa5b93671a3a40badaf3c",
+      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 95.3,
+      "duration": 99.25,
       "chapters": [
         {
           "title": "Sign in",
@@ -118,19 +119,20 @@
         },
         {
           "title": "Understand its priority",
-          "start": 36.1
+          "start": 39.55
         },
         {
           "title": "Add a reference",
-          "start": 53.6
+          "start": 57.55
         },
         {
           "title": "Trace every change",
-          "start": 79.8
+          "start": 83.75
         }
       ],
       "covers": [
         "sign-in",
+        "open-ticket",
         "follow-deadlines",
         "maintain-assessments",
         "maintain-references",
@@ -173,6 +175,7 @@
         "sha256:73571e42df0a6e0b4cc95d427755cbfbd8c566f9e7ed821c1755f213c187a2a4",
         "sha256:5f113e55ca9a0a7839bbd4ba576767e92acc99274e6859db68b7defa9002dd2a",
         "sha256:5f113e55ca9a0a7839bbd4ba576767e92acc99274e6859db68b7defa9002dd2a",
+        "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
         "sha256:15c70d38512a2c1cd7ca3753f2d267de575c4c757d9c1d4b3e6f9389b2201b84",

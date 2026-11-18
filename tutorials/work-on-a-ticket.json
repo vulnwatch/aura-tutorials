@@ -6,7 +6,7 @@
     "subtitle": "Find your Tickets, understand them, record what you learn, and trace every change."
   },
   "user": "asmith",
-  "covers": ["sign-in", "follow-deadlines", "maintain-assessments", "maintain-references", "investigate-history"],
+  "covers": ["sign-in", "open-ticket", "follow-deadlines", "maintain-assessments", "maintain-references", "investigate-history"],
   "changesData": true,
   "vars": { "ticket": "SNTL-12" },
   "chapters": [
@@ -17,6 +17,13 @@
     {
       "title": "Find your Tickets",
       "steps": [
+        {
+          "id": "landing",
+          "action": "show",
+          "hold": 3,
+          "caption": "Analysts land on the New view",
+          "narration": "As an analyst, you land on the New view, the queue of new Tickets."
+        },
         {
           "id": "assigned-to-me",
           "action": "click",
@@ -29,7 +36,7 @@
             { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
           ],
           "caption": "Open the view Assigned to me",
-          "narration": "Analysts land on the New view, the queue of new Tickets. The view Assigned to me lists the Tickets that are yours."
+          "narration": "To see your Tickets in Analysis or Analyzed, open the view Assigned to me."
         },
         {
           "id": "attention",
@@ -37,7 +44,7 @@
           "target": { "role": "list", "name": "Tickets that need attention" },
           "zoom": 1.7,
           "caption": "The attention summary counts the urgent work",
-          "narration": "Next to the heading, the attention summary counts the active P1 Tickets, the embargoes that have expired, and the deliveries that are overdue, by phase."
+          "narration": "Next to the heading, the attention summary counts the active P1 Tickets, the embargoes that have expired, and the Tickets overdue in each phase, from Triage to QA."
         },
         {
           "id": "deadlines",
@@ -46,7 +53,7 @@
             { "role": "grid", "name": "Tickets" },
             { "role": "columnheader", "name": "Deadline" }
           ],
-          "zoom": 1.5,
+          "zoom": 1.3,
           "caption": "Each row shows its next deadline",
           "narration": "In the list, the Deadline column shows the next deadline of each Ticket, in red once it has passed."
         }
@@ -55,21 +62,7 @@
     {
       "title": "Understand its priority",
       "steps": [
-        {
-          "id": "open-ticket",
-          "action": "click",
-          "target": [
-            { "role": "grid", "name": "Tickets" },
-            { "role": "link", "name": "{ticket}", "exact": true }
-          ],
-          "waitForUrl": "^/tickets/{ticket}$",
-          "waitFor": [
-            { "role": "region", "name": "Details" },
-            { "role": "region", "name": "Participants" }
-          ],
-          "caption": "Open the Ticket",
-          "narration": "Open the Ticket from its identifier."
-        },
+        { "include": "open-ticket" },
         {
           "id": "priority",
           "action": "click",
@@ -83,14 +76,14 @@
           "action": "show",
           "target": { "role": "dialog", "name": "P1, override" },
           "zoom": 1.5,
-          "caption": "Who set it, when, and what Sentinel computed",
-          "narration": "This priority is an override: the explanation says who set it and when, and the priority that Sentinel computed from the evidence."
+          "caption": "The explanation says who set it and when",
+          "narration": "This priority is an override: the explanation says who set it and when, and the priority that Sentinel computed from the severity and the exploitation."
         },
         {
           "id": "close",
           "action": "press",
           "key": "Escape",
-          "waitFor": { "role": "region", "name": "Details" },
+          "waitFor": { "role": "region", "name": "Details", "exact": true },
           "caption": "Press Escape to close it",
           "narration": "Press Escape to close the explanation."
         }
@@ -109,7 +102,7 @@
           "waitForUrl": "^/tickets/{ticket}/references$",
           "waitFor": { "role": "grid", "name": "References" },
           "caption": "Open the tab References",
-          "narration": "The tab References lists the advisories, patches, and reports that analysts read about the Ticket."
+          "narration": "To read the advisories, patches, and reports about the Ticket, open the tab References."
         },
         {
           "id": "add",
@@ -130,8 +123,8 @@
             { "role": "textbox", "name": "Address", "exact": true }
           ],
           "value": "https://security.example.com/advisories/fictional-openssl-2099-0012",
-          "caption": "Paste its address",
-          "narration": "Paste the address of the page."
+          "caption": "Enter its address",
+          "narration": "Enter the address of the page."
         },
         {
           "id": "title",
@@ -141,8 +134,8 @@
             { "role": "textbox", "name": "Title (optional)" }
           ],
           "value": "Fictional vendor advisory",
-          "caption": "Give it a title",
-          "narration": "A title is optional, and makes the reference easier to find. Sentinel detects its type from the address."
+          "caption": "Enter a title",
+          "narration": "Enter a title: it is optional, and makes the reference easier to find."
         },
         {
           "id": "save",
@@ -156,8 +149,8 @@
             "name": "References",
             "child": { "role": "link", "name": "Fictional vendor advisory (another site)" }
           },
-          "caption": "Add it to the Ticket",
-          "narration": "Select Add reference in the dialog."
+          "caption": "Select Add reference in the dialog",
+          "narration": "Select Add reference in the dialog to add it to the Ticket."
         },
         {
           "id": "added",
@@ -166,9 +159,9 @@
             { "role": "grid", "name": "References" },
             { "role": "row", "name": "Fictional vendor advisory" }
           ],
-          "zoom": 1.4,
+          "zoom": 1.3,
           "caption": "The reference is on the Ticket",
-          "narration": "The new reference shows in the table, as a manual reference, with its type and the time it was added."
+          "narration": "The new reference shows in the table: a manual reference, uncategorized, with the time it was added."
         }
       ]
     },
@@ -185,7 +178,7 @@
           "waitForUrl": "^/tickets/{ticket}/audit-log$",
           "waitFor": { "role": "tabpanel", "name": "Audit log", "child": { "role": "listitem" } },
           "caption": "Open the tab Audit log",
-          "narration": "The tab Audit log keeps every change of the Ticket, and what Sentinel did by itself."
+          "narration": "To see every change of the Ticket, and what Sentinel did by itself, open the tab Audit log."
         },
         {
           "id": "event",

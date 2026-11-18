@@ -13,6 +13,10 @@ script, a flow, the catalog, or the code that captures and composes.
   to a new release of Aura, such as for a Renovate pull request, and decide
   which videos it changes.
 
+`.opencode/README.md` catalogs the skills and the reviewers (Reviewers), and
+how each contributor chooses their models. Restart OpenCode after changing
+an agent, a skill, or the model selection.
+
 ## Isolation From Aura
 
 - `aura/` is a submodule pinned to a release tag of
@@ -50,10 +54,46 @@ script, a flow, the catalog, or the code that captures and composes.
 - `scripts/tutorials.sh validate` after any change of a script, a flow, or
   the catalog; `shellcheck -x scripts/*.sh scripts/lib/*.sh` after a change
   of a shell script.
-- Render what you change, then look at the screenshots of
-  `out/<id>/capture/` and at frames of the video before you report it done.
+- Render what you change: `scripts/tutorials.sh render` reports the findings
+  of the checks of the composition, which CI fails on; resolve every one
+  (`docs/authoring.md`, Review).
+- Then look at the screenshots of `out/<id>/capture/` and at the frames of
+  the video, which `scripts/tutorials.sh frames <id>` extracts, and run the
+  reviewers that Reviewers requires, before you report it done.
 - Commit `tutorials.lock.json` with the scripts and the code that it
   describes, after their render.
+
+## Reviewers
+
+The reviewers of `.opencode/agents/` are read-only subagents. Run every
+reviewer that the matrix below selects for the change once it is complete,
+rendered, and looked at, and before you report the work done or open a pull
+request.
+
+| Change | Reviewers |
+|---|---|
+| A new tutorial | `@accuracy-reviewer`, `@consistency-reviewer`, and `@visual-reviewer` |
+| A changed script or flow, or `catalog/tasks.json` | `@accuracy-reviewer` and `@consistency-reviewer`; `@visual-reviewer` too when the render changes its frames |
+| A render that changes the frames of a video: a change of `src/compose.mjs` or `src/capture.mjs`, or screens that a new version of Aura or of the tooling changes | `@visual-reviewer`, on the videos that changed |
+| A new version of Aura (`aura-bump`) | `@accuracy-reviewer`, on the tutorials whose screens changed and on the catalog; `@visual-reviewer`, on the videos rendered again |
+| The Style of `docs/authoring.md` | `@consistency-reviewer`, on every tutorial |
+| A workflow, a script of `scripts/`, `renovate.json`, `.gitmodules`, or the tooling (`Containerfile`, `package.json`, `package-lock.json`) | `@cicd-reviewer` |
+
+- Invoke each reviewer from your own session, after any task that you
+  delegated has returned: a subagent cannot invoke another, and must never
+  work around that limit, such as with `opencode run`; it names the reviewers
+  that its work needs in its result instead.
+- Give each reviewer its scope: the tutorials, the changed files, and the
+  issue or pull request. Each starts from that scope and reads its own
+  authorities; never ask it to rely on your summary of them.
+- You may resume a reviewer's session for a follow-up of the same work, with
+  the new diff and its earlier findings, while its scope is unchanged;
+  otherwise start a fresh one.
+- Findings are hypotheses: verify each against its authority, a document of
+  Aura, `docs/authoring.md`, or a frame. Discard the speculative, the
+  already handled, and the disproportionate, and say why in the pull request.
+  Use the smallest correction; a correction that adds a field to the scripts,
+  a check, a command, or a document needs the user's decision first.
 
 ## Git and GitHub
 
