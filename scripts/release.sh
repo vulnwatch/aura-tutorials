@@ -77,9 +77,11 @@ write_manifest() {
             id: .key,
             file: "\(.key).mp4",
             title: .value.title,
+            subtitle: .value.subtitle,
             aura: .value.aura,
             duration: .value.duration,
             chapters: .value.chapters,
+            steps: .value.steps,
             covers: .value.covers,
             entry: $hashes[.key]
           }]

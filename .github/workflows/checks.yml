@@ -7,7 +7,7 @@ name: Checks
 # src/tutorials.mjs changes, are
 # rendered too, with the checks of their composition, which fail the job, and
 # kept with their contact sheets as an artifact to review (docs/authoring.md,
-# Review).
+# Review). The website is generated too, and kept as an artifact.
 
 on:
   pull_request:
@@ -95,6 +95,26 @@ jobs:
             echo "Rendered ${changed[*]}: see the artifact tutorials." >>"${GITHUB_STEP_SUMMARY}"
             exit "${status}"
           fi
+
+      # The website, with the videos just rendered and those of the latest
+      # release, to look at before the merge. It fails while Publish still
+      # renders a tutorial that main just gained, which no release holds yet:
+      # run the job again once Publish is done.
+      - name: Generate the website
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          scripts/tutorials.sh site --release
+          echo "The website holds $(du -sm out/site | cut -f 1) MB: see the artifact site." >>"${GITHUB_STEP_SUMMARY}"
+
+      - name: Keep the website
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: site
+          path: out/site/
+          retention-days: 14
 
       - name: Keep the videos, their contact sheets, and the report
         if: always()

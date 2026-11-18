@@ -2,7 +2,9 @@ name: Publish
 
 # After a merge to main: render the videos that changed since the latest
 # release and publish a release with every video and videos.json
-# (scripts/release.sh; docs/authoring.md, Publication).
+# (scripts/release.sh), then deploy the website of the tutorials to GitHub
+# Pages, with the videos of that release, also when no video changed
+# (docs/authoring.md, Publication).
 
 on:
   push:
@@ -13,14 +15,15 @@ concurrency:
   group: publish
   cancel-in-progress: false
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   publish:
     name: Publish the videos
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -34,3 +37,35 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/release.sh publish
+
+      # The videos just rendered, then those of the latest release, which
+      # this job published or found current.
+      - name: Generate the website
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          scripts/tutorials.sh site --release
+          size="$(du -sm out/site | cut -f 1)"
+          echo "The website holds ${size} MB, of the 1 GB that GitHub Pages allows." >>"${GITHUB_STEP_SUMMARY}"
+          if ((size > 800)); then
+            echo "::warning::The website holds ${size} MB, close to the 1 GB of GitHub Pages"
+          fi
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: out/site
+
+  deploy:
+    name: Deploy the website
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
