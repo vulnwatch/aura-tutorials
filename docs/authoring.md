@@ -319,12 +319,42 @@ and why.
 
 ## Publication
 
-CI checks every pull request: it validates the scripts and checks the lock
-against a capture (`scripts/tutorials.sh check --verify-only`), and renders
+CI checks every pull request and every push to `main`: it validates the
+scripts and checks the lock against a capture
+(`scripts/tutorials.sh check --verify-only`). The capture is of the tutorials
+that the change can affect, so that its time does not grow with their number:
+
+- every tutorial, when the change touches what every capture depends on:
+  `aura/` or `.gitmodules`, the `Containerfile`, `package.json` or
+  `package-lock.json`, `src/capture.mjs`, `src/compose.mjs`,
+  `src/tutorials.mjs`, `src/lib/`, `scripts/`, or the workflow itself;
+- otherwise only the tutorials whose resolved script differs from the one
+  that the lock of the base records, so that a change of a flow counts
+  through the tutorials that include it, and those whose entry of the lock
+  changed. A change of the catalog, of the documents, or of the website
+  captures none: the catalog changes no screen, and the validation checks the
+  tasks that each script covers against it.
+
+The lock must be current for every tutorial, captured or not, as
+`scripts/tutorials.sh status` reports it, and the summary of the run lists
+the tutorials that it did not capture. A pull request compares with its base
+branch, a push with the commit that `main` held before it;
+`scripts/tutorials.sh affected` prints them for the committed and the tracked
+changes of a clone. The
+job always runs and narrows its scope inside, so that a required check of
+`main` never waits for it. A push to `main` is so checked for what it
+changes alone, not for what an earlier push left failing; a release still
+needs a current lock and renders that give its fingerprints. Every Monday on
+`main`, and when started by hand, the same workflow captures every tutorial,
+to catch what no diff shows, such as an image that a tag moved, or what a
+push left; a failure of it shows in the runs of the workflow.
+
+On a pull request, CI also renders
 the tutorials that the pull request changes, or all of them when it changes
 the tooling or `src/tutorials.mjs`, which reports the checks and extracts the
 frames, as artifacts to review with their contact sheets; the checks of their
-composition fail it (Review). After a
+composition fail it (Review). It renders each from the capture of the check,
+without capturing it again. After a
 merge, CI renders the stale videos and publishes a release of this
 repository with every video: the unchanged ones copied from the previous
 release, and `videos.json`, which lists them. The latest video of a tutorial

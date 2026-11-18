@@ -196,9 +196,11 @@ scope, and report what it finds.
 ### The pipeline
 
 - Does every pull request still validate the scripts, check the lock against
-  a capture (`check --verify-only`), and render the tutorials that it changes
-  with `render --strict`, so that the checks of the composition fail it
-  (`docs/authoring.md`, Review; Publication)?
+  a capture of every tutorial that it can affect (`check --verify-only`) and
+  offline for the others, and render the tutorials that it changes with
+  `render --strict`, so that the checks of the composition fail it
+  (`docs/authoring.md`, Review; Publication)? Does a file that a capture
+  depends on select every tutorial (`scripts/tutorials.sh`, `SHARED_PATHS`)?
 - Does a release still come only after a merge to `main`, from a lock that
   is current and whose renders give its fingerprints? Does a change create a
   path that publishes without those gates?

@@ -16,7 +16,7 @@
 #                                              against tutorials.lock.json
 #   scripts/tutorials.sh coverage              Which tasks of the catalog the
 #                                              tutorials cover
-#   scripts/tutorials.sh render [--strict] [--stale | --all | <id>...]
+#   scripts/tutorials.sh render [--strict] [--reuse-capture] [--stale | --all | <id>...]
 #                                              Capture, compose, and render the
 #                                              tutorials (the stale ones by
 #                                              default) to out/<id>/<id>.mp4,
@@ -24,14 +24,23 @@
 #                                              composition reports the findings
 #                                              of its checks, and --strict
 #                                              fails on them once every video
-#                                              is rendered, as CI runs it
+#                                              is rendered, as CI runs it.
+#                                              --reuse-capture renders a
+#                                              tutorial from the capture that
+#                                              out/<id>/capture holds, when it
+#                                              is of the current script and
+#                                              version of Aura, instead of
+#                                              capturing it again: only after a
+#                                              check with the same code, as in
+#                                              CI, since a capture does not
+#                                              record the code that made it
 #   scripts/tutorials.sh frames <id> [<s>...]  Extract the frames of each step
 #                                              of a rendered video, and a
 #                                              contact sheet of each chapter,
 #                                              into out/<id>/frames/, which
 #                                              frames.md lists; with times in
 #                                              seconds, only those frames
-#   scripts/tutorials.sh check [--verify-only] [<id>...]
+#   scripts/tutorials.sh check [--verify-only] [--since <ref> | <id>...]
 #                                              Capture the tutorials (all by
 #                                              default) again and compare their
 #                                              screens with the lock: record
@@ -40,10 +49,24 @@
 #                                              write out/report/check.md with
 #                                              the changed screens beside the
 #                                              earlier ones; fails when a video
-#                                              needs a render. --verify-only
-#                                              records nothing, and also fails
-#                                              when the lock is not current, as
-#                                              CI runs it
+#                                              needs a render. --since captures
+#                                              only the tutorials that the
+#                                              changes since the Git ref <ref>
+#                                              can affect, as affected prints
+#                                              them. --verify-only records
+#                                              nothing, and also fails when the
+#                                              lock is not current for any
+#                                              tutorial, captured or not, as CI
+#                                              runs it
+#   scripts/tutorials.sh affected <ref>        Print the ids of the tutorials
+#                                              that the changes since the Git
+#                                              ref <ref> can affect: all of
+#                                              them when a file changed that
+#                                              every capture depends on
+#                                              (SHARED_PATHS below); otherwise
+#                                              those whose resolved script, or
+#                                              whose entry of the lock, differs
+#                                              from the lock at <ref>; needs jq
 #   scripts/tutorials.sh preview <id>          Serve the composition of a
 #                                              rendered tutorial in HyperFrames
 #                                              Studio on http://localhost:3002
@@ -67,12 +90,62 @@ readonly BACKEND="${REPO_ROOT}/scripts/backend.sh"
 # Whether the running backend holds the dataset as loaded (scripts/backend.sh).
 readonly BACKEND_STATE="${REPO_ROOT}/out/.backend-state"
 
+# What the capture of every tutorial depends on: Aura, the tooling, the code
+# that captures, composes, and checks, the scripts that run them, and the
+# workflow that runs the check. A change of a flow counts through the resolved
+# scripts of the tutorials that include it; the catalog changes no screen, and
+# validate checks the tasks that a script covers against it.
+readonly -a SHARED_PATHS=(
+    aura
+    .gitmodules
+    Containerfile
+    package.json
+    package-lock.json
+    src/capture.mjs
+    src/compose.mjs
+    src/tutorials.mjs
+    src/lib
+    scripts
+    .github/workflows/checks.yml
+)
+
 tutorials() {
     "${TOOLING}" tutorials "$@"
 }
 
 all_ids() {
     find "${REPO_ROOT}/tutorials" -maxdepth 1 -name '*.json' -printf '%f\n' | sed 's/\.json$//' | sort
+}
+
+# Prints the ids of the tutorials that the changes since the Git ref $1 can
+# affect, and says why on stderr.
+affected_ids() {
+    local ref="$1" shared hashes base
+    command -v jq >/dev/null 2>&1 || die "jq is required"
+    git -C "${REPO_ROOT}" rev-parse --verify --quiet "${ref}^{commit}" >/dev/null ||
+        die "not a commit of this repository: ${ref}"
+    shared="$(git -C "${REPO_ROOT}" diff --name-only "${ref}" -- "${SHARED_PATHS[@]}")" ||
+        die "cannot compare with ${ref}"
+    if [[ -n "${shared}" ]]; then
+        warn "every tutorial is affected: the changes since ${ref} touch ${shared//$'\n'/, }"
+        all_ids
+        return 0
+    fi
+    hashes="$(tutorials hashes)" || die "cannot resolve the scripts"
+    base="$(git -C "${REPO_ROOT}" show "${ref}:tutorials.lock.json" 2>/dev/null)" || base='{"tutorials": {}}'
+    # A changed script, a flow that it includes, or an entry of the lock that
+    # claims other screens: each needs a capture to hold.
+    # The locks are read as files: one argument holds at most 128 KiB.
+    jq -rR --slurpfile base <(printf '%s' "${base}") --slurpfile lock "${REPO_ROOT}/tutorials.lock.json" '
+        split("\t") as [$id, $hash]
+        | select($id != null)
+        | select($base[0].tutorials[$id].script != $hash or $base[0].tutorials[$id] != $lock[0].tutorials[$id])
+        | $id' <<<"${hashes}"
+}
+
+cmd_affected() {
+    [[ $# -eq 1 ]] || die "affected: takes a Git ref"
+    affected_ids "$1"
 }
 
 # A backend with the dataset as loaded, new if needed.
@@ -111,11 +184,15 @@ capture() {
 }
 
 cmd_render() {
-    local strict=false
-    if [[ "${1:-}" == --strict ]]; then
-        strict=true
+    local strict=false reuse=false
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --strict) strict=true ;;
+            --reuse-capture) reuse=true ;;
+            *) break ;;
+        esac
         shift
-    fi
+    done
     local -a ids=()
     case "${1:---stale}" in
         --stale) mapfile -t ids < <(tutorials status --ids) ;;
@@ -129,8 +206,12 @@ cmd_render() {
     tutorials validate
     local id
     while read -r id; do
-        echo "tutorials.sh: rendering ${id}" >&2
-        capture "${id}"
+        if [[ "${reuse}" == true ]] && tutorials captured "${id}" 2>/dev/null; then
+            echo "tutorials.sh: rendering ${id} from the capture of out/${id}/capture" >&2
+        else
+            echo "tutorials.sh: rendering ${id}" >&2
+            capture "${id}"
+        fi
         "${TOOLING}" compose "${id}"
         "${TOOLING}" render "${id}"
         tutorials lock "${id}"
@@ -143,14 +224,33 @@ cmd_render() {
 }
 
 cmd_check() {
-    local verify_only=false
-    if [[ "${1:-}" == --verify-only ]]; then
-        verify_only=true
+    local verify_only=false since=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --verify-only) verify_only=true ;;
+            --since)
+                [[ $# -ge 2 ]] || die "check: --since takes a Git ref"
+                since="$2"
+                shift
+                ;;
+            *) break ;;
+        esac
         shift
-    fi
-    local -a ids=("$@")
-    ((${#ids[@]} > 0)) || mapfile -t ids < <(all_ids)
+    done
+    local -a ids=("$@") skipped=()
     tutorials validate
+    if [[ -n "${since}" ]]; then
+        ((${#ids[@]} == 0)) || die "check: --since takes no tutorials"
+        local affected id
+        affected="$(affected_ids "${since}")"
+        [[ -z "${affected}" ]] || mapfile -t ids <<<"${affected}"
+        while read -r id; do
+            [[ $'\n'"${affected}"$'\n' == *$'\n'"${id}"$'\n'* ]] || skipped+=("${id}")
+        done < <(all_ids)
+        echo "tutorials.sh: since ${since}: capturing ${ids[*]:-no tutorial}; not capturing ${skipped[*]:-none}" >&2
+    elif ((${#ids[@]} == 0)); then
+        mapfile -t ids < <(all_ids)
+    fi
     rm -rf "${REPO_ROOT}/out/report"
     local id status
     while read -r id; do
@@ -171,6 +271,15 @@ cmd_check() {
     done < <(capture_order "${ids[@]}")
     local failed=false
     tutorials report "${ids[@]}" || failed=true
+    if ((${#skipped[@]} > 0)); then
+        mkdir -p "${REPO_ROOT}/out/report"
+        {
+            echo "## Not captured: no change since \`${since}\` can affect them"
+            echo
+            printf -- "- \`%s\`\n" "${skipped[@]}"
+            echo
+        } | tee -a "${REPO_ROOT}/out/report/check.md"
+    fi
     if [[ "${verify_only}" == true ]]; then
         local stale
         stale="$(tutorials status --ids)"
@@ -215,6 +324,7 @@ main() {
     shift
     case "${command}" in
         list | validate | status | coverage | frames) tutorials "${command}" "$@" ;;
+        affected) cmd_affected "$@" ;;
         render) cmd_render "$@" ;;
         check) cmd_check "$@" ;;
         preview) "${TOOLING}" preview "$@" ;;
