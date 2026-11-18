@@ -46,7 +46,7 @@
 #                                            with the videos of <videos>
 #                                            (src/site.mjs)
 #   scripts/tooling.sh site serve <dir>      Serve the website in <dir> on
-#                                            http://localhost:8080
+#                                            http://localhost:3003
 #   scripts/tooling.sh ffmpeg <args>         Run FFmpeg in out/, offline
 #   scripts/tooling.sh clean                 Remove the dependencies and the
 #                                            cache of HyperFrames
@@ -76,7 +76,7 @@ readonly LOCK_FILE="tutorials.lock.json"
 
 # The port of HyperFrames Studio, and that of the preview of the website.
 readonly PREVIEW_PORT=3002
-readonly SITE_PORT=8080
+readonly SITE_PORT=3003
 
 # The settings of HyperFrames: no telemetry, update checks, skills, or
 # installations on first use; its cache in the mounted directory; the

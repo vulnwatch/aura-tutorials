@@ -45,9 +45,11 @@ holds the rules for agents.
   variables included), the hash of the generator (`src/capture.mjs` and
   `src/compose.mjs`, which decide how a video looks), the hash of the tooling
   (the `Containerfile` and `package-lock.json`), and the fingerprints of its
-  screenshots; and what the website shows of it (Publication): its title and
-  subtitle, its duration, and the times of its chapters and of its steps,
-  with their captions. `scripts/tutorials.sh status` compares it with the
+  screenshots; and what describes it to the website and in `videos.json`
+  (Publication): its title and subtitle, its duration, the times of its
+  chapters, and its steps, with their captions, which the search of the
+  website looks in, and their times. `scripts/tutorials.sh status` compares
+  it with the
   repository; `scripts/tutorials.sh check` compares it with a new capture.
 - **The videos**, `out/<id>/<id>.mp4`, which Git ignores: CI renders them and
   publishes them (Publication).
@@ -338,18 +340,21 @@ The site serves the MP4s itself, as `video/mp4` with range requests, which
 the assets of a release lack; the release stays the versioned archive. It
 holds:
 
-- the home page: every tutorial, and the profiles of the catalog, each with
-  its tasks and the tutorials that cover them;
-- a page per tutorial, at `tutorials/<id>/`: its video, with a poster, a
-  frame of its intro card, and its chapters as a WebVTT track; its steps,
-  with their captions and times, each a button that plays the video from
-  its start; the tasks that it covers; and links to its MP4 and to
-  `videos.json` of the latest release;
-- the coverage, at `coverage/`: the tasks without a tutorial, and those that
-  Aura shows in part, with their notes.
+- the directory, its home page: the roles, which are the profiles of the
+  catalog, and under the chosen one its path, the tutorials that cover its
+  tasks, numbered in the order of those tasks. A tutorial that covers a task
+  of a specific role belongs to that role; Every user, where every role
+  starts, keeps the tutorials whose tasks are all common. A role without a
+  tutorial shows as coming soon. A search finds the videos of every role by
+  their title, their subtitle, and the captions of their steps;
+- a page per tutorial, at `tutorials/<id>/`, always dark, which keeps to
+  its video, with a poster, a frame of its intro card, and its chapters as a
+  WebVTT track: around it, only the link back to its role, its title, its
+  place in the path, and the link to the next video of its role, or to the
+  directory after the last one.
 
 A new tutorial, or a change of a script or of the catalog, needs nothing
 more: the site follows the lock and the catalog. Each pull request keeps the
 site as the artifact `site`, with the videos that it renders and those of
 the latest release; `scripts/tutorials.sh site --release --serve` makes the
-same site locally and serves it on `http://localhost:8080`.
+same site locally and serves it on `http://localhost:3003`.
