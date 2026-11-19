@@ -51,9 +51,12 @@ published link of its video, so never rename one without the user's consent.
 - Sign in through the `sign-in` flow: shown when signing in is part of the
   story, in `setup` otherwise. Open a Ticket from the list through the
   `open-ticket` flow, with the variable `ticket`.
-- Every shown step has a caption and a narration (`docs/authoring.md`,
-  Style), which a voice reads: write it as it should sound
-  (`docs/authoring.md`, Narration).
+- Every shown step has a caption, its title, which the video does not show,
+  and a narration (`docs/authoring.md`, Style), which a voice reads: write it
+  as it should sound (`docs/authoring.md`, Narration). The narration of a
+  click starts with its action, "Select" or "Open", then names what it
+  selects or opens: the click lands early in the sentence, and the
+  validation fails on another start.
 
 ## 4. Render and look
 
@@ -65,13 +68,13 @@ published link of its video, so never rename one without the user's consent.
    yourself. When a capture fails, look at
    `out/<id>/capture/failure.png`, fix the locator or the wait, and render
    again. When the checks of the composition report a finding, fix the step
-   that it names, with a `zoom`, a `hold`, another `target`, or a shorter
+   that it names, with a `zoom`, another `target`, or a shorter
    caption (`docs/authoring.md`, Review), and render again: CI fails on them.
 3. Look at the screenshots of `out/<id>/capture/`: each shows its step's
    state, nothing still loading, no pointer hovering over the UI.
 4. `scripts/tutorials.sh frames <id>`, then look at the contact sheets of
    `out/<id>/frames/`, one per chapter, and at the frames that they leave in
-   doubt: the camera frames the target, the caption hides nothing, nothing
+   doubt: the camera frames the target, the ring surrounds it, nothing
    overlaps. `frames.md` lists them with the times of the steps.
 5. `scripts/tooling.sh hyperframes <id> check` must report no error. Its
    warnings `timeline_track_too_dense` and `text_below_floor` are expected,

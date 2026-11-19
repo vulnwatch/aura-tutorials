@@ -13,7 +13,7 @@ and the release lists them all in `videos.json`.
 ## Approach
 
 A tutorial is a script of steps, in chapters. Each step names an action in the
-UI, the caption that the video shows, and the sentence that a voice reads.
+UI, a caption that titles it, and the sentence that a voice reads.
 One command turns a script into a narrated MP4 in three stages:
 
 1. **Capture.** Playwright drives the real UI against a local Sentinel backend
@@ -23,7 +23,7 @@ One command turns a script into a narrated MP4 in three stages:
 2. **Compose.** HyperFrames (`heygen-com/hyperframes`, Apache 2.0) turns the
    screenshots into animated scenes, one for each chapter: camera zoom and pan
    towards the target, a synthetic pointer that moves and clicks, keycaps,
-   highlights, captions, chapter cards, and transitions. The voice reads the
+   highlights, chapter cards, and transitions. The voice reads the
    narration of each step, which lasts at least as long as its sentence.
 3. **Render.** HyperFrames renders the composition to an MP4, 1920x1080 at 30
    fps, with headless Chrome and FFmpeg, which mixes the voice and writes the
@@ -34,8 +34,8 @@ A catalog of the tasks that users do in Aura, taken from Aura's own screen
 map, says what the tutorials should cover, and a lock file records what each
 video was made from. When Aura releases a new version, a capture of every
 script tells which videos changed: only those are made again. The
-composition checks what needs no judgment, such as a caption that covers the
-target of its step, and reviewer agents look at the rest: whether the texts
+composition checks what needs no judgment, such as a target that the camera
+cuts, and reviewer agents look at the rest: whether the texts
 tell the truth about Aura, how the frames look, and whether the tutorials
 agree with each other. `docs/authoring.md` describes the scripts, their
 style, the workflows, and the review.

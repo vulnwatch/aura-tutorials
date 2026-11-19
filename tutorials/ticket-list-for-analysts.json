@@ -1,0 +1,273 @@
+{
+  "title": "The Ticket list for analysts",
+  "subtitle": "The queues, your Tickets, and the embargoes",
+  "outro": {
+    "title": "Start from the queues",
+    "subtitle": "New and Unassigned first, then the Tickets assigned to you."
+  },
+  "user": "asmith",
+  "covers": [
+    "work-new-tickets",
+    "follow-deadlines",
+    "manage-confidentiality"
+  ],
+  "vars": {
+    "ticket": "SNTL-12",
+    "confidential": "SNTL-18"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "The queues",
+      "steps": [
+        {
+          "id": "landing",
+          "action": "show",
+          "hold": 3,
+          "caption": "Analysts land on the New view",
+          "narration": "As an analyst, you land on the New view, the queue of the new Tickets that no analyst has taken yet."
+        },
+        {
+          "id": "order",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "columnheader",
+              "name": "Priority"
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "The most urgent Ticket comes first",
+          "narration": "A queue is sorted by priority, then by deadline, so its most urgent Ticket comes first."
+        },
+        {
+          "id": "unassigned",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "Unassigned"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^SNTL-9\\b"
+            }
+          ],
+          "caption": "Open the view Unassigned",
+          "narration": "Open the view Unassigned for the Tickets in Analysis or Analyzed that wait for an assignee.",
+          "hold": 3
+        }
+      ]
+    },
+    {
+      "title": "Your Tickets",
+      "steps": [
+        {
+          "id": "assigned-to-me",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "Assigned to me"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^{ticket}\\b"
+            }
+          ],
+          "caption": "Open the view Assigned to me",
+          "narration": "Open the view Assigned to me to see your Tickets in Analysis or Analyzed."
+        },
+        {
+          "id": "deadlines",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "columnheader",
+              "name": "Deadline"
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "The Deadline column shows the next deadline",
+          "narration": "In the list, the Deadline column shows the next deadline of a Ticket, in red once it has passed."
+        },
+        {
+          "id": "overdue",
+          "action": "click",
+          "target": [
+            {
+              "role": "list",
+              "name": "Tickets that need attention"
+            },
+            {
+              "role": "link",
+              "name": "QA"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^SNTL-2[67]\\b"
+            }
+          ],
+          "caption": "Select an overdue count to find late work",
+          "narration": "Select QA, or another overdue count of the attention summary, to find late work in the All view.",
+          "hold": 3.5
+        }
+      ]
+    },
+    {
+      "title": "The embargoes",
+      "steps": [
+        {
+          "id": "embargo",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "Embargo"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-27\\b"
+            }
+          ],
+          "caption": "Open the view Embargo",
+          "narration": "Open the view Embargo for the confidential Tickets, sorted by Coordinated Release Date, the earliest first."
+        },
+        {
+          "id": "lock",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "rowheader",
+              "name": "{confidential}"
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "A lock marks a confidential Ticket",
+          "narration": "In every view, a lock after its identifier marks a confidential Ticket."
+        },
+        {
+          "id": "expired",
+          "action": "click",
+          "target": [
+            {
+              "role": "list",
+              "name": "Tickets that need attention"
+            },
+            {
+              "role": "link",
+              "name": "Embargo expired"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^SNTL-27\\b"
+            }
+          ],
+          "caption": "Select Embargo expired",
+          "narration": "Select Embargo expired to list the Tickets whose Coordinated Release Date has passed, and that are still confidential.",
+          "hold": 3.5
+        }
+      ]
+    }
+  ]
+}

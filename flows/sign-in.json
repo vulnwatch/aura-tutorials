@@ -22,7 +22,7 @@
       "action": "fill",
       "target": { "label": "Password" },
       "value": "{password}",
-      "caption": "Then enter your password",
+      "caption": "Enter your password",
       "narration": "Then enter your password."
     },
     {

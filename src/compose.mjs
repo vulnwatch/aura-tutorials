@@ -3,8 +3,8 @@
 // sub-composition of compositions/ with its own GSAP timeline. A chapter
 // animates the screenshots of its steps in a window, with a camera that zooms
 // and pans towards the target of each step, a synthetic pointer that moves
-// and clicks, a keycap for each key press, highlights, captions, and
-// crossfades; a tutorial of several chapters opens each with a card. A voice
+// and clicks, a keycap for each key press, highlights, and crossfades;
+// a tutorial of several chapters opens each with a card. A voice
 // reads the narration of each step from its clip (src/lib/narration.mjs), and
 // the step lasts at least as long as its sentence. Writes <out>/composition/,
 // <out>/compose.json and <out>/chapters.ffmeta, the duration and the chapters,
@@ -13,10 +13,9 @@
 //
 // It also checks what it knows without judgment, and writes the findings into
 // compose.json with the times of the steps and the cards (docs/authoring.md,
-// Review): each step's target and ring in the view of the camera and clear of
-// the caption, the keycap of a key press in view, and each caption short
-// enough and on screen long enough to read. It reports them on stderr and
-// succeeds; scripts/tutorials.sh render --strict fails on them.
+// Review): each step's target and ring in the view of the camera, the keycap of
+// a key press in view, and each caption short enough. It reports them on
+// stderr and succeeds; scripts/tutorials.sh render --strict fails on them.
 //
 // Usage: node src/compose.mjs <id> <out>
 
@@ -66,7 +65,7 @@ const CONTENT = {
   bottom: WINDOW.top + TITLE_BAR + CONTENT_HEIGHT,
 };
 // The point of the canvas where the camera puts what it looks at: above the
-// middle, clear of the captions.
+// middle, clear of the subtitles of a player.
 const FOCUS = { x: CANVAS.width / 2, y: 470 };
 // The host that the address bar shows, fictional.
 const HOST = "sentinel.example.com";
@@ -85,19 +84,20 @@ const POINTER_MOVE = 0.85;
 const CROSSFADE = 0.45;
 const TYPING_TIME = { min: 0.6, max: 1.4, perCharacter: 0.09 };
 // How long each action holds after it ends, unless its step names a hold: the
-// time to read its caption.
+// time to see its result.
 const ACTION_HOLD = { goto: 3.0, fill: 1.1, click: 1.0, press: 1.0, show: 2.6 };
-// The voice starts after the start of its step, as its caption rises, and the
-// step ends no sooner than a breath after the sentence.
+// The voice starts just after the start of its step, and the step ends no
+// sooner than a breath after the sentence.
 const VOICE = { lead: 0.3, tail: 0.45 };
-// A click lands as its sentence ends, so that the voice names the action
-// before the screen changes; the step then holds only this long after it,
-// its caption having shown through the sentence.
-const CLICK_HOLD_AFTER_VOICE = 0.4;
-// The subtitles show at the top of the video, clear of the captions; or just
-// above the caption, during a step whose target the camera holds in the band
-// of the top, about two lines of a player's text.
-const CUE_LINE = { top: "6%", low: "74%", band: 200 };
+// A click lands once the voice has named the action, this long into its
+// sentence, or as a shorter sentence ends, and not before the pointer has
+// arrived; the result then shows while the voice reads the rest, and for the
+// hold of the action after it.
+const CLICK_AFTER_VOICE_START = 1.8;
+// The subtitles show where a player puts them, at the bottom of the video;
+// or at the top, during a step whose ringed target the camera holds in the
+// band of the bottom, about two lines of a player's text.
+const CUE_LINE = { top: "6%", band: 200 };
 // A cue of the subtitles holds at most about two lines of 42 characters, and
 // at least a few words.
 const CUE_CHARACTERS = 84;
@@ -107,18 +107,9 @@ const CUE_SHORTEST = 24;
 // names one: 1 shows the whole window.
 const ACTION_ZOOM = { goto: 1, fill: 1.75, click: 1.6, press: 1.5, show: 1.3 };
 
-// A caption rises in after the start of its step and fades before its end.
-const CAPTION_IN = { delay: 0.1, duration: 0.45 };
-const CAPTION_OUT = 0.32;
-// The box of a caption on the canvas, which its styles below decide: its top
-// and bottom, and an upper estimate of its width, since the composition knows
-// no text metrics: each character of its text takes at most about 0.52 em of
-// Inter at 36 px, beside its number and its paddings.
-const CAPTION_BOX = { top: 960, bottom: 1036, perCharacter: 0.52 * 36, frame: 16 + 18 + 30 };
-// A caption holds about 0.5 s plus 0.3 s a word to be read (HyperFrames,
-// references/motion.md, Holds), and has at most about eight words
-// (docs/authoring.md, Style).
-const READING = { base: 0.5, perWord: 0.3 };
+// A caption, the title of a step, which the website searches and the frames
+// list, has at most about eight words (docs/authoring.md, Style). The video
+// shows no caption: the voice and the subtitles tell each step.
 const CAPTION_WORDS = 8;
 // The ring around a target, outside its box, in CSS pixels of the page: its
 // padding, its border, and its halo, the spread of its shadow (.ring).
@@ -201,15 +192,6 @@ const inside = (inner, outer) =>
   inner.top >= outer.top - 0.5 &&
   inner.right <= outer.right + 0.5 &&
   inner.bottom <= outer.bottom + 0.5;
-const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-
-// The box of a caption on the canvas, from CAPTION_BOX and the styles of
-// .caption-number.
-function captionBox(number, text) {
-  const numberWidth = Math.max(44, 20 + 13 * String(number).length);
-  const width = CAPTION_BOX.frame + numberWidth + text.length * CAPTION_BOX.perCharacter;
-  return { left: (CANVAS.width - width) / 2, top: CAPTION_BOX.top, right: (CANVAS.width + width) / 2, bottom: CAPTION_BOX.bottom };
-}
 
 // The findings of the checks of a shown step, at the times of its chapter.
 // `timing` holds its start, end, and focus, the moment when the camera has
@@ -222,12 +204,6 @@ function checkStep(step, number, timing, cameraAt) {
   if (words > CAPTION_WORDS) {
     add("caption-too-long", timing.start, `the caption has ${words} words, more than the ${CAPTION_WORDS} of the Style; shorten it`);
   }
-  const shown = timing.end - timing.start - CAPTION_IN.delay - CAPTION_IN.duration - CAPTION_OUT;
-  const needed = READING.base + READING.perWord * words;
-  if (shown < needed - 0.005) {
-    add("caption-unread", timing.start, `the caption is whole on screen ${round(shown)} s, under the ${round(needed)} s that ${words} words need; give the step a longer hold`);
-  }
-  const caption = captionBox(number, step.caption);
   if (step.box) {
     const transform = cameraAt(timing.focus);
     const view = viewOf(transform);
@@ -238,18 +214,12 @@ function checkStep(step, number, timing, cameraAt) {
     } else if (!inside(ring, view)) {
       add("ring-outside-view", timing.focus, "the ring around the target is cut by the edge of the window or of the video; lower the zoom, or point at a smaller target");
     }
-    if (overlaps(ring, caption)) {
-      add("caption-covers-target", timing.focus, "the caption covers the target; raise the zoom so that the camera brings the target up, or point at a smaller target");
-    }
   }
   if (timing.keycap) {
     const transform = cameraAt(timing.keycap.at);
     const keycap = onCanvas(transform, timing.keycap.rect);
     if (!inside(keycap, viewOf(transform))) {
       add("keycap-outside-view", timing.keycap.at, "the keycap is not whole in the view of the camera");
-    }
-    if (overlaps(keycap, caption)) {
-      add("caption-covers-target", timing.keycap.at, "the caption covers the keycap");
     }
   }
   return findings;
@@ -309,8 +279,11 @@ function cuesOf(text, start, end) {
 }
 
 // A timed element of a composition.
+// The duration is the difference of the rounded times, so that a clip that
+// ends where the next one starts leaves no gap of a millisecond between
+// them, in which a frame of the video would show neither.
 const clip = (start, end, className = "") =>
-  `class="${`clip ${className}`.trim()}" data-start="${round(start)}" data-duration="${round(end - start)}"`;
+  `class="${`clip ${className}`.trim()}" data-start="${round(start)}" data-duration="${round(round(end) - round(start))}"`;
 
 // The GSAP calls of a timeline, in order of time. No fromTo renders its start
 // values when the timeline is built: the styles hold the state of each element
@@ -429,10 +402,12 @@ function introScene() {
       <div class="card-inner" id="intro-inner">
         ${brand}
         <h1>${escapeHtml(tutorial.title)}</h1>
-        <p id="intro-subtitle">${escapeHtml(tutorial.subtitle)}</p>
+        <p id="intro-subtitle" style="opacity: 0">${escapeHtml(tutorial.subtitle)}</p>
       </div>
     </div>`;
   // The title is on screen from the first frame, the thumbnail of a player.
+  // What fades in later is transparent until its tween starts: a tween sets
+  // its first state only from its own start.
   const tweens = [
     { method: "fromTo", selector: "#intro-inner", vars: { scale: 0.97 }, at: 0, extra: { scale: 1, duration: 1.6, ease: "power2.out" } },
     { method: "fromTo", selector: "#intro-subtitle", vars: { opacity: 0, y: 16 }, at: 0.4, extra: { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" } },
@@ -444,7 +419,7 @@ function introScene() {
 function outroScene() {
   const outro = tutorial.outro ?? { title: "That's it", subtitle: "" };
   const markup = `    <div id="outro-card" ${clip(0, OUTRO, "card")} data-track-index="1">
-      <div class="card-inner" id="outro-inner">
+      <div class="card-inner" id="outro-inner" style="opacity: 0">
         ${brand}
         <h1>${escapeHtml(outro.title)}</h1>
         <p>${escapeHtml(outro.subtitle ?? "")}</p>
@@ -545,6 +520,7 @@ const CHAPTER_STYLES = `${CARD_STYLES}
     }
     .ring {
       position: absolute;
+      box-sizing: border-box;
       border: ${RING.border}px solid ${ACCENT};
       border-radius: 10px;
       box-shadow: 0 0 0 ${RING.halo}px rgba(9, 105, 218, 0.18);
@@ -587,55 +563,19 @@ const CHAPTER_STYLES = `${CARD_STYLES}
       opacity: 0;
       transform-origin: 3px 2px;
       filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
-    }
-    .caption {
-      position: absolute;
-      left: 0;
-      bottom: 44px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-    .caption-inner {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 16px 30px 16px 16px;
-      border-radius: 999px;
-      background: rgba(11, 18, 32, 0.9);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-      opacity: 0;
-    }
-    .caption-number {
-      min-width: 44px;
-      height: 44px;
-      padding: 0 10px;
-      border-radius: 22px;
-      background: ${ACCENT};
-      color: #ffffff;
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 44px;
-      text-align: center;
-    }
-    .caption-text {
-      font-size: 36px;
-      font-weight: 550;
-      color: #ffffff;
     }`;
 
 // Where the pointer enters, in CSS pixels of the page.
 const POINTER_START = { x: PAGE.width * 0.72, y: PAGE.height * 0.82 };
 
 // Builds the scene of a chapter from its captured steps. `numbers` gives the
-// number of each step's caption, which counts across the tutorial. Returns its
+// number of each step, which counts across the tutorial. Returns its
 // file and its duration, and the times of its steps and the findings of their
 // checks, at the times of the chapter.
 function chapterScene(chapterIndex, steps, numbers, withCard) {
   const p = `c${chapterIndex + 1}`;
   const compositionId = `chapter-${chapterIndex + 1}`;
   const frames = [];
-  const captions = [];
   const voices = [];
   const rings = [];
   const ripples = [];
@@ -681,13 +621,14 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("fromTo", `#${ringId}`, { opacity: 0, scale: 1.08 }, at, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" });
     tween("to", `#${ringId}`, { opacity: 0, duration: 0.3 }, end - 0.3);
   };
-  // A keycap below the end of the target, or above the caption without one.
+  // A keycap below the end of the target, or in the lower middle of the
+  // window without one, above the subtitles of a player.
   // Returns its box for the checks, at the time that it is pressed.
   const keycap = (step, at, end) => {
     const keyId = `${p}-key-${step.id}`;
     const position = step.box
       ? { x: step.box.x + step.box.width - 90, y: step.box.y + step.box.height + 14 }
-      : { x: PAGE.width / 2 - 45, y: PAGE.height - 160 };
+      : { x: PAGE.width / 2 - 45, y: PAGE.height - 280 };
     keycaps.push({ id: keyId, key: step.key, ...position });
     tween("fromTo", `#${keyId}`, { opacity: 0, y: 10 }, at, { opacity: 1, y: 0, duration: 0.25, ease: "back.out(2)" });
     tween("fromTo", `#${keyId}`, { scale: 1 }, at + 0.35, { scale: 0.9, duration: 0.08, yoyo: true, repeat: 1 });
@@ -742,6 +683,8 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         showFrame(focused, clickAt + 0.05);
         const typing = Math.min(TYPING_TIME.max, Math.max(TYPING_TIME.min, typed.length * TYPING_TIME.perCharacter));
         const typingStart = clickAt + 0.35;
+        // The pointer would cover what the step types.
+        hidePointer(typingStart);
         typed.forEach((frame, character) => showFrame(frame, typingStart + (typing * character) / typed.length));
         focus = typingStart + typing;
         time = stepEnd(step, stepStart, typingStart + typing);
@@ -752,24 +695,25 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         showFrame(before, time);
         moveCamera(zoom, target, time);
         movePointer(target, time + 0.2);
-        // The pointer waits on the ringed target while the voice reads.
+        // The pointer waits on the ringed target while the voice names the
+        // action.
         const arrived = time + 0.2 + POINTER_MOVE + 0.15;
-        const spokenAt = time + VOICE.lead + narration.get(step.id).duration;
-        const clickAt = Math.max(arrived, spokenAt);
+        const spoken = Math.min(CLICK_AFTER_VOICE_START, narration.get(step.id).duration);
+        const clickAt = Math.max(arrived, time + VOICE.lead + spoken);
         ring(step, step.box, time + 0.5, clickAt + 0.25);
         ringed = true;
         click(clickAt);
         showFrame(after, clickAt + 0.3, CROSSFADE);
         moveCamera(1, null, clickAt + 0.4, 1.1);
         focus = clickAt;
-        time = stepEnd(step, stepStart, clickAt + 1.5, clickAt > arrived ? CLICK_HOLD_AFTER_VOICE : undefined);
+        time = stepEnd(step, stepStart, clickAt + 1.5);
         break;
       }
       case "press": {
         const [before, after] = files;
         showFrame(before, time);
-        // Without a target, the keycap shows above the caption, which the
-        // whole window frames, whatever the step before left in view.
+        // Without a target, the keycap shows in the whole window, whatever
+        // the step before left in view.
         moveCamera(target ? zoom : 1, target, time);
         const pressAt = time + 0.9;
         pressed = keycap(step, pressAt - 0.35, pressAt + 1.0);
@@ -804,18 +748,21 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
       default:
         throw new Error(`unknown action ${step.action} of step ${step.id}`);
     }
-    captions.push({ id: `${p}-caption-${step.id}`, number: numbers.get(step.id), step, start: stepStart, end: time });
     const spoken = narration.get(step.id);
     voices.push({ id: `${p}-voice-${step.id}`, key: spoken.key, start: stepStart + VOICE.lead, end: stepStart + VOICE.lead + spoken.duration });
     timings.push({ step, start: stepStart, focus, end: time, ring: ringed, keycap: pressed, voice: voices.at(-1) });
   }
+  // The window rises with its first page in it, not empty.
+  frames[0].start = Math.min(frames[0].start, start - 0.3);
+  frames[0].fade = 0;
   const findings = timings.flatMap((timing) => checkStep(timing.step, numbers.get(timing.step.id), timing, cameraAt));
-  // Where the subtitles of a step show: low when its ringed target, at its
-  // focus, reaches into the band of the top.
+  // Where the subtitles of a step show: at the top when its ringed target, at
+  // its focus, reaches into the band of the bottom; where the player puts
+  // them otherwise.
   const cueLine = (timing) => {
-    if (!timing.step.box) return CUE_LINE.top;
+    if (!timing.step.box) return null;
     const ringed = onCanvas(cameraAt(timing.focus), rectOf(timing.step.box, RING.pad + RING.border + RING.halo));
-    return ringed.top < CUE_LINE.band ? CUE_LINE.low : CUE_LINE.top;
+    return ringed.bottom > CANVAS.height - CUE_LINE.band ? CUE_LINE.top : null;
   };
   // The chapter ends with the whole window, which recedes.
   const stepsEnd = time;
@@ -825,11 +772,6 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
   const duration = round(stepsEnd + WINDOW_FALL);
   frames.at(-1).end = duration;
 
-  // The captions: each rises in as its step starts and fades before it ends.
-  for (const caption of captions) {
-    tween("fromTo", `#${caption.id} .caption-inner`, { opacity: 0, y: 24 }, caption.start + CAPTION_IN.delay, { opacity: 1, y: 0, duration: CAPTION_IN.duration, ease: "power3.out" });
-    tween("to", `#${caption.id} .caption-inner`, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, caption.end - CAPTION_OUT);
-  }
   // The crossfades of the frames.
   frames.forEach((frame, index) => {
     if (frame.fade > 0) {
@@ -853,7 +795,7 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
   const chapter = tutorial.chapters[chapterIndex];
   const cardMarkup = withCard
     ? `    <div id="${p}-card" ${clip(0, CHAPTER_CARD, "card")} data-track-index="1">
-      <div class="card-inner" id="${p}-card-inner">
+      <div class="card-inner" id="${p}-card-inner" style="opacity: 0">
         <div class="eyebrow">Chapter ${chapterIndex + 1}</div>
         <h2>${escapeHtml(chapter.title)}</h2>
       </div>
@@ -864,7 +806,8 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
     tween("fromTo", `#${p}-card-inner`, { opacity: 0, y: 24 }, 0.1, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
     tween("to", `#${p}-card-inner`, { opacity: 0, y: -24, duration: 0.45, ease: "power2.in" }, CHAPTER_CARD - 0.55);
   }
-  const pad = RING.pad;
+  // The border of a ring lies outside its padding, the same on every side.
+  const pad = RING.pad + RING.border;
   const markup = `${cardMarkup}    <div id="${p}-world" class="world" data-layout-allow-overflow>
       <div id="${p}-window" class="window">
         <div class="title-bar">
@@ -909,13 +852,6 @@ ${keycaps
         </div>
       </div>
     </div>
-${captions
-  .map(
-    (caption) => `    <div id="${caption.id}" ${clip(caption.start, caption.end, "caption")} data-track-index="4" data-narration="${escapeHtml(caption.step.narration ?? "")}">
-      <div class="caption-inner"><span class="caption-number">${caption.number}</span><span class="caption-text">${escapeHtml(caption.step.caption)}</span></div>
-    </div>`,
-  )
-  .join("\n")}
 ${
   // The voice, at the times of the chapter, as its start basis says.
   voices
@@ -1080,7 +1016,7 @@ const vttTime = (seconds) => {
 const cues = steps.flatMap((step) => cuesOf(step.narration, step.voiceStart, step.voiceEnd).map((cue) => ({ ...cue, line: step.cueLine })));
 await writeFile(
   join(outDir, `${id}.vtt`),
-  `WEBVTT\n\n${cues.map((cue, index) => `${index + 1}\n${vttTime(cue.start)} --> ${vttTime(cue.end)} line:${cue.line}\n${cue.text}`).join("\n\n")}\n`,
+  `WEBVTT\n\n${cues.map((cue, index) => `${index + 1}\n${vttTime(cue.start)} --> ${vttTime(cue.end)}${cue.line ? ` line:${cue.line}` : ""}\n${cue.text}`).join("\n\n")}\n`,
 );
 
 console.error(

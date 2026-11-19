@@ -25,7 +25,7 @@ Clean, Minor issues, or Needs revision.
 | Agent | Trigger (`AGENTS.md`, Reviewers, is authoritative) | Purpose |
 |---|---|---|
 | `@accuracy-reviewer` | A new or changed script, flow, or catalog; a new version of Aura | Every text of the videos against Aura's screen documents and the screenshots of the capture; the covers of the scripts and the catalog against Aura |
-| `@visual-reviewer` | A render that changes the frames of a video | The frames of the videos as a viewer sees them: framing, captions, keycaps, settled screens, the pointer, overlap, pacing |
+| `@visual-reviewer` | A render that changes the frames of a video | The frames of the videos as a viewer sees them: framing, rings, keycaps, subtitles, settled screens, the pointer, overlap, pacing |
 | `@consistency-reviewer` | A new or changed script, flow, or catalog; a change of the Style | The scripts against the Style of `docs/authoring.md` and against each other: wording, users, Tickets, flows, data, coverage |
 | `@cicd-reviewer` | A change of a workflow, a script, Renovate, or the tooling | Pinning, permissions, the gates of the pipeline, the isolation from Aura and the host, and the documentation of the commands |
 

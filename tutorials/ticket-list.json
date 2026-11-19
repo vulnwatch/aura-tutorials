@@ -1,0 +1,458 @@
+{
+  "title": "Find your way in the Ticket list",
+  "subtitle": "Views, search, sorting, filters, and the Tickets that need attention",
+  "outro": {
+    "title": "That's the Ticket list",
+    "subtitle": "A view, a search, and its filters are part of the address: share it as a link."
+  },
+  "user": "hgray",
+  "covers": [
+    "find-tickets",
+    "open-ticket"
+  ],
+  "vars": {
+    "package": "fictional-openssl",
+    "ticket": "SNTL-12"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "The views",
+      "steps": [
+        {
+          "id": "landing",
+          "action": "show",
+          "hold": 3,
+          "caption": "Aura opens the Ticket list",
+          "narration": "Sentinel Aura opens the Ticket list in its All view: every Ticket that you can see, the most recently modified first."
+        },
+        {
+          "id": "views",
+          "action": "show",
+          "target": {
+            "role": "tablist",
+            "name": "Views"
+          },
+          "zoom": 1.5,
+          "caption": "The views are tabs, each with its count",
+          "narration": "The views are tabs, and each counts its Tickets. New and Unassigned are the queues of the Tickets that wait for an analyst; Analysis, Analyzed, and All follow."
+        },
+        {
+          "id": "analysis",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "Analysis"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              }
+            }
+          ],
+          "caption": "Open the view Analysis",
+          "narration": "Open the view Analysis to see the Tickets in that status, sorted by priority, then by deadline."
+        },
+        {
+          "id": "all",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "All"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              }
+            }
+          ],
+          "caption": "Open the view All",
+          "narration": "Open the view All to return to every Ticket."
+        },
+        {
+          "id": "deadlines",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "columnheader",
+              "name": "Deadline"
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "The Deadline column shows the next deadline",
+          "narration": "In the list, the Deadline column shows the next deadline of a Ticket, in red once it has passed."
+        }
+      ]
+    },
+    {
+      "title": "The search",
+      "steps": [
+        {
+          "id": "search",
+          "action": "fill",
+          "target": {
+            "role": "searchbox",
+            "name": "Search Tickets"
+          },
+          "value": "{package}",
+          "caption": "Enter a package in the search",
+          "narration": "Enter the name of a package: the search finds Tickets by their identifier, their CVE, or their packages."
+        },
+        {
+          "id": "submit",
+          "action": "press",
+          "key": "Enter",
+          "target": {
+            "role": "searchbox",
+            "name": "Search Tickets"
+          },
+          "waitFor": {
+            "role": "grid",
+            "name": "Tickets",
+            "child": {
+              "role": "rowheader"
+            },
+            "allHaveText": "^{ticket}\\b"
+          },
+          "caption": "Press Enter to search",
+          "narration": "Press Enter to keep the Tickets of the view that match."
+        },
+        {
+          "id": "clear-search",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Clear filters"
+          },
+          "zoom": 1,
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-26\\b"
+            }
+          ],
+          "caption": "Select Clear filters",
+          "narration": "Select Clear filters to remove the search."
+        }
+      ]
+    },
+    {
+      "title": "Sorting and filters",
+      "steps": [
+        {
+          "id": "sort",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "columnheader",
+              "name": "Severity"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-(1|7)\\b"
+            }
+          ],
+          "caption": "Select a column heading to sort",
+          "narration": "Select Severity, or the heading of another sortable column, to sort the list by it."
+        },
+        {
+          "id": "sorted",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "columnheader",
+              "name": "Severity"
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "The most severe Tickets come first",
+          "narration": "The most severe Tickets now come first; selecting the heading again reverses the order."
+        },
+        {
+          "id": "filters",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Filters",
+            "exact": true
+          },
+          "zoom": 1,
+          "waitFor": {
+            "role": "dialog",
+            "name": "Filters"
+          },
+          "caption": "Select Filters",
+          "narration": "Select Filters to narrow the list."
+        },
+        {
+          "id": "filter-analysis",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Filters"
+            },
+            {
+              "role": "group",
+              "name": "Status"
+            },
+            {
+              "text": "Analysis",
+              "exact": true
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-(9|11|21)\\b"
+            }
+          ],
+          "caption": "Select a value, such as Analysis",
+          "narration": "Select Analysis, a value of the status filter: the list follows at once."
+        },
+        {
+          "id": "filter-analyzed",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Filters"
+            },
+            {
+              "role": "group",
+              "name": "Status"
+            },
+            {
+              "text": "Analyzed",
+              "exact": true
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-30\\b"
+            }
+          ],
+          "caption": "Select Analyzed to match either status",
+          "narration": "Select Analyzed too, to keep the Tickets that have either status."
+        },
+        {
+          "id": "filters-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close the filters",
+          "narration": "Press Escape to close the filters."
+        },
+        {
+          "id": "clear-filters",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Clear filters"
+          },
+          "zoom": 1,
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-(1|7)\\b"
+            }
+          ],
+          "caption": "Select Clear filters",
+          "narration": "Select Clear filters: it removes the search and the filters, and keeps the view and its sorting."
+        }
+      ]
+    },
+    {
+      "title": "The attention summary",
+      "steps": [
+        {
+          "id": "attention",
+          "action": "show",
+          "target": {
+            "role": "list",
+            "name": "Tickets that need attention"
+          },
+          "zoom": 1.7,
+          "caption": "The attention summary counts urgent Tickets",
+          "narration": "Next to the heading, the attention summary counts the Tickets that need attention: the active P1 Tickets, and the Tickets overdue in each phase, from Triage to QA."
+        },
+        {
+          "id": "count",
+          "action": "click",
+          "target": [
+            {
+              "role": "list",
+              "name": "Tickets that need attention"
+            },
+            {
+              "role": "link",
+              "name": "Submission"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^{ticket}\\b"
+            }
+          ],
+          "caption": "Select a count to list its Tickets",
+          "narration": "Select Submission, or another count, to list its Tickets in the All view."
+        },
+        {
+          "id": "priority",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "row",
+              "name": "{ticket}"
+            },
+            {
+              "role": "button",
+              "name": "P1, override",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "P1, override",
+            "exact": true
+          },
+          "caption": "Select a priority to see its explanation",
+          "narration": "Select the priority of a Ticket to see its explanation."
+        },
+        {
+          "id": "explanation",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "P1, override",
+            "exact": true
+          },
+          "zoom": 1.8,
+          "caption": "The explanation shows who set an override",
+          "narration": "Here, the priority is an override: the explanation shows who set it and when, and the automatic priority that it replaces."
+        },
+        {
+          "id": "priority-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close it",
+          "narration": "Press Escape to close it."
+        },
+        {
+          "include": "open-ticket"
+        },
+        {
+          "id": "ticket",
+          "action": "show",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Ticket"
+            },
+            {
+              "role": "tab",
+              "name": "Overview"
+            }
+          ],
+          "zoom": 1,
+          "caption": "The Ticket opens on its Overview",
+          "narration": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details."
+        }
+      ]
+    }
+  ]
+}

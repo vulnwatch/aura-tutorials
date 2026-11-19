@@ -1,11 +1,11 @@
 {
   "description": "The tasks that the tutorials cover: the frequent tasks of each profile of Aura's docs/screen-map.md (Users and Frequent Tasks), and the basics that every task needs. A tutorial names the tasks that it shows in its covers; scripts/tutorials.sh coverage lists the tasks without one. The status of a task says how much of it the pinned Aura can show: available, partial (the notes say what is missing), or not-in-aura; scripts and the aura-bump skill update it with each version of Aura.",
-  "aura": "v0.9.0",
+  "aura": "v0.10.0",
   "profiles": [
-    { "id": "every-user", "name": "Every user", "source": "aura/docs/screen-map.md#every-user", "user": "jdoe" },
+    { "id": "every-user", "name": "Every user", "source": "aura/docs/screen-map.md#every-user", "user": "hgray" },
     { "id": "analysts", "name": "Vulnerability analysts", "source": "aura/docs/screen-map.md#vulnerability-analysts", "user": "asmith" },
     { "id": "maintainers", "name": "Package maintainers", "source": "aura/docs/screen-map.md#package-maintainers", "user": "dbrown" },
-    { "id": "readers", "name": "Readers", "source": "aura/docs/screen-map.md#readers", "user": "jdoe" },
+    { "id": "readers", "name": "Readers", "source": "aura/docs/screen-map.md#readers", "user": "hgray" },
     { "id": "administrators", "name": "Administrators", "source": "aura/docs/screen-map.md#administrators", "user": "jdoe" },
     { "id": "restricted-analysts", "name": "Restricted analysts", "source": "aura/docs/screen-map.md#restricted-analysts", "user": "cwhite" }
   ],
@@ -15,6 +15,13 @@
       "profile": "every-user",
       "task": "Sign in to Sentinel Aura, and land on the Ticket list",
       "source": "aura/docs/screens/sign-in.md#purpose",
+      "status": "available"
+    },
+    {
+      "id": "find-tickets",
+      "profile": "every-user",
+      "task": "Find Tickets in the Ticket list: its views, its search, its filters, its sorting, and its attention summary",
+      "source": "aura/docs/screens/ticket-list.md#purpose",
       "status": "available"
     },
     {
@@ -46,7 +53,7 @@
       "task": "Work the queue of new Tickets: take them, or ignore them, or mark them as duplicates",
       "source": "aura/docs/screen-map.md#vulnerability-analysts",
       "status": "partial",
-      "notes": "The New view lists the queue; taking, ignoring, and marking duplicates are not in Aura yet."
+      "notes": "The New and Unassigned views list the queues, and Edit assignee on the Ticket takes one; ignoring a Ticket and marking it as a duplicate are not in Aura yet."
     },
     {
       "id": "analyze-packages",
@@ -54,7 +61,7 @@
       "task": "Analyze the packages, tracks, and Product eligibility of their Tickets",
       "source": "aura/docs/screen-map.md#vulnerability-analysts",
       "status": "partial",
-      "notes": "The package tree and the affected versions show on the Ticket; changing tracks and eligibility is not in Aura yet."
+      "notes": "The Ticket shows the package tree and the affected versions, and offers Exclude and Restore on its packages, tracks, and Products, the affectedness of a track, and the eligibility of a Product; adding a package or a track is not in Aura yet."
     },
     {
       "id": "maintain-references",
@@ -69,7 +76,7 @@
       "task": "Maintain severities, SUSE CVSS assessments, and priority overrides",
       "source": "aura/docs/screen-map.md#vulnerability-analysts",
       "status": "partial",
-      "notes": "The Ticket shows them, and the explanation of a priority; changing them is not in Aura yet."
+      "notes": "The SUSE CVSS assessment is added, edited, and deleted on the Ticket, which shows the severities and the explanation of a priority; changing a severity or overriding a priority is not in Aura yet."
     },
     {
       "id": "follow-deadlines",
@@ -84,7 +91,7 @@
       "task": "Manage the confidentiality of embargoed Tickets, their Coordinated Release Dates, and their access grants",
       "source": "aura/docs/screen-map.md#vulnerability-analysts",
       "status": "partial",
-      "notes": "Access grants are granted and revoked on the Ticket; the Coordinated Release Date and confidentiality are not editable yet."
+      "notes": "The Embargo view lists the confidential Tickets with their Coordinated Release Dates, and access grants are granted and revoked on the Ticket; the Coordinated Release Date and confidentiality are not editable yet."
     },
     {
       "id": "create-tickets-and-refetch",
@@ -168,7 +175,7 @@
       "task": "Work the non-confidential Tickets as vulnerability analysts do, without access to embargoed data",
       "source": "aura/docs/screen-map.md#restricted-analysts",
       "status": "partial",
-      "notes": "As for the analysts' tasks: the Ticket list and the Ticket show the work; most of its actions are not in Aura yet."
+      "notes": "As for the analysts' tasks: the Ticket list and the Ticket show the work and offer its actions on the Tickets that the user sees; ignoring a Ticket, marking it as a duplicate, changing a severity, and overriding a priority are not in Aura yet."
     },
     {
       "id": "bot-api-keys",

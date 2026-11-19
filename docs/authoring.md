@@ -74,7 +74,7 @@ no video stale: the lock only records what each video was rendered with, and
   "title": "Find SUSE's status for a CVE",
   "subtitle": "Search the Tickets, open one, and read its packages",
   "outro": { "title": "Search finds more than CVEs", "subtitle": "…" },
-  "user": "jdoe",
+  "user": "hgray",
   "covers": ["search", "cve-status"],
   "changesData": false,
   "vars": { "cve": "CVE-2099-0012", "ticket": "SNTL-12" },
@@ -110,9 +110,9 @@ under a minute, a workflow one of several minutes in chapters.
 | `key` | `press` | The key, as Playwright names it, such as `Enter` or `Escape`; the video shows it on a keycap |
 | `waitFor`, `waitForUrl` | All | What must hold after the action before its screenshot |
 | `zoom` | All | How far the camera zooms towards the target, from 1 (the whole window) to 3; each action has a default |
-| `hold` | All | Seconds the step holds after its action, to read its caption; each action has a default |
+| `hold` | All | Seconds the step holds after its action, to see its result; each action has a default |
 | `duration` | All | The least duration of the step, in seconds; a step also lasts until its sentence ends (Narration) |
-| `caption` | Shown steps | The text on screen (Style) |
+| `caption` | Shown steps | The title of the step, which the search of the website looks in and the frames list (Style); the video does not show it |
 | `narration` | Shown steps | The sentence that the voice reads during the step, and the text of its subtitles (Narration) |
 
 The actions:
@@ -163,8 +163,9 @@ the example dataset. An unknown variable fails the validation.
 - **Data**: only Sentinel's example dataset, whose data is fictional. A step
   that types data uses fictional values, such as addresses under
   `example.com`.
-- **Captions**: in English, sentence case, at most about eight words, in the
-  imperative for an action ("Select Sign in") and as a statement for what a
+- **Captions**: the title of each step, which the video does not show: the
+  voice and the subtitles tell the step. In English, sentence case, at most
+  about eight words, in the imperative for an action ("Select Sign in") and as a statement for what a
   screen shows ("The Ticket opens on its Overview"). Name controls as the UI
   does, and use Aura's words: "select", not "click"; "Ticket", capitalized.
 - **Verbs**: one verb for each kind of action, in captions and narrations:
@@ -174,7 +175,11 @@ the example dataset. An unknown variable fails the validation.
   and "Press" for a key, with its purpose ("Press Escape to close it").
 - **Narration**: one or two full sentences that the caption shortens, written
   to be read aloud, and addressed to the viewer as "you", whatever the
-  profile.
+  profile. The narration of a click starts with its action, "Select" or
+  "Open", names what it selects or opens next, and gives its purpose, when
+  it has one, after that ("Select Filters to narrow the list."), because the click lands early
+  in the sentence (Narration, Timing); the validation fails on another
+  start.
 - **One idea per step**: a step that both acts and explains becomes two, an
   action and a `show`.
 - **Chapters**: a tutorial of several chapters gives each a title of two to
@@ -218,16 +223,19 @@ text as subtitles.
   another way each time, with another duration, and retires its models. The
   clips are the recording that the videos were made from, as their scripts
   are; the videos are not, since a render gives them again.
-- **Timing**: the voice starts 0.3 s after its step, as the caption rises,
-  and the step ends no sooner than 0.45 s after the sentence
-  (`src/compose.mjs`, `VOICE`). A `hold` or a `duration` only lengthens a
-  step beyond that. A click lands as its sentence ends, while the pointer
-  waits on the ringed target, so that the voice names the action before the
-  screen changes.
+- **Timing**: the voice starts 0.3 s after its step, and the step ends no
+  sooner than 0.45 s after the sentence (`src/compose.mjs`, `VOICE`). A
+  `hold` or a `duration` only lengthens a step beyond that. A click lands
+  1.8 s into its sentence, or as a shorter sentence ends, once the voice has
+  named the action while the pointer waits on the ringed target
+  (`CLICK_AFTER_VOICE_START`); its result then shows while the voice reads
+  the rest of the sentence, and for at least 2.5 s after the click, unless
+  the step names a shorter `hold`.
 - **Subtitles**: `out/<id>/<id>.vtt`, WebVTT, the narrations while the voice
-  reads them, a long one in cues of at most 84 characters, at the top of
-  the video, clear of the captions, or just above the caption during a step
-  whose target is at the top.
+  reads them, a long one in cues of at most 84 characters, where a player
+  puts them, at the bottom of the video, or at the top during a step whose
+  target is at the bottom. The video itself shows no caption and no narration,
+  so the website turns the subtitles on.
 - **The lock** records the hash of the keys, the durations, and the files of
   the clips of each video: a changed sentence makes its video stale through its
   script, and another voice, or another reading of a sentence, through its
@@ -235,8 +243,7 @@ text as subtitles.
   (`narration-changed`).
 
 To change the voice, edit `narration/voice.json` and render every tutorial:
-each sentence is read again, about 2,000 characters for the first three
-tutorials. To have one sentence read again, delete its clip and render.
+each sentence is read again. To have one sentence read again, delete its clip and render.
 Commit `narration/` with the scripts and the lock.
 
 Write a narration as it should sound: the voice reads abbreviations that
@@ -335,7 +342,7 @@ reviewers, agents that look at what the checks cannot measure.
 ### Checks of the Composition
 
 `src/compose.mjs` knows the box of each target, the moves of the camera, the
-place of each caption and keycap, and every time. For each shown step, at its
+place of each keycap, and every time. For each shown step, at its
 focus, the moment when the camera has settled on what the step points at, it
 checks:
 
@@ -343,26 +350,26 @@ checks:
 |---|---|
 | `target-outside-view` | The target is not whole in the part of the window that the camera shows |
 | `ring-outside-view` | The ring around the target is cut by the edge of the window or of the video |
-| `caption-covers-target` | The caption covers the target, its ring, or the keycap of a key press |
 | `keycap-outside-view` | The keycap of a key press is not whole in view |
 | `caption-too-long` | The caption has more than eight words (Style) |
-| `caption-unread` | The caption is not whole on screen for 0.5 s plus 0.3 s a word, the time to read it (HyperFrames, `references/motion.md`) |
 
-The width of a caption is an upper estimate, since the composition measures
-no text. The composition reports the findings, and writes them into
+The composition reports the findings, and writes them into
 `out/<id>/compose.json` with the start, the focus, and the end of every step
 and the times of the cards. `scripts/tutorials.sh render --strict` fails on
 them once the videos are rendered, as CI does for the tutorials that a pull
 request changes. A finding is fixed in its script, and no step is exempt: a
-lower `zoom` or a smaller `target` for a target out of view, a `zoom` that
-brings the target up for one under the caption, a `hold` for a caption too
-brief, a shorter caption.
+lower `zoom` or a smaller `target` for a target or a ring out of view, a
+shorter caption.
+
+The ring surrounds its target with the same margin on every side. For a cell
+of a table, the capture takes the box of what the cell holds, its text and
+its images, since a cell is as wide as its column (`src/capture.mjs`).
 
 ### Frames
 
 `scripts/tutorials.sh frames <id>` extracts from the rendered video, into
 `out/<id>/frames/`, a frame of each step at its focus and one just before its
-end, with its caption still on screen; a contact sheet of each chapter,
+end, with the result of its action; a contact sheet of each chapter,
 `chapter-<n>.png`, with a row for each step; one of the cards, `cards.png`;
 and `frames.md`, which lists them with the captions, the times, and the
 findings of the checks. With times in seconds, it extracts only the frames
@@ -377,7 +384,7 @@ catalogs them:
 | Reviewer | What it checks |
 |---|---|
 | `@accuracy-reviewer` | Every title, caption, narration, and outro against Aura's screen documents and the screenshots of the capture; the covers of each script and the catalog against Aura |
-| `@visual-reviewer` | The frames as a viewer sees them: the camera frames the target, the caption hides nothing, no screen still loading, no pointer over the UI, readable text, no overlap, pacing |
+| `@visual-reviewer` | The frames as a viewer sees them: the camera frames the target, the ring surrounds it, no screen still loading, no pointer over the UI, readable text, no overlap, pacing |
 | `@consistency-reviewer` | The scripts against the Style and against each other: wording, users, Tickets, flows, data, coverage |
 | `@cicd-reviewer` | The workflows, the scripts, Renovate, and the tooling |
 
@@ -449,7 +456,7 @@ holds:
   their title, their subtitle, and the captions of their steps;
 - a page per tutorial, at `tutorials/<id>/`, always dark, which keeps to
   its video, with a poster, a frame of its intro card, its chapters as a
-  WebVTT track, and its subtitles as another, which the visitor turns on:
+  WebVTT track, and its subtitles as another, which shows unless the visitor turns it off:
   around it, only the link back to its role, its title, its
   place in the path, and the link to the next video of its role, or to the
   directory after the last one.

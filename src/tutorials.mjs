@@ -415,9 +415,8 @@ async function findings(ids) {
 
 // The tiles of a contact sheet, two to a row.
 const TILE = { width: 800, height: 450 };
-// How long before the end of a step its last frame is taken: its caption
-// still shows, since it fades in the last 0.32 s (src/compose.mjs,
-// CAPTION_OUT).
+// How long before the end of a step its last frame is taken: the result of
+// its action shows, before the next step moves the camera.
 const BEFORE_END = 0.5;
 
 const round = (value) => Math.round(value * 1000) / 1000;
@@ -477,7 +476,7 @@ async function frames([id, ...times]) {
   const lines = [
     `# Frames of ${id}`,
     "",
-    `The video \`out/${id}/${id}.mp4\`, ${composed.duration} s, from the current script; the times are in seconds of the video. Each step has a frame at its focus, when the camera has settled on what it points at, and one ${BEFORE_END} s before its end, with its caption still on screen. The contact sheets hold every frame below at a smaller size, each labeled with its step, moment, and time, for where only they are kept, as in the artifact of CI.`,
+    `The video \`out/${id}/${id}.mp4\`, ${composed.duration} s, from the current script; the times are in seconds of the video. Each step has a frame at its focus, when the camera has settled on what it points at, and one ${BEFORE_END} s before its end, with the result of its action. The contact sheets hold every frame below at a smaller size, each labeled with its step, moment, and time, for where only they are kept, as in the artifact of CI.`,
     "",
     "## Cards (`cards.png`)",
     "",
