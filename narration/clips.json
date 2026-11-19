@@ -1,0 +1,108 @@
+{
+  "clips": {
+    "0601636641ff59bb9e55e3f3": {
+      "text": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details.",
+      "duration": 7.802
+    },
+    "18fb85fada3b5ed7dcea9a14": {
+      "text": "Then enter your password.",
+      "duration": 1.625
+    },
+    "1b516421c98083b25dc93854": {
+      "text": "In the list, the Deadline column shows the next deadline of each Ticket, in red once it has passed.",
+      "duration": 6.13
+    },
+    "27a68493af25a94450948da3": {
+      "text": "Aura opens the Ticket list. Next to its heading, the attention summary counts the Tickets that need attention.",
+      "duration": 6.269
+    },
+    "2b34d4f6d66875a5057fba63": {
+      "text": "The new reference shows in the table: a manual reference, uncategorized, with the time it was added.",
+      "duration": 6.41
+    },
+    "348e5da60278c17d0e2059e6": {
+      "text": "The reference that you added is the latest event, with who added it and when.",
+      "duration": 4.551
+    },
+    "3ed1de35de8122274fc4671d": {
+      "text": "To read the advisories, patches, and reports about the Ticket, open the tab References.",
+      "duration": 5.619
+    },
+    "4a21decd6845db5927dbfbb3": {
+      "text": "Select Sign in.",
+      "duration": 1.3
+    },
+    "54c644f87663e95959214988": {
+      "text": "To see every change of the Ticket, and what Sentinel did by itself, open the tab Audit log.",
+      "duration": 5.573
+    },
+    "57357d73a944be511e260287": {
+      "text": "To see your Tickets in Analysis or Analyzed, open the view Assigned to me.",
+      "duration": 4.737
+    },
+    "6ce697a1059d47a6f8a3b2df": {
+      "text": "Press Escape to close the explanation.",
+      "duration": 2.508
+    },
+    "72a22934cd4fe185e385e7d7": {
+      "text": "To record a new one, select Add reference.",
+      "duration": 2.461
+    },
+    "79d9b26883dfbf3d3d8dd27f": {
+      "text": "Next to the heading, the attention summary counts the active P1 Tickets, the embargoes that have expired, and the Tickets overdue in each phase, from Triage to QA.",
+      "duration": 10.31
+    },
+    "8651d6204b36427f358ea7ba": {
+      "text": "Enter a title: it is optional, and makes the reference easier to find.",
+      "duration": 4.644
+    },
+    "96d153d8345e60924f21c4c7": {
+      "text": "Below, the packages show where SUSE stands for each codestream and its Products: here, affected.",
+      "duration": 6.734
+    },
+    "98ccb6624a17bc27330cad3b": {
+      "text": "Press Enter to keep the Tickets that match: here, the Ticket of the CVE.",
+      "duration": 4.737
+    },
+    "9de524aafabbfb1a44abef7c": {
+      "text": "Select Add reference in the dialog to add it to the Ticket.",
+      "duration": 3.39
+    },
+    "a6c4f00a060786ca3ac45e9e": {
+      "text": "From the Ticket list, enter the identifier of the CVE in the search.",
+      "duration": 4.598
+    },
+    "ac3b2a6fa53d1e116d6e4d44": {
+      "text": "To open the Ticket, select its identifier.",
+      "duration": 2.461
+    },
+    "b47465e1764802dab8ef557b": {
+      "text": "As an analyst, you land on the New view, the queue of new Tickets.",
+      "duration": 4.319
+    },
+    "b80cf462dfd3e27635b06462": {
+      "text": "Enter your username.",
+      "duration": 1.394
+    },
+    "c4e041b3c93fff4ce22e8cd3": {
+      "text": "Enter the address of the page.",
+      "duration": 1.765
+    },
+    "cf125205748aa0c5580c28bb": {
+      "text": "The priority in the heading explains itself: select it.",
+      "duration": 3.715
+    },
+    "e75122461ca0850d9afca86f": {
+      "text": "This priority is an override: the explanation says who set it and when, and the priority that Sentinel computed from the severity and the exploitation.",
+      "duration": 9.52
+    },
+    "eaccfe487aa35d08eda3f6e6": {
+      "text": "Open Sentinel Aura in your browser. If you aren't signed in, it shows Sign in.",
+      "duration": 4.83
+    },
+    "fbaacf94c2a20db428d6ffbf": {
+      "text": "The heading of the Ticket shows its CVE, its status, its severity, and its priority.",
+      "duration": 5.619
+    }
+  }
+}

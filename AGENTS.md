@@ -40,6 +40,15 @@ an agent, a skill, or the model selection.
   plugin of HyperFrames for agents.
 - HyperFrames runs without telemetry, update checks, or installations of its
   own (`scripts/tooling.sh`); keep it so.
+- The voice of the videos is a paid speech service
+  (`docs/authoring.md`, Narration). Only `scripts/tooling.sh narrate`, which
+  `scripts/tutorials.sh render` runs, calls it, and only for a clip that
+  `narration/` lacks, with the user's key, which it reads from
+  `~/.config/aura-tutorials/openrouter.key` or from `OPENROUTER_API_KEY`.
+  Never read that file yourself, and never write the key into a file of the
+  repository, a command line, or a log.
+  Ask the user before changing `narration/voice.json`, which reads every
+  sentence again, and never delete clips to have them read again unasked.
 
 ## Content
 
@@ -60,8 +69,8 @@ an agent, a skill, or the model selection.
 - Then look at the screenshots of `out/<id>/capture/` and at the frames of
   the video, which `scripts/tutorials.sh frames <id>` extracts, and run the
   reviewers that Reviewers requires, before you report it done.
-- Commit `tutorials.lock.json` with the scripts and the code that it
-  describes, after their render.
+- Commit `tutorials.lock.json` and `narration/` with the scripts and the
+  code that they describe, after their render.
 
 ## Reviewers
 
@@ -74,7 +83,7 @@ request.
 |---|---|
 | A new tutorial | `@accuracy-reviewer`, `@consistency-reviewer`, and `@visual-reviewer` |
 | A changed script or flow, or `catalog/tasks.json` | `@accuracy-reviewer` and `@consistency-reviewer`; `@visual-reviewer` too when the render changes its frames |
-| A render that changes the frames of a video: a change of `src/compose.mjs` or `src/capture.mjs`, or screens that a new version of Aura or of the tooling changes | `@visual-reviewer`, on the videos that changed |
+| A render that changes the frames of a video: a change of `src/compose.mjs` or `src/capture.mjs`, another voice (`narration/voice.json`), which changes the times of the steps, or screens that a new version of Aura or of the tooling changes | `@visual-reviewer`, on the videos that changed |
 | A new version of Aura (`aura-bump`) | `@accuracy-reviewer`, on the tutorials whose screens changed and on the catalog; `@visual-reviewer`, on the videos rendered again |
 | The Style of `docs/authoring.md` | `@consistency-reviewer`, on every tutorial |
 | A workflow, a script of `scripts/`, `renovate.json`, `.gitmodules`, or the tooling (`Containerfile`, `package.json`, `package-lock.json`) | `@cicd-reviewer` |

@@ -52,12 +52,17 @@ published link of its video, so never rename one without the user's consent.
   story, in `setup` otherwise. Open a Ticket from the list through the
   `open-ticket` flow, with the variable `ticket`.
 - Every shown step has a caption and a narration (`docs/authoring.md`,
-  Style).
+  Style), which a voice reads: write it as it should sound
+  (`docs/authoring.md`, Narration).
 
 ## 4. Render and look
 
 1. `scripts/tutorials.sh validate`.
-2. `scripts/tutorials.sh render --strict <id>`. When a capture fails, look at
+2. `scripts/tutorials.sh render --strict <id>`. It first makes the clip of
+   each new or changed narration, which needs the user's key of the speech
+   service (`docs/authoring.md`, Narration, The key): when it fails for lack
+   of one, ask the user to put it in its file, and never read or write it
+   yourself. When a capture fails, look at
    `out/<id>/capture/failure.png`, fix the locator or the wait, and render
    again. When the checks of the composition report a finding, fix the step
    that it names, with a `zoom`, a `hold`, another `target`, or a shorter
@@ -69,8 +74,11 @@ published link of its video, so never rename one without the user's consent.
    doubt: the camera frames the target, the caption hides nothing, nothing
    overlaps. `frames.md` lists them with the times of the steps.
 5. `scripts/tooling.sh hyperframes <id> check` must report no error. Its
-   warnings `timeline_track_too_dense` and `film_silent`, the video having no
-   sound yet, are expected.
+   warnings `timeline_track_too_dense` and `text_below_floor` are expected,
+   and `dead_stretch` on a step that shows a screen while the voice reads a
+   long sentence.
+6. Read the subtitles, `out/<id>/<id>.vtt`: each narration at the time of
+   its step.
 
 ## 5. Review
 
@@ -88,6 +96,6 @@ same reviewer for the follow-up.
 - Show the user the frames, the duration, the coverage, and the verdicts of
   the reviewers with the findings that you discarded, and take their
   feedback.
-- Commit the script, its flows, the catalog, and `tutorials.lock.json`
-  together, for example `feat(tutorials): add search-for-a-cve`. Do not push
+- Commit the script, its flows, the catalog, `narration/`, and
+  `tutorials.lock.json` together, for example `feat(tutorials): add search-for-a-cve`. Do not push
   without the user's consent.

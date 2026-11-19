@@ -20,7 +20,15 @@
 #                                              Capture, compose, and render the
 #                                              tutorials (the stale ones by
 #                                              default) to out/<id>/<id>.mp4,
-#                                              and record them in the lock; the
+#                                              with their subtitles,
+#                                              out/<id>/<id>.vtt, and record
+#                                              them in the lock; first make the
+#                                              clips of the narration that
+#                                              narration/ lacks, which needs
+#                                              the key of the speech service
+#                                              (scripts/tooling.sh, narrate)
+#                                              only for a new sentence or
+#                                              voice; the
 #                                              composition reports the findings
 #                                              of its checks, and --strict
 #                                              fails on them once every video
@@ -204,6 +212,9 @@ cmd_render() {
         return 0
     fi
     tutorials validate
+    # The clips of the narration that narration/ lacks, for every tutorial:
+    # it calls the speech service only for a new sentence or voice.
+    "${TOOLING}" narrate
     local id
     while read -r id; do
         if [[ "${reuse}" == true ]] && tutorials captured "${id}" 2>/dev/null; then
@@ -266,7 +277,7 @@ cmd_check() {
         fi
         status="$(tutorials compare "${id}")"
         if [[ "${status}" == unchanged && "${verify_only}" == false ]]; then
-            tutorials verify "${id}" || warn "${id} has unchanged screens but another script or generator than its video"
+            tutorials verify "${id}" || warn "${id} has unchanged screens but another script, generator, or narration than its video"
         fi
     done < <(capture_order "${ids[@]}")
     local failed=false
@@ -305,7 +316,7 @@ cmd_site() {
     if [[ "${release}" == true ]]; then
         command -v gh >/dev/null 2>&1 || die "the GitHub CLI, gh, is required"
         rm -rf "${REPO_ROOT}/out/site-videos"
-        gh release download --pattern '*.mp4' --dir "${REPO_ROOT}/out/site-videos"
+        gh release download --pattern '*.mp4' --pattern '*.vtt' --dir "${REPO_ROOT}/out/site-videos"
         videos+=(out/site-videos)
     fi
     "${TOOLING}" site build out/site "${videos[@]}"

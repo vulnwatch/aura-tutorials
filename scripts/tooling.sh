@@ -6,7 +6,8 @@
 # A container runs with the user and group IDs of the invoking user, without
 # capabilities, and receives from the host the repository, read-only, and
 # three writable directories: out/, where every run writes, the dependencies,
-# and the cache of HyperFrames. The dependencies live in a directory of this
+# and the cache of HyperFrames; `narrate` alone also receives narration/
+# writable. The dependencies live in a directory of this
 # clone under $XDG_CACHE_HOME/aura-tutorials/, or ~/.cache/aura-tutorials/,
 # mounted on node_modules/, which stays empty on the host; every command but
 # `npm` first installs them with `npm ci` when the directory is new or when
@@ -24,6 +25,20 @@
 #   scripts/tooling.sh tutorials <args>      Run src/tutorials.mjs, offline,
 #                                            with write access to
 #                                            tutorials.lock.json
+#   scripts/tooling.sh narrate               Make the clips of the narration
+#                                            that narration/ lacks, and remove
+#                                            those that no tutorial uses
+#                                            (src/narrate.mjs), with write
+#                                            access to narration/; calls the
+#                                            speech service only when a clip is
+#                                            to make, with the key of
+#                                            OPENROUTER_API_KEY, or else of
+#                                            the file openrouter.key under
+#                                            $XDG_CONFIG_HOME/aura-tutorials/,
+#                                            or ~/.config/aura-tutorials/, and
+#                                            runs offline without one; in CI,
+#                                            removes nothing, and fails when a
+#                                            clip is unused
 #   scripts/tooling.sh capture <id>          Capture the tutorial <id> from the
 #                                            development server of aura/, into
 #                                            out/<id>/capture/
@@ -73,6 +88,11 @@ readonly STAMP_FILE="${DEPS_DIR}.stamp"
 readonly HF_CACHE_DIR="${CACHE_HOME}/aura-tutorials/hyperframes-${CLONE_ID}"
 readonly DEPENDENCY_FILES=(package.json package-lock.json)
 readonly LOCK_FILE="tutorials.lock.json"
+readonly NARRATION_DIR="narration"
+# The key of the speech service, which the user keeps outside the repository.
+CONFIG_HOME="${XDG_CONFIG_HOME:-}"
+[[ "${CONFIG_HOME}" == /* ]] || CONFIG_HOME="${HOME:?HOME is not set}/.config"
+readonly KEY_FILE="${CONFIG_HOME}/aura-tutorials/openrouter.key"
 
 # The port of HyperFrames Studio, and that of the preview of the website.
 readonly PREVIEW_PORT=3002
@@ -140,6 +160,7 @@ run_container() {
         --env=NPM_CONFIG_UPDATE_NOTIFIER=false \
         --env=PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
         --env=AURA_VERSION="$(aura_version)" \
+        --env=CI \
         "${HF_ENV[@]}" \
         --volume="${REPO_ROOT}:/work:ro,z" \
         --volume="${DEPS_DIR}:/work/node_modules:rw,z" \
@@ -233,6 +254,30 @@ cmd_tutorials() {
     run_container --network=none \
         --volume="${REPO_ROOT}/${LOCK_FILE}:/work/${LOCK_FILE}:rw,z" -- \
         node src/tutorials.mjs "$@"
+}
+
+# The clips of the narration. The key of the speech service is that of
+# OPENROUTER_API_KEY, or else of the user's key file, which lies outside the
+# repository, since every container mounts the repository. The container reaches the network only with a
+# key, which it receives from the environment, never as an argument: without
+# one, src/narrate.mjs fails when a clip is to make.
+cmd_narrate() {
+    [[ $# -eq 0 ]] || die "narrate: takes no arguments"
+    ensure_installed
+    if [[ -z "${OPENROUTER_API_KEY:-}" && -r "${KEY_FILE}" ]]; then
+        [[ -z "$(find -L "${KEY_FILE}" -perm /077)" ]] ||
+            die "${KEY_FILE} is readable by others; run 'chmod 600 ${KEY_FILE}'"
+        OPENROUTER_API_KEY="$(tr -d '[:space:]' <"${KEY_FILE}")"
+        export OPENROUTER_API_KEY
+    fi
+    local -a network=(--network=none)
+    if [[ -n "${OPENROUTER_API_KEY:-}" ]]; then
+        network=(--env=OPENROUTER_API_KEY)
+    fi
+    mkdir -p "${REPO_ROOT}/${NARRATION_DIR}/clips"
+    run_container "${network[@]}" \
+        --volume="${REPO_ROOT}/${NARRATION_DIR}:/work/${NARRATION_DIR}:rw,z" -- \
+        node src/narrate.mjs
 }
 
 # The capture shares the network namespace of the development server, where
@@ -337,7 +382,7 @@ main() {
     local command="$1"
     shift
     case "${command}" in
-        install | npm | versions | tutorials | capture | compose | render | preview | hyperframes | site | ffmpeg)
+        install | npm | versions | tutorials | narrate | capture | compose | render | preview | hyperframes | site | ffmpeg)
             check_docker
             "cmd_${command}" "$@"
             ;;

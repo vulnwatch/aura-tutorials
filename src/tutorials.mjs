@@ -1,12 +1,14 @@
 // The tutorials as a set: their scripts and flows, the catalog of tasks that
 // they cover, and tutorials.lock.json, which records for each video what it
 // was rendered from: the version of Aura, the hash of its resolved script, the
-// hash of the generator, the code that captures and composes, the hash of the
-// tooling, and the fingerprints of its screenshots; and its title, subtitle,
+// hash of the generator, the code that captures and composes, the hash of its
+// narration, the clips that its voice reads (src/lib/narration.mjs), the hash
+// of the tooling, and the fingerprints of its screenshots; and its title, subtitle,
 // duration, chapters, and steps, with their captions and times, which
 // describe it to the website (src/site.mjs) and in videos.json of a release.
 // A video is up to date
-// while its script, the generator, and the version of Aura are current; a
+// while its script, the generator, its narration, and the version of Aura are
+// current; a
 // capture of a new version of Aura whose fingerprints equal the recorded ones
 // needs no new video. The tooling, the image and the dependencies, only shows
 // what the video was rendered with: an update of it that leaves the screens
@@ -46,6 +48,7 @@ import { execFile } from "node:child_process";
 import { readdir, readFile, writeFile, mkdir, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
+import { loadClips, loadVoice, narrationHash } from "./lib/narration.mjs";
 import {
   CATALOG_PATH,
   FLOWS_DIR,
@@ -104,10 +107,11 @@ function requireAura() {
 }
 
 // The state of a video against its entry of the lock.
-function stateOf(tutorial, entry, generator) {
+function stateOf(tutorial, entry, generator, narration) {
   if (!entry) return "new";
   if (entry.script !== tutorial.hash) return "script-changed";
   if (entry.generator !== generator) return "generator-changed";
+  if (entry.narration !== narration) return "narration-changed";
   if (entry.aura !== aura) return "aura-changed";
   return "up-to-date";
 }
@@ -185,9 +189,12 @@ async function status(args) {
   const lock = await readLock();
   const generator = await generatorHash();
   const tooling = await toolingHash();
+  const voice = await loadVoice();
+  const clips = await loadClips();
   for (const tutorial of tutorials) {
     const entry = lock.tutorials[tutorial.id];
-    const state = stateOf(tutorial, entry, generator);
+    // Null while a clip is to make, which no entry records.
+    const state = stateOf(tutorial, entry, generator, narrationHash(tutorial, voice, clips));
     if (args.includes("--ids")) {
       if (state !== "up-to-date") console.log(tutorial.id);
     } else {
@@ -273,8 +280,9 @@ async function verify([id]) {
   const entry = lock.tutorials[id];
   const result = await readJson(join("out", id, "compare.json"));
   if (!entry || result.status !== "unchanged") throw new Error(`verify: the screens of ${id} changed or were never rendered`);
-  if (entry.script !== tutorial.hash || entry.generator !== (await generatorHash())) {
-    throw new Error(`verify: ${id} has another script or generator than its video; render it`);
+  const narration = narrationHash(tutorial, await loadVoice(), await loadClips());
+  if (entry.script !== tutorial.hash || entry.generator !== (await generatorHash()) || entry.narration !== narration) {
+    throw new Error(`verify: ${id} has another script, generator, or narration than its video; render it`);
   }
   entry.aura = aura;
   await writeLock(lock);
@@ -290,6 +298,10 @@ async function lockCommand([id]) {
     throw new Error(`lock: the capture or the composition of ${id} is of another version of its script`);
   }
   if (capture.aura !== aura) throw new Error(`lock: ${id} was captured from Aura ${capture.aura}, not ${aura}`);
+  const narration = narrationHash(tutorial, await loadVoice(), await loadClips());
+  if (!narration || composed.narration !== narration) {
+    throw new Error(`lock: the composition of ${id} has another narration than narration/; render it again`);
+  }
   const lock = await readLock();
   lock.tutorials[id] = {
     title: tutorial.title,
@@ -297,6 +309,7 @@ async function lockCommand([id]) {
     aura,
     script: tutorial.hash,
     generator: await generatorHash(),
+    narration,
     tooling: await toolingHash(),
     duration: composed.duration,
     chapters: composed.chapters,

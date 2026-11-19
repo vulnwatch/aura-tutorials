@@ -213,11 +213,14 @@ scope, and report what it finds.
 - Do Node.js, npm, and npx run only in the containers of
   `scripts/tooling.sh`, never on the host or the runner directly?
 - Does HyperFrames still run without telemetry, update checks, skills, or
-  installations of its own, and render without a network?
+  installations of its own, and render without a network? Does only
+  `scripts/tooling.sh narrate` reach the speech service, only with a key
+  that it receives by name from the environment, and does CI hold none?
 - Does the change keep `aura/` untouched, running only its scripts through
   `scripts/backend.sh`, and keep the check that the port of the development
   server is free? Does a container mount the repository read-only, with only
-  `out/`, the dependencies, its cache, and the lock writable?
+  `out/`, the dependencies, its cache, the lock, and, for `narrate` alone,
+  `narration/` writable?
 
 ### Scripts
 

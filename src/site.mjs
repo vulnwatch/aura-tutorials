@@ -11,7 +11,8 @@
 // Usage: node src/site.mjs <command> [args]
 //   build <out> <videos>...  Write the site into <out>, with the video of each
 //                            tutorial of the lock from the first directory of
-//                            <videos> that holds <id>.mp4 or <id>/<id>.mp4
+//                            <videos> that holds <id>.mp4 or <id>/<id>.mp4,
+//                            and its subtitles, <id>.vtt beside it
 //   serve <dir> <port>       Serve the site in <dir> on <port>, with the range
 //                            requests that seeking a video needs
 
@@ -193,7 +194,11 @@ function tutorialPage(tutorial) {
       <div class="video">
         <video controls preload="metadata" playsinline poster="${root}videos/${tutorial.id}.jpg" width="1920" height="1080">
           <source src="${root}videos/${tutorial.id}.mp4" type="video/mp4" />
-          <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />
+          <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />${
+            tutorial.subtitles
+              ? `\n          <track kind="subtitles" src="${root}videos/${tutorial.id}.vtt" srclang="en" label="English" />`
+              : ""
+          }
         </video>
       </div>
       <div class="below">
@@ -422,6 +427,11 @@ async function build([out, ...videoDirs]) {
   for (const tutorial of site.tutorials) {
     const video = await findVideo(tutorial.id, videoDirs);
     await copyFile(video, join(out, "videos", `${tutorial.id}.mp4`));
+    // The subtitles of the video, the narration that its voice reads, which a
+    // video rendered before the narration lacks.
+    const subtitles = video.replace(/\.mp4$/, ".vtt");
+    tutorial.subtitles = Boolean(await stat(subtitles).catch(() => null));
+    if (tutorial.subtitles) await copyFile(subtitles, join(out, "videos", `${tutorial.id}.vtt`));
     await execFileAsync("ffmpeg", [
       "-hide_banner", "-loglevel", "error", "-y",
       "-ss", String(POSTER_AT), "-i", video, "-frames:v", "1", "-update", "1",

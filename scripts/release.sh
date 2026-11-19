@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Publish the videos as a GitHub release of this repository, from CI after a
 # merge (docs/authoring.md, Publication), with gh and jq. A release holds every
-# video, <id>.mp4, and videos.json, which lists them with the entry of the lock
+# video, <id>.mp4, its subtitles, <id>.vtt, and videos.json, which lists them
+# with the entry of the lock
 # that each was made from; the latest one is at
 # releases/latest/download/<id>.mp4. A video whose entry of the lock equals the
 # one of the previous release is copied from it; the others are rendered, and
@@ -76,6 +77,7 @@ write_manifest() {
           videos: [.tutorials | to_entries[] | {
             id: .key,
             file: "\(.key).mp4",
+            subtitles: "\(.key).vtt",
             title: .value.title,
             subtitle: .value.subtitle,
             aura: .value.aura,
@@ -91,7 +93,7 @@ write_manifest() {
 write_notes() {
     local aura="$1" tag="$2" repository="${GITHUB_REPOSITORY:-vulnwatch/aura-tutorials}"
     {
-        echo "The video tutorials of Sentinel Aura ${aura}, 1920x1080 at 30 fps, without audio."
+        echo "The video tutorials of Sentinel Aura ${aura}, 1920x1080 at 30 fps, narrated in English, each with its subtitles, <id>.vtt."
         echo
         echo "| Video | Duration | Chapters |"
         echo "|---|---|---|"
@@ -99,7 +101,7 @@ write_notes() {
             '.videos[] | "| [\(.title)](\($base)/\(.file)) | \(.duration | floor / 60 | floor):\(.duration | floor % 60 | tostring | if length < 2 then "0" + . else . end) | \(.chapters | length) |"' \
             "${RELEASE_DIR}/videos.json"
         echo
-        echo "The latest video of a tutorial is always at https://github.com/${repository}/releases/latest/download/<id>.mp4."
+        echo "The latest video of a tutorial is always at https://github.com/${repository}/releases/latest/download/<id>.mp4, and its subtitles at <id>.vtt beside it."
     } >"${RELEASE_DIR}/notes.md"
 }
 
@@ -143,11 +145,11 @@ cmd_publish() {
         git -C "${REPO_ROOT}" diff --exit-code -- tutorials.lock.json ||
             die "the capture of CI differs from tutorials.lock.json; check the tutorials again and commit the lock"
         for id in "${render[@]}"; do
-            cp "${REPO_ROOT}/out/${id}/${id}.mp4" "${RELEASE_DIR}/"
+            cp "${REPO_ROOT}/out/${id}/${id}.mp4" "${REPO_ROOT}/out/${id}/${id}.vtt" "${RELEASE_DIR}/"
         done
     fi
     for id in "${copy[@]}"; do
-        gh release download "${previous}" --pattern "${id}.mp4" --dir "${RELEASE_DIR}"
+        gh release download "${previous}" --pattern "${id}.mp4" --pattern "${id}.vtt" --dir "${RELEASE_DIR}"
     done
 
     local count tag
@@ -160,7 +162,7 @@ cmd_publish() {
         echo "release.sh: dry run; out/release/ holds the release" >&2
         return 0
     fi
-    gh release create "${tag}" "${RELEASE_DIR}"/*.mp4 "${RELEASE_DIR}/videos.json" \
+    gh release create "${tag}" "${RELEASE_DIR}"/*.mp4 "${RELEASE_DIR}"/*.vtt "${RELEASE_DIR}/videos.json" \
         --title "Sentinel Aura ${aura} tutorials, release $((count + 1))" \
         --notes-file "${RELEASE_DIR}/notes.md" --target "$(git -C "${REPO_ROOT}" rev-parse HEAD)" --latest
 }
