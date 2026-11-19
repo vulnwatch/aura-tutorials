@@ -140,6 +140,11 @@ function checkStep(problems, where, step, shown) {
     if (!isText(step.caption)) problems.add(where, "a shown step needs a caption");
     if (!isText(step.narration)) problems.add(where, "a shown step needs a narration");
   }
+  // The click lands early in the sentence of its step (src/compose.mjs,
+  // CLICK_AFTER_VOICE_START), so the sentence names the action first.
+  if (step.action === "click" && isText(step.narration) && !/^(Select|Open) /.test(step.narration)) {
+    problems.add(where, 'the narration of a click starts with its action, "Select" or "Open" (docs/authoring.md, Style)');
+  }
 }
 
 function checkFlow(problems, where, flow) {

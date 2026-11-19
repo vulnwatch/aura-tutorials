@@ -233,7 +233,7 @@ steps in scope visit.
 |---|---|
 | Wording, sentence case, the Style, the same word across tutorials, users, Tickets, flows | `@consistency-reviewer` |
 | What the frames of the video show: framing, overlap, loading, pointer, pacing | `@visual-reviewer` |
-| The geometry and the reading time of each step | The checks of the composition (`docs/authoring.md`, Review) |
+| The geometry of each step and the length of its caption | The checks of the composition (`docs/authoring.md`, Review) |
 | Workflows, scripts, and Renovate | `@cicd-reviewer` |
 
 ## Output

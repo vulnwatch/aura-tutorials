@@ -196,7 +196,7 @@ function tutorialPage(tutorial) {
           <source src="${root}videos/${tutorial.id}.mp4" type="video/mp4" />
           <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />${
             tutorial.subtitles
-              ? `\n          <track kind="subtitles" src="${root}videos/${tutorial.id}.vtt" srclang="en" label="English" />`
+              ? `\n          <track kind="subtitles" src="${root}videos/${tutorial.id}.vtt" srclang="en" label="English" default />`
               : ""
           }
         </video>

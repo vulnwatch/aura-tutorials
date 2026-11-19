@@ -182,6 +182,8 @@ Review): do not report what they enforce.
 - Is each narration one or two full sentences, written to be read aloud,
   that the caption shortens rather than contradicts or departs from? Do the
   narrations address the viewer the same way?
+- Does the narration of a click name its action first, then what it selects
+  or opens, and any purpose after that? The validation checks only that it starts with "Select" or "Open".
 
 ### Steps and chapters
 
@@ -222,7 +224,7 @@ Review): do not report what they enforce.
 |---|---|
 | Whether a text tells the truth about Aura, and the status of a task | `@accuracy-reviewer` |
 | What the frames of the video show | `@visual-reviewer` |
-| The format of the scripts, and the length and reading time of each caption | `scripts/tutorials.sh validate` and the checks of the composition |
+| The format of the scripts, the start of the narration of a click, and the length of each caption | `scripts/tutorials.sh validate` and the checks of the composition |
 | Workflows, scripts, and Renovate | `@cicd-reviewer` |
 
 ## Output

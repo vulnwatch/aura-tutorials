@@ -102,15 +102,60 @@ async function settle(page) {
   await page.waitForTimeout(400);
 }
 
-// The bounding box of a target, scrolled into view first, so that the
-// screenshot shows it.
+// The box of what a cell of a table holds, its text and its images, within
+// the cell: a cell is as wide as its column, so that a ring around the cell
+// would lie off what it points at, to one side of it. Nothing for another
+// element, whose own box is what a viewer sees, or for a cell that holds
+// nothing to see. Text that only assistive technologies read, clipped to a
+// pixel, does not count.
+const CELLS = "th, td, [role=columnheader], [role=rowheader], [role=gridcell], [role=cell]";
+async function contentBoxOf(locator) {
+  return locator.evaluate((element, cells) => {
+    if (!element.matches(cells)) return null;
+    const cell = element.getBoundingClientRect();
+    const rects = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (!node.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        rects.push(...range.getClientRects());
+      } else if (node.matches("svg, img")) {
+        rects.push(node.getBoundingClientRect());
+      }
+    }
+    const seen = rects
+      .filter((rect) => rect.width > 1 && rect.height > 1)
+      .map((rect) => ({
+        left: Math.max(rect.left, cell.left),
+        top: Math.max(rect.top, cell.top),
+        right: Math.min(rect.right, cell.right),
+        bottom: Math.min(rect.bottom, cell.bottom),
+      }))
+      .filter((rect) => rect.right > rect.left && rect.bottom > rect.top);
+    if (seen.length === 0) return null;
+    const left = Math.min(...seen.map((rect) => rect.left));
+    const top = Math.min(...seen.map((rect) => rect.top));
+    return {
+      x: left,
+      y: top,
+      width: Math.max(...seen.map((rect) => rect.right)) - left,
+      height: Math.max(...seen.map((rect) => rect.bottom)) - top,
+    };
+  }, CELLS);
+}
+
+// The box of a target, scrolled into view first, so that the screenshot
+// shows it: its bounding box, or, for a cell of a table, the box of what it
+// holds.
 async function boxOf(page, locator) {
   await locator.waitFor({ state: "visible", timeout: TIMEOUT });
   if (!(await locator.isVisible()) || !(await inViewport(locator))) {
     await locator.scrollIntoViewIfNeeded();
     await settle(page);
   }
-  const box = await locator.boundingBox();
+  const box = (await contentBoxOf(locator)) ?? (await locator.boundingBox());
   if (!box) throw new Error("the target has no bounding box");
   return {
     x: Math.round(box.x * 100) / 100,

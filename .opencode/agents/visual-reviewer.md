@@ -1,7 +1,7 @@
 ---
 description: >
   Looks at the frames of rendered tutorial videos as a viewer would: the
-  camera frames each target, the caption hides nothing that a step points
+  camera frames each target, the ring surrounds what a step points
   at, no screen still loads, no pointer hovers over the UI, text is readable,
   nothing overlaps, and the pacing lets a viewer follow. Use after a render
   that changes the frames of a video: a new or changed script, a change of
@@ -123,10 +123,11 @@ screenshots of the capture. You do NOT write or modify files, apart from the
 frames that `scripts/tutorials.sh frames` extracts into `out/<id>/frames/`.
 
 `src/compose.mjs` decides the look of every video once: the window, the
-camera, the pointer, the rings, the keycaps, the captions, the cards, and
-the motion. You give no aesthetic advice: whether a color, a font, or an
-easing is pleasant is not a finding; whether a viewer sees the target, reads
-its caption, and follows the step is.
+camera, the pointer, the rings, the keycaps, the cards, and the motion. The
+video shows no caption: the voice and the subtitles tell each step. You give
+no aesthetic advice: whether a color, a font, or an easing is pleasant is
+not a finding; whether a viewer sees the target, sees the result of its
+action, and follows the step is.
 
 ## Finding filter
 
@@ -139,9 +140,8 @@ is a finding; "the step feels busy" is not.
 
 **Do not duplicate the checks of the composition.** `src/compose.mjs`
 measures, for each step, that its target and its ring are in the view of the
-camera, that the caption covers neither them nor a keycap, that a keycap is
-in view, that a caption has at most eight words, and that it stays on screen
-long enough to read (`docs/authoring.md`, Review); `frames.md` lists their
+camera, that a keycap is in view, and that a caption has at most eight words
+(`docs/authoring.md`, Review); `frames.md` lists their
 findings. Report what they cannot measure, and, under Check estimates, where
 a frame contradicts them: a problem that they passed, such as a ring that
 the capture placed where the element no longer is, or a finding of theirs
@@ -163,7 +163,7 @@ that the frame does not show.
    checks.
 5. Open `cards.png` and every `chapter-<n>.png`: each row is a step, at its
    focus, when the camera has settled on what it points at, and just before
-   its end, with its caption still on screen.
+   its end, with the result of its action.
 6. Open the full frames, `<nn>-<step>-focus.png` and `<nn>-<step>-end.png`, of
    every step whose tile leaves a doubt or whose text must be read. For a
    moment in between, such as a crossfade, a camera move, or the click of a
@@ -184,14 +184,16 @@ they leave in doubt.
 - Does the camera show each target whole, with enough around it to tell
   where on the screen it is? Does the ring surround the element that the step
   names, not a place beside it?
-- At its zoom, can a viewer read the text that the caption or the narration
-  speaks of?
-- Does a step without a target show the screen that its caption speaks of,
+- At its zoom, can a viewer read the text that the narration speaks of?
+- Does a step without a target show the screen that its narration speaks of,
   rather than a zoom that the step before left?
 
-### Captions, keycaps, and cards
+### Results, keycaps, subtitles, and cards
 
-- Does the caption hide anything that the step speaks of, beyond its target,
+- Does the result of each click or key press stay on screen long enough to
+  see what changed, while or after the voice speaks of it?
+- Would the subtitles, at the bottom of the video, or at the top for the
+  steps whose cues `<id>.vtt` places there, hide what the step speaks of,
   such as the row that a narration describes, or the result of a search?
 - Is every keycap visible and readable while its key is pressed?
 - Can the title, the chapter cards, and the outro be read, without a cut
@@ -209,7 +211,7 @@ they leave in doubt.
 
 ### Overlap and transitions
 
-- Do the ring, the pointer, the ripple, the keycap, or the caption overlap
+- Do the ring, the pointer, the ripple, or the keycap overlap
   each other, or the content of the UI, in a way that hides what matters?
 - Does a crossfade mix two screens long enough to confuse? Does the address
   bar show the path of the page in view?
@@ -232,7 +234,7 @@ they leave in doubt.
 |---|---|
 | Whether a text tells the truth about Aura | `@accuracy-reviewer` |
 | Wording, the Style, users, Tickets, flows | `@consistency-reviewer` |
-| The measured geometry and reading time of each step | The checks of the composition, unless a frame contradicts them |
+| The measured geometry of each step and the length of its caption | The checks of the composition, unless a frame contradicts them |
 | The look that `src/compose.mjs` decides: colors, type, motion | Its owner, the user; no aesthetic advice |
 | Warnings of `hyperframes check` | The invoking agent, which runs it; mention one only where a frame shows its effect |
 
