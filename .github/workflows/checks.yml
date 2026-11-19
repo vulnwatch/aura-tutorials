@@ -12,7 +12,7 @@ name: Checks
 # run. On a pull request, the tutorials whose entry of the lock changed, or all
 # of them when the tooling or src/tutorials.mjs changes, are rendered too, with
 # the checks of their composition, which fail the job, and kept with their
-# contact sheets as an artifact to review (docs/authoring.md, Review). The
+# subtitles and contact sheets as an artifact to review (docs/authoring.md, Review). The
 # website is generated too, and kept as an artifact.
 
 on:
@@ -148,13 +148,14 @@ jobs:
           path: out/site/
           retention-days: 14
 
-      - name: Keep the videos, their contact sheets, and the report
+      - name: Keep the videos, their subtitles, their contact sheets, and the report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tutorials
           path: |
             out/*/*.mp4
+            out/*/*.vtt
             out/*/frames/chapter-*.png
             out/*/frames/cards.png
             out/*/frames/frames.md

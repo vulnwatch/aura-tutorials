@@ -5,9 +5,10 @@
       "subtitle": "Search the Tickets, open one, and read its packages",
       "aura": "v0.9.0",
       "script": "sha256:aa28af3e598cd5972cabc5eb3d089dd1af2e0a58a4a62dbc54241ebac2491fc9",
-      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
+      "generator": "sha256:5206dbc093e519f8078b701bd1d055f4f477d17739fc8e3b0c15a0a9d10fee4b",
+      "narration": "sha256:11284fc8990ae5f0b16a82a046205afcc781ce771db30410b91dfe0d9705887a",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 28.42,
+      "duration": 38.549,
       "chapters": [
         {
           "title": "Find SUSE's status for a CVE",
@@ -20,35 +21,35 @@
           "chapter": 1,
           "caption": "Enter the CVE in the search",
           "start": 3.9,
-          "end": 7.62
+          "end": 9.248
         },
         {
           "id": "submit",
           "chapter": 1,
           "caption": "Press Enter to search",
-          "start": 7.62,
-          "end": 11.02
+          "start": 9.248,
+          "end": 14.735
         },
         {
           "id": "open-ticket-select",
           "chapter": 1,
           "caption": "Open the Ticket",
-          "start": 11.02,
-          "end": 14.72
+          "start": 14.735,
+          "end": 19.396
         },
         {
           "id": "heading",
           "chapter": 1,
           "caption": "The heading shows its status and priority",
-          "start": 14.72,
-          "end": 18.92
+          "start": 19.396,
+          "end": 25.765
         },
         {
           "id": "packages",
           "chapter": 1,
           "caption": "The packages show SUSE's status for each Product",
-          "start": 18.92,
-          "end": 23.12
+          "start": 25.765,
+          "end": 33.249
         }
       ],
       "covers": [
@@ -85,9 +86,10 @@
       "subtitle": "Sentinel Aura in under a minute",
       "aura": "v0.9.0",
       "script": "sha256:c4100d5426348a8095ac5b13f91d1e079f88a5453305a80f79cc372dce428fc7",
-      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
+      "generator": "sha256:5206dbc093e519f8078b701bd1d055f4f477d17739fc8e3b0c15a0a9d10fee4b",
+      "narration": "sha256:c06013b161cb27beeb2545090b54630857bc1700791a426ea7e380e09acd3c30",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 34.95,
+      "duration": 45.612,
       "chapters": [
         {
           "title": "Sign in and open a Ticket",
@@ -100,49 +102,49 @@
           "chapter": 1,
           "caption": "Open Sentinel Aura in your browser",
           "start": 3.9,
-          "end": 7.5
+          "end": 9.48
         },
         {
           "id": "sign-in-username",
           "chapter": 1,
           "caption": "Enter your username",
-          "start": 7.5,
-          "end": 10.65
+          "start": 9.48,
+          "end": 12.63
         },
         {
           "id": "sign-in-password",
           "chapter": 1,
           "caption": "Then enter your password",
-          "start": 10.65,
-          "end": 14.6
+          "start": 12.63,
+          "end": 16.58
         },
         {
           "id": "sign-in-submit",
           "chapter": 1,
           "caption": "Select Sign in",
-          "start": 14.6,
-          "end": 18.3
+          "start": 16.58,
+          "end": 20.08
         },
         {
           "id": "ticket-list",
           "chapter": 1,
           "caption": "Aura lands on the Ticket list",
-          "start": 18.3,
-          "end": 21.75
+          "start": 20.08,
+          "end": 27.099
         },
         {
           "id": "open-ticket-select",
           "chapter": 1,
           "caption": "Open the Ticket",
-          "start": 21.75,
-          "end": 25.45
+          "start": 27.099,
+          "end": 31.76
         },
         {
           "id": "ticket",
           "chapter": 1,
           "caption": "The Ticket opens on its Overview",
-          "start": 25.45,
-          "end": 29.65
+          "start": 31.76,
+          "end": 40.312
         }
       ],
       "covers": [
@@ -196,9 +198,10 @@
       "subtitle": "A day of an analyst in Sentinel Aura",
       "aura": "v0.9.0",
       "script": "sha256:902356f5ed6528de62e453f82699896ea0935e4ba00fa5b93671a3a40badaf3c",
-      "generator": "sha256:66a4cde604bedd66b0a121caad503b5a0af2621c4be5202e83f41e42d3107ccf",
+      "generator": "sha256:5206dbc093e519f8078b701bd1d055f4f477d17739fc8e3b0c15a0a9d10fee4b",
+      "narration": "sha256:40cd1defdae7aa819e9d91de3f6bb02f45250102bcb81b04e528681fd8c4e2c4",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 99.25,
+      "duration": 141.22,
       "chapters": [
         {
           "title": "Sign in",
@@ -206,19 +209,19 @@
         },
         {
           "title": "Find your Tickets",
-          "start": 21
+          "start": 22.78
         },
         {
           "title": "Understand its priority",
-          "start": 39.55
+          "start": 55.726
         },
         {
           "title": "Add a reference",
-          "start": 57.55
+          "start": 82.972
         },
         {
           "title": "Trace every change",
-          "start": 83.75
+          "start": 120.546
         }
       ],
       "steps": [
@@ -227,140 +230,140 @@
           "chapter": 1,
           "caption": "Open Sentinel Aura in your browser",
           "start": 5.9,
-          "end": 9.5
+          "end": 11.48
         },
         {
           "id": "sign-in-username",
           "chapter": 1,
           "caption": "Enter your username",
-          "start": 9.5,
-          "end": 12.65
+          "start": 11.48,
+          "end": 14.63
         },
         {
           "id": "sign-in-password",
           "chapter": 1,
           "caption": "Then enter your password",
-          "start": 12.65,
-          "end": 16.6
+          "start": 14.63,
+          "end": 18.58
         },
         {
           "id": "sign-in-submit",
           "chapter": 1,
           "caption": "Select Sign in",
-          "start": 16.6,
-          "end": 20.3
+          "start": 18.58,
+          "end": 22.08
         },
         {
           "id": "landing",
           "chapter": 2,
           "caption": "Analysts land on the New view",
-          "start": 23.3,
-          "end": 26.75
+          "start": 25.08,
+          "end": 30.149
         },
         {
           "id": "assigned-to-me",
           "chapter": 2,
           "caption": "Open the view Assigned to me",
-          "start": 26.75,
-          "end": 30.45
+          "start": 30.149,
+          "end": 37.086
         },
         {
           "id": "attention",
           "chapter": 2,
           "caption": "The attention summary counts the urgent work",
-          "start": 30.45,
-          "end": 34.65
+          "start": 37.086,
+          "end": 48.146
         },
         {
           "id": "deadlines",
           "chapter": 2,
           "caption": "Each row shows its next deadline",
-          "start": 34.65,
-          "end": 38.85
+          "start": 48.146,
+          "end": 55.026
         },
         {
           "id": "open-ticket-select",
           "chapter": 3,
           "caption": "Open the Ticket",
-          "start": 41.85,
-          "end": 45.55
+          "start": 58.026,
+          "end": 62.687
         },
         {
           "id": "priority",
           "chapter": 3,
           "caption": "Select the priority to see why",
-          "start": 45.55,
-          "end": 49.25
+          "start": 62.687,
+          "end": 68.602
         },
         {
           "id": "explanation",
           "chapter": 3,
           "caption": "The explanation says who set it and when",
-          "start": 49.25,
-          "end": 53.45
+          "start": 68.602,
+          "end": 78.872
         },
         {
           "id": "close",
           "chapter": 3,
           "caption": "Press Escape to close it",
-          "start": 53.45,
-          "end": 56.85
+          "start": 78.872,
+          "end": 82.272
         },
         {
           "id": "references",
           "chapter": 4,
           "caption": "Open the tab References",
-          "start": 59.85,
-          "end": 63.55
+          "start": 85.272,
+          "end": 93.091
         },
         {
           "id": "add",
           "chapter": 4,
           "caption": "Select Add reference",
-          "start": 63.55,
-          "end": 67.25
+          "start": 93.091,
+          "end": 97.752
         },
         {
           "id": "address",
           "chapter": 4,
           "caption": "Enter its address",
-          "start": 67.25,
-          "end": 71.2
+          "start": 97.752,
+          "end": 101.702
         },
         {
           "id": "title",
           "chapter": 4,
           "caption": "Enter a title",
-          "start": 71.2,
-          "end": 75.15
+          "start": 101.702,
+          "end": 107.096
         },
         {
           "id": "save",
           "chapter": 4,
           "caption": "Select Add reference in the dialog",
-          "start": 75.15,
-          "end": 78.85
+          "start": 107.096,
+          "end": 112.686
         },
         {
           "id": "added",
           "chapter": 4,
           "caption": "The reference is on the Ticket",
-          "start": 78.85,
-          "end": 83.05
+          "start": 112.686,
+          "end": 119.846
         },
         {
           "id": "audit-log",
           "chapter": 5,
           "caption": "Open the tab Audit log",
-          "start": 86.05,
-          "end": 89.75
+          "start": 122.846,
+          "end": 130.619
         },
         {
           "id": "event",
           "chapter": 5,
           "caption": "Your change is the latest event",
-          "start": 89.75,
-          "end": 93.95
+          "start": 130.619,
+          "end": 135.92
         }
       ],
       "covers": [

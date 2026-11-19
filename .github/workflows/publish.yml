@@ -1,7 +1,7 @@
 name: Publish
 
 # After a merge to main: render the videos that changed since the latest
-# release and publish a release with every video and videos.json
+# release and publish a release with every video, its subtitles, and videos.json
 # (scripts/release.sh), then deploy the website of the tutorials to GitHub
 # Pages, with the videos of that release, also when no video changed
 # (docs/authoring.md, Publication).

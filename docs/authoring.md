@@ -13,6 +13,7 @@ holds the rules for agents.
   - [Locators and Waits](#locators-and-waits)
   - [Flows and Variables](#flows-and-variables)
 - [Style](#style)
+- [Narration](#narration)
 - [Workflows](#workflows)
   - [Add a Tutorial](#add-a-tutorial)
   - [Extend a Tutorial](#extend-a-tutorial)
@@ -40,10 +41,14 @@ holds the rules for agents.
 - **A flow**, `flows/<id>.json`: steps that several scripts share, such as
   signing in. A script includes a flow among the steps that it shows, or in
   its setup, which runs without being shown.
+- **The narration**, `narration/`: the voice that reads the narration of
+  each shown step, `voice.json`, and its clips, one for each sentence, which
+  `clips.json` lists (Narration).
 - **The lock**, `tutorials.lock.json`: for each video, what it was rendered
   from: the version of Aura, the hash of its resolved script (its flows and
   variables included), the hash of the generator (`src/capture.mjs` and
-  `src/compose.mjs`, which decide how a video looks), the hash of the tooling
+  `src/compose.mjs`, which decide how a video looks), the hash of its
+  narration (the clips that its voice reads), the hash of the tooling
   (the `Containerfile` and `package-lock.json`), and the fingerprints of its
   screenshots; and what describes it to the website and in `videos.json`
   (Publication): its title and subtitle, its duration, the times of its
@@ -51,11 +56,12 @@ holds the rules for agents.
   website looks in, and their times. `scripts/tutorials.sh status` compares
   it with the
   repository; `scripts/tutorials.sh check` compares it with a new capture.
-- **The videos**, `out/<id>/<id>.mp4`, which Git ignores: CI renders them and
-  publishes them (Publication).
+- **The videos**, `out/<id>/<id>.mp4`, each with its subtitles,
+  `out/<id>/<id>.vtt`, which Git ignores: CI renders them and publishes them
+  (Publication).
 
-A video is up to date while its script, the generator, and the version of
-Aura are those of the lock. A new version of Aura makes every video stale
+A video is up to date while its script, the generator, its narration, and the
+version of Aura are those of the lock. A new version of Aura makes every video stale
 until `check` captures it again: a video whose fingerprints are unchanged is
 then current again without a render; the others need one. The tooling makes
 no video stale: the lock only records what each video was rendered with, and
@@ -105,9 +111,9 @@ under a minute, a workflow one of several minutes in chapters.
 | `waitFor`, `waitForUrl` | All | What must hold after the action before its screenshot |
 | `zoom` | All | How far the camera zooms towards the target, from 1 (the whole window) to 3; each action has a default |
 | `hold` | All | Seconds the step holds after its action, to read its caption; each action has a default |
-| `duration` | All | The least duration of the step, in seconds |
+| `duration` | All | The least duration of the step, in seconds; a step also lasts until its sentence ends (Narration) |
 | `caption` | Shown steps | The text on screen (Style) |
-| `narration` | Shown steps | The sentence that a voice will read; required now, so that narration needs no change of the scripts |
+| `narration` | Shown steps | The sentence that the voice reads during the step, and the text of its subtitles (Narration) |
 
 The actions:
 
@@ -178,6 +184,66 @@ the example dataset. An unknown variable fails the validation.
 - **Tickets**: the same Ticket across tutorials when the task allows it,
   SNTL-12 by default, so that the videos feel like one product tour.
 
+## Narration
+
+A voice reads the narration of each shown step, and the video shows the same
+text as subtitles.
+
+- **The voice**, `narration/voice.json`: the `model` of the speech service,
+  OpenRouter (`src/narrate.mjs`), and its `voice`. One voice reads every
+  tutorial, in English.
+- **The clips**, `narration/clips/<key>.mp3`: one for each sentence, MP3 at
+  48 kbit/s, mono. `narration/clips.json` lists them with their text and
+  duration. The key of a clip is the hash of its text, the model, and the
+  voice: two steps with the same sentence share a clip, and a changed
+  sentence, or another voice, needs a new one.
+- **Making them**: `scripts/tutorials.sh render` first makes the clips that
+  `narration/` lacks and removes those that no tutorial uses any more
+  (`scripts/tooling.sh narrate`). Only a clip to make calls the speech
+  service, with the key of the contributor (The key); without one, the
+  render fails and names the sentences. A render that finds
+  every clip needs no key and no network, as in CI, which holds no key; a
+  render of CI removes nothing, and fails when `narration/` holds a clip
+  that no tutorial uses. After removing a tutorial, which leaves no video
+  to render, run `scripts/tooling.sh narrate` to remove its clips.
+- **The key**: an API key of OpenRouter, in the file
+  `~/.config/aura-tutorials/openrouter.key`, or `openrouter.key` under
+  `$XDG_CONFIG_HOME/aura-tutorials/`, which holds only the key and which
+  only its owner reads (`chmod 600`). The environment variable
+  `OPENROUTER_API_KEY` wins over the file, for a key that a password manager
+  holds. The key never lives in the repository, not even in a file that Git
+  ignores: every container mounts the repository, the one that installs the
+  dependencies included. Give the key a low spending limit.
+- **Why the repository keeps them**: the service reads the same sentence
+  another way each time, with another duration, and retires its models. The
+  clips are the recording that the videos were made from, as their scripts
+  are; the videos are not, since a render gives them again.
+- **Timing**: the voice starts 0.3 s after its step, as the caption rises,
+  and the step ends no sooner than 0.45 s after the sentence
+  (`src/compose.mjs`, `VOICE`). A `hold` or a `duration` only lengthens a
+  step beyond that. A click lands as its sentence ends, while the pointer
+  waits on the ringed target, so that the voice names the action before the
+  screen changes.
+- **Subtitles**: `out/<id>/<id>.vtt`, WebVTT, the narrations while the voice
+  reads them, a long one in cues of at most 84 characters, at the top of
+  the video, clear of the captions, or just above the caption during a step
+  whose target is at the top.
+- **The lock** records the hash of the keys, the durations, and the files of
+  the clips of each video: a changed sentence makes its video stale through its
+  script, and another voice, or another reading of a sentence, through its
+  narration, as `scripts/tutorials.sh status` reports it
+  (`narration-changed`).
+
+To change the voice, edit `narration/voice.json` and render every tutorial:
+each sentence is read again, about 2,000 characters for the first three
+tutorials. To have one sentence read again, delete its clip and render.
+Commit `narration/` with the scripts and the lock.
+
+Write a narration as it should sound: the voice reads abbreviations that
+people say as words or letters, such as CVE, SUSE, P1, and QA, but reads
+long identifiers, such as the number of a CVE, unevenly. Say "the CVE", not
+its number, which the screen shows.
+
 ## Workflows
 
 Every command runs from the root of the repository. `scripts/backend.sh`
@@ -194,13 +260,15 @@ it.
 3. Write `tutorials/<id>.json`, reusing the flows; take the locators from
    Aura's end-to-end tests and the wording from its screen documents.
 4. `scripts/tutorials.sh validate`, then
-   `scripts/tutorials.sh render --strict <id>`. A failing capture leaves
+   `scripts/tutorials.sh render --strict <id>`, which needs the key of the
+   speech service for the new sentences (Narration, The key). A
+   failing capture leaves
    `out/<id>/capture/failure.png`; a finding of the checks of the
    composition names the step to fix (Review).
 5. Look at the screenshots and at the frames of the video
    (`scripts/tutorials.sh frames <id>`), and have the reviewers look at them
-   (Review). Then commit the script, the catalog, and `tutorials.lock.json`;
-   CI renders and publishes the video.
+   (Review). Then commit the script, the catalog, `narration/`, and
+   `tutorials.lock.json`; CI renders and publishes the video.
 
 The `tutorial-author` skill (`.opencode/skills/`) guides an agent through
 these steps.
@@ -208,7 +276,8 @@ these steps.
 ### Extend a Tutorial
 
 Add the steps, or a chapter, to its script and render it again: its script
-hash changes, so `status` marks it stale. Extend a tutorial when the new
+hash changes, so `status` marks it stale. A changed narration needs its clip,
+and so the key of the speech service (Narration). Extend a tutorial when the new
 steps continue its workflow; start a new one when they are another task.
 
 ### Change the Look of Every Video
@@ -355,9 +424,10 @@ the tooling or `src/tutorials.mjs`, which reports the checks and extracts the
 frames, as artifacts to review with their contact sheets; the checks of their
 composition fail it (Review). It renders each from the capture of the check,
 without capturing it again. After a
-merge, CI renders the stale videos and publishes a release of this
-repository with every video: the unchanged ones copied from the previous
-release, and `videos.json`, which lists them. The latest video of a tutorial
+merge, CI renders the stale videos, with the clips of `narration/` and
+without a key of the speech service, and publishes a release of this
+repository with every video and its subtitles, `<id>.vtt`: the unchanged
+ones copied from the previous release, and `videos.json`, which lists them. The latest video of a tutorial
 is always at
 `https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`.
 
@@ -378,8 +448,9 @@ holds:
   tutorial shows as coming soon. A search finds the videos of every role by
   their title, their subtitle, and the captions of their steps;
 - a page per tutorial, at `tutorials/<id>/`, always dark, which keeps to
-  its video, with a poster, a frame of its intro card, and its chapters as a
-  WebVTT track: around it, only the link back to its role, its title, its
+  its video, with a poster, a frame of its intro card, its chapters as a
+  WebVTT track, and its subtitles as another, which the visitor turns on:
+  around it, only the link back to its role, its title, its
   place in the path, and the link to the next video of its role, or to the
   directory after the last one.
 

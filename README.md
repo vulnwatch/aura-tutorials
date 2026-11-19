@@ -13,8 +13,8 @@ and the release lists them all in `videos.json`.
 ## Approach
 
 A tutorial is a script of steps, in chapters. Each step names an action in the
-UI, the caption that the video shows, and the sentence that a voice will read.
-One command turns a script into an MP4 in three stages:
+UI, the caption that the video shows, and the sentence that a voice reads.
+One command turns a script into a narrated MP4 in three stages:
 
 1. **Capture.** Playwright drives the real UI against a local Sentinel backend
    loaded with Sentinel's example dataset, whose data is fictional. For each
@@ -23,9 +23,12 @@ One command turns a script into an MP4 in three stages:
 2. **Compose.** HyperFrames (`heygen-com/hyperframes`, Apache 2.0) turns the
    screenshots into animated scenes, one for each chapter: camera zoom and pan
    towards the target, a synthetic pointer that moves and clicks, keycaps,
-   highlights, captions, chapter cards, and transitions.
+   highlights, captions, chapter cards, and transitions. The voice reads the
+   narration of each step, which lasts at least as long as its sentence.
 3. **Render.** HyperFrames renders the composition to an MP4, 1920x1080 at 30
-   fps, with headless Chrome and FFmpeg, which writes its title and chapters.
+   fps, with headless Chrome and FFmpeg, which mixes the voice and writes the
+   title and the chapters. The narrations, at the times of the voice, are
+   its subtitles, a WebVTT file beside it.
 
 A catalog of the tasks that users do in Aura, taken from Aura's own screen
 map, says what the tutorials should cover, and a lock file records what each
@@ -37,8 +40,11 @@ tell the truth about Aura, how the frames look, and whether the tutorials
 agree with each other. `docs/authoring.md` describes the scripts, their
 style, the workflows, and the review.
 
-Narration (text to speech) comes later: each step will then last as long as
-its sentence, and the same text will produce the subtitles.
+The voice is a model of a speech service, which reads each sentence once: the
+repository keeps the clips, in `narration/`, since the service never reads a
+sentence the same way twice. A render then needs neither the service nor a
+network, and only a new or changed sentence, or another voice, costs a call
+(`docs/authoring.md`, Narration).
 
 ## Repository
 
@@ -46,6 +52,7 @@ its sentence, and the same text will produce the subtitles.
 |---|---|
 | `tutorials/` | The tutorial scripts, one per video |
 | `flows/` | Steps that several scripts share, such as signing in |
+| `narration/` | The voice, `voice.json`, and the clips that it read, one per sentence |
 | `catalog/tasks.json` | The tasks of Aura's users, and which ones Aura can show |
 | `tutorials.lock.json` | What each video was made from |
 | `src/` | The capture, the composition, the commands of the set of tutorials, and the website (`src/site.mjs`) |
@@ -71,9 +78,12 @@ scripts/backend.sh stop                # remove the backend when done
 ```
 
 `scripts/tutorials.sh` starts the backend of `aura/` and its development server
-when it needs them (`scripts/backend.sh`). Under `out/<id>/`, which Git
+when it needs them (`scripts/backend.sh`). A render of a new or changed
+narration needs the key of the speech service, in
+`~/.config/aura-tutorials/openrouter.key` (`docs/authoring.md`, Narration);
+any other render needs none. Under `out/<id>/`, which Git
 ignores, a render leaves the screenshots in `capture/`, the composition in
-`composition/`, and the video, and `frames` its frames and contact sheets in
+`composition/`, the video, and its subtitles, and `frames` its frames and contact sheets in
 `frames/`; `site` writes the website into `out/site/`, with the videos of
 `out/<id>/`, and with `--release` those of the latest release for the others
 (docs/authoring.md, Publication). `scripts/tutorials.sh preview <id>` serves the
@@ -105,7 +115,8 @@ its header lists the commands, and `scripts/tooling.sh versions` prints the
 versions of the tools. The dependencies of `package.json` live outside the
 repository, in the user's cache directory. HyperFrames runs without
 telemetry, update checks, skills, or installations of its own, and renders
-without a network.
+without a network. Only `scripts/tooling.sh narrate` reaches an outside
+service with a key, the speech service, and only with a clip to make.
 
 ## License
 

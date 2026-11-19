@@ -4,9 +4,12 @@
 // animates the screenshots of its steps in a window, with a camera that zooms
 // and pans towards the target of each step, a synthetic pointer that moves
 // and clicks, a keycap for each key press, highlights, captions, and
-// crossfades; a tutorial of several chapters opens each with a card. Writes
-// <out>/composition/, and <out>/compose.json and <out>/chapters.ffmeta, the
-// duration and the chapters, which the render writes into the MP4.
+// crossfades; a tutorial of several chapters opens each with a card. A voice
+// reads the narration of each step from its clip (src/lib/narration.mjs), and
+// the step lasts at least as long as its sentence. Writes <out>/composition/,
+// <out>/compose.json and <out>/chapters.ffmeta, the duration and the chapters,
+// which the render writes into the MP4, and <out>/<id>.vtt, the subtitles:
+// the narrations at the times of the voice.
 //
 // It also checks what it knows without judgment, and writes the findings into
 // compose.json with the times of the steps and the cards (docs/authoring.md,
@@ -19,6 +22,7 @@
 
 import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { clipFile, loadClips, loadVoice, narrationHash, narrationOf } from "./lib/narration.mjs";
 import { loadTutorial } from "./lib/script.mjs";
 
 const [id, outDir] = process.argv.slice(2);
@@ -34,6 +38,16 @@ if (capture.script !== tutorial.hash) {
   throw new Error(`the capture of ${id} is of another version of its script; capture it again`);
 }
 const compositionDir = join(outDir, "composition");
+
+// The clip that reads the narration of each step, by the id of the step.
+const voice = await loadVoice();
+const clips = await loadClips();
+const narration = new Map(narrationOf(tutorial, voice, clips).map((clip) => [clip.step, clip]));
+for (const clip of narration.values()) {
+  if (clip.duration === null) {
+    throw new Error(`no clip of the narration of step ${clip.step} of ${id}; run scripts/tooling.sh narrate (docs/authoring.md, Narration)`);
+  }
+}
 
 // The canvas, and the window that shows the UI on it: its title bar and its
 // content, whose CSS pixels of the captured page scale by PAGE_SCALE.
@@ -73,6 +87,21 @@ const TYPING_TIME = { min: 0.6, max: 1.4, perCharacter: 0.09 };
 // How long each action holds after it ends, unless its step names a hold: the
 // time to read its caption.
 const ACTION_HOLD = { goto: 3.0, fill: 1.1, click: 1.0, press: 1.0, show: 2.6 };
+// The voice starts after the start of its step, as its caption rises, and the
+// step ends no sooner than a breath after the sentence.
+const VOICE = { lead: 0.3, tail: 0.45 };
+// A click lands as its sentence ends, so that the voice names the action
+// before the screen changes; the step then holds only this long after it,
+// its caption having shown through the sentence.
+const CLICK_HOLD_AFTER_VOICE = 0.4;
+// The subtitles show at the top of the video, clear of the captions; or just
+// above the caption, during a step whose target the camera holds in the band
+// of the top, about two lines of a player's text.
+const CUE_LINE = { top: "6%", low: "74%", band: 200 };
+// A cue of the subtitles holds at most about two lines of 42 characters, and
+// at least a few words.
+const CUE_CHARACTERS = 84;
+const CUE_SHORTEST = 24;
 
 // The zoom of the camera towards the target of each action, unless the step
 // names one: 1 shows the whole window.
@@ -226,10 +255,57 @@ function checkStep(step, number, timing, cameraAt) {
   return findings;
 }
 
-// The end of a step: its action's end, plus its hold, and at least its
-// duration. The one place that times a step, which a narration will extend.
-function stepEnd(step, start, actionEnd) {
-  return Math.max(actionEnd + (step.hold ?? ACTION_HOLD[step.action]), start + (step.duration ?? 0));
+// The end of a step: its action's end, plus its hold, at least its duration,
+// and no sooner than the end of its sentence. The one place that times a step.
+function stepEnd(step, start, actionEnd, hold = ACTION_HOLD[step.action]) {
+  return Math.max(
+    actionEnd + (step.hold ?? hold),
+    start + (step.duration ?? 0),
+    start + VOICE.lead + narration.get(step.id).duration + VOICE.tail,
+  );
+}
+
+// The cues of the subtitles of a narration that the voice reads from `start`
+// to `end`: its clauses, joined while a cue has room, each for the share of
+// the time that its characters take.
+function cuesOf(text, start, end) {
+  // As many cues as the text needs, of about the same length.
+  const count = Math.ceil(text.length / CUE_CHARACTERS);
+  const room = Math.min(CUE_CHARACTERS, Math.ceil(text.length / count) + 12);
+  const parts = [];
+  for (const clause of text.split(/(?<=[.:;,!?])\s+/)) {
+    const words = clause.length > room ? clause.split(/\s+/) : [clause];
+    for (const word of words) {
+      const last = parts.at(-1);
+      if (last !== undefined && last.length + 1 + word.length <= room) parts[parts.length - 1] = `${last} ${word}`;
+      else parts.push(word);
+    }
+  }
+  // A cue of a few words would flash by: it joins the next one, or the one
+  // before, when they have room together.
+  for (let index = 0; index < parts.length && parts.length > 1; index += 1) {
+    if (parts[index].length >= CUE_SHORTEST) continue;
+    const next = index + 1 < parts.length ? index : index - 1;
+    if (parts[next].length + 1 + parts[next + 1].length > CUE_CHARACTERS) continue;
+    parts.splice(next, 2, `${parts[next]} ${parts[next + 1]}`);
+    index -= 1;
+  }
+  // A short cue that no neighbor has room for shares the text with the one
+  // before, split at the space nearest to their middle.
+  for (let index = 1; index < parts.length; index += 1) {
+    if (parts[index].length >= CUE_SHORTEST) continue;
+    const both = `${parts[index - 1]} ${parts[index]}`;
+    const spaces = [...both.matchAll(/ /g)].map((match) => match.index);
+    const middle = spaces.reduce((best, space) => (Math.abs(space - both.length / 2) < Math.abs(best - both.length / 2) ? space : best));
+    parts.splice(index - 1, 2, both.slice(0, middle), both.slice(middle + 1));
+  }
+  const total = parts.reduce((count, part) => count + part.length, 0);
+  let at = start;
+  return parts.map((part) => {
+    const cue = { start: round(at), end: round(at + ((end - start) * part.length) / total), text: part };
+    at = cue.end;
+    return cue;
+  });
 }
 
 // A timed element of a composition.
@@ -560,6 +636,7 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
   const compositionId = `chapter-${chapterIndex + 1}`;
   const frames = [];
   const captions = [];
+  const voices = [];
   const rings = [];
   const ripples = [];
   const keycaps = [];
@@ -675,14 +752,17 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         showFrame(before, time);
         moveCamera(zoom, target, time);
         movePointer(target, time + 0.2);
-        const clickAt = time + 0.2 + POINTER_MOVE + 0.15;
+        // The pointer waits on the ringed target while the voice reads.
+        const arrived = time + 0.2 + POINTER_MOVE + 0.15;
+        const spokenAt = time + VOICE.lead + narration.get(step.id).duration;
+        const clickAt = Math.max(arrived, spokenAt);
         ring(step, step.box, time + 0.5, clickAt + 0.25);
         ringed = true;
         click(clickAt);
         showFrame(after, clickAt + 0.3, CROSSFADE);
         moveCamera(1, null, clickAt + 0.4, 1.1);
         focus = clickAt;
-        time = stepEnd(step, stepStart, clickAt + 1.5);
+        time = stepEnd(step, stepStart, clickAt + 1.5, clickAt > arrived ? CLICK_HOLD_AFTER_VOICE : undefined);
         break;
       }
       case "press": {
@@ -694,6 +774,9 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         const pressAt = time + 0.9;
         pressed = keycap(step, pressAt - 0.35, pressAt + 1.0);
         showFrame(after, pressAt + 0.15, CROSSFADE);
+        // The pointer of an earlier step would point at whatever the key
+        // put in its place.
+        hidePointer(pressAt + 0.15);
         moveCamera(1, null, pressAt + 0.4, 1.1);
         focus = time + CAMERA_MOVE;
         time = stepEnd(step, stepStart, pressAt + 1.5);
@@ -722,9 +805,18 @@ function chapterScene(chapterIndex, steps, numbers, withCard) {
         throw new Error(`unknown action ${step.action} of step ${step.id}`);
     }
     captions.push({ id: `${p}-caption-${step.id}`, number: numbers.get(step.id), step, start: stepStart, end: time });
-    timings.push({ step, start: stepStart, focus, end: time, ring: ringed, keycap: pressed });
+    const spoken = narration.get(step.id);
+    voices.push({ id: `${p}-voice-${step.id}`, key: spoken.key, start: stepStart + VOICE.lead, end: stepStart + VOICE.lead + spoken.duration });
+    timings.push({ step, start: stepStart, focus, end: time, ring: ringed, keycap: pressed, voice: voices.at(-1) });
   }
   const findings = timings.flatMap((timing) => checkStep(timing.step, numbers.get(timing.step.id), timing, cameraAt));
+  // Where the subtitles of a step show: low when its ringed target, at its
+  // focus, reaches into the band of the top.
+  const cueLine = (timing) => {
+    if (!timing.step.box) return CUE_LINE.top;
+    const ringed = onCanvas(cameraAt(timing.focus), rectOf(timing.step.box, RING.pad + RING.border + RING.halo));
+    return ringed.top < CUE_LINE.band ? CUE_LINE.low : CUE_LINE.top;
+  };
   // The chapter ends with the whole window, which recedes.
   const stepsEnd = time;
   moveCamera(1, null, stepsEnd, 0.6);
@@ -823,22 +915,35 @@ ${captions
       <div class="caption-inner"><span class="caption-number">${caption.number}</span><span class="caption-text">${escapeHtml(caption.step.caption)}</span></div>
     </div>`,
   )
+  .join("\n")}
+${
+  // The voice, at the times of the chapter, as its start basis says.
+  voices
+  .map(
+    (spoken) =>
+      `    <audio id="${spoken.id}" ${clip(spoken.start, spoken.end)} data-track-index="5" data-volume="1" data-hf-media-start-basis="local" src="assets/narration/${spoken.key}.mp3"></audio>`,
+  )
   .join("\n")}`;
   return {
     compositionId,
     file: sceneFile(compositionId, CHAPTER_STYLES, markup, tweens),
     duration,
     frames,
+    voices,
     card: withCard ? { title: `Chapter ${chapterIndex + 1}: ${chapter.title}`, start: 0, end: CHAPTER_CARD } : null,
-    steps: timings.map(({ step, start: stepStart, focus, end }) => ({
+    steps: timings.map(({ step, start: stepStart, focus, end, voice: spoken, ...timing }) => ({
       id: step.id,
       number: numbers.get(step.id),
       chapter: chapterIndex + 1,
       action: step.action,
       caption: step.caption,
+      narration: step.narration,
       start: stepStart,
       focus,
       end,
+      voiceStart: spoken.start,
+      voiceEnd: spoken.end,
+      cueLine: cueLine({ step, focus, ...timing }),
     })),
     findings,
   };
@@ -867,7 +972,7 @@ for (const [index, chapter] of tutorial.chapters.entries()) {
   scenes.push(scene);
   chapters.push({ title: chapter.title, start: index === 0 ? 0 : round(time) });
   if (scene.card) cards.push(shift(time, scene.card, ["start", "end"]));
-  steps.push(...scene.steps.map((step) => shift(time, step, ["start", "focus", "end"])));
+  steps.push(...scene.steps.map((step) => shift(time, step, ["start", "focus", "end", "voiceStart", "voiceEnd"])));
   findings.push(...scene.findings.map((finding) => shift(time, finding, ["at"])));
   time += scene.duration;
 }
@@ -878,12 +983,15 @@ cards.push({ title: tutorial.outro?.title ?? "That's it", start: round(time), en
 // --- Files --------------------------------------------------------------
 
 await rm(compositionDir, { recursive: true, force: true });
-for (const dir of ["compositions", "assets/frames", "assets/fonts", "assets/vendor"]) {
+for (const dir of ["compositions", "assets/frames", "assets/narration", "assets/fonts", "assets/vendor"]) {
   await mkdir(join(compositionDir, dir), { recursive: true });
 }
 for (const scene of scenes) {
   for (const frame of scene.frames ?? []) {
     await copyFile(join(captureDir, frame.file), join(compositionDir, "assets", "frames", frame.file));
+  }
+  for (const spoken of scene.voices ?? []) {
+    await copyFile(clipFile(spoken.key), join(compositionDir, "assets", "narration", `${spoken.key}.mp3`));
   }
   await writeFile(join(compositionDir, "compositions", `${scene.compositionId}.html`), scene.file);
 }
@@ -960,7 +1068,19 @@ if (chapters.length > 1) {
 await writeFile(join(outDir, "chapters.ffmeta"), `${ffmeta.join("\n")}\n`);
 await writeFile(
   join(outDir, "compose.json"),
-  `${JSON.stringify({ tutorial: id, script: tutorial.hash, duration, chapters, cards, steps, findings }, null, 2)}\n`,
+  `${JSON.stringify({ tutorial: id, script: tutorial.hash, narration: narrationHash(tutorial, voice, clips), duration, chapters, cards, steps, findings }, null, 2)}\n`,
+);
+
+// The subtitles: each narration while the voice reads it.
+const vttTime = (seconds) => {
+  const ms = Math.round(seconds * 1000);
+  const two = (value) => String(value).padStart(2, "0");
+  return `${two(Math.floor(ms / 3600000))}:${two(Math.floor(ms / 60000) % 60)}:${two(Math.floor(ms / 1000) % 60)}.${String(ms % 1000).padStart(3, "0")}`;
+};
+const cues = steps.flatMap((step) => cuesOf(step.narration, step.voiceStart, step.voiceEnd).map((cue) => ({ ...cue, line: step.cueLine })));
+await writeFile(
+  join(outDir, `${id}.vtt`),
+  `WEBVTT\n\n${cues.map((cue, index) => `${index + 1}\n${vttTime(cue.start)} --> ${vttTime(cue.end)} line:${cue.line}\n${cue.text}`).join("\n\n")}\n`,
 );
 
 console.error(
