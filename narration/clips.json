@@ -4,105 +4,121 @@
       "text": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details.",
       "duration": 7.802
     },
-    "18fb85fada3b5ed7dcea9a14": {
-      "text": "Then enter your password.",
-      "duration": 1.625
+    "0b5fdd68c0c4771132c84ad9": {
+      "text": "Select Clear filters: it removes the search and the filters, and keeps the view and its sorting.",
+      "duration": 5.759
     },
-    "1b516421c98083b25dc93854": {
-      "text": "In the list, the Deadline column shows the next deadline of each Ticket, in red once it has passed.",
-      "duration": 6.13
+    "14b8991c6696ebb4930a4341": {
+      "text": "Select Clear filters to remove the search.",
+      "duration": 2.415
     },
-    "27a68493af25a94450948da3": {
-      "text": "Aura opens the Ticket list. Next to its heading, the attention summary counts the Tickets that need attention.",
-      "duration": 6.269
+    "1ae4b60c9fe41136148e728f": {
+      "text": "Select Embargo expired to list the Tickets whose Coordinated Release Date has passed, and that are still confidential.",
+      "duration": 6.687
     },
-    "2b34d4f6d66875a5057fba63": {
-      "text": "The new reference shows in the table: a manual reference, uncategorized, with the time it was added.",
-      "duration": 6.41
+    "1e6155e494e0a806fd1e0651": {
+      "text": "Press Enter to keep the Tickets of the view that match.",
+      "duration": 2.74
     },
-    "348e5da60278c17d0e2059e6": {
-      "text": "The reference that you added is the latest event, with who added it and when.",
-      "duration": 4.551
+    "28c16733914a2c9deb5e6fa1": {
+      "text": "Select Severity, or the heading of another sortable column, to sort the list by it.",
+      "duration": 5.108
     },
-    "3ed1de35de8122274fc4671d": {
-      "text": "To read the advisories, patches, and reports about the Ticket, open the tab References.",
-      "duration": 5.619
+    "3455cb9825a48544af5e3132": {
+      "text": "Open the view Embargo for the confidential Tickets, sorted by Coordinated Release Date, the earliest first.",
+      "duration": 6.873
     },
-    "4a21decd6845db5927dbfbb3": {
-      "text": "Select Sign in.",
-      "duration": 1.3
+    "357ec1ee2e8b6b1051f2e7ca": {
+      "text": "Select Analysis, a value of the status filter: the list follows at once.",
+      "duration": 5.108
     },
-    "54c644f87663e95959214988": {
-      "text": "To see every change of the Ticket, and what Sentinel did by itself, open the tab Audit log.",
-      "duration": 5.573
+    "3b38e324f988843f579101f3": {
+      "text": "Here, the priority is an override: the explanation shows who set it and when, and the automatic priority that it replaces.",
+      "duration": 8.034
     },
-    "57357d73a944be511e260287": {
-      "text": "To see your Tickets in Analysis or Analyzed, open the view Assigned to me.",
-      "duration": 4.737
+    "460e344555503fc2b8b3dabb": {
+      "text": "The views are tabs, and each counts its Tickets. New and Unassigned are the queues of the Tickets that wait for an analyst; Analysis, Analyzed, and All follow.",
+      "duration": 10.635
     },
-    "6ce697a1059d47a6f8a3b2df": {
-      "text": "Press Escape to close the explanation.",
+    "4890a0e8895617e3f9599df1": {
+      "text": "In every view, a lock after its identifier marks a confidential Ticket.",
+      "duration": 4.505
+    },
+    "51b14610bc9c0fc32c835f56": {
+      "text": "Press Escape to close the filters.",
+      "duration": 2.09
+    },
+    "5d84ae6c5dc8168c679202a4": {
+      "text": "Open the view Unassigned for the Tickets in Analysis or Analyzed that wait for an assignee.",
+      "duration": 5.714
+    },
+    "6004e87552687ba31c872ad4": {
+      "text": "Enter the name of a package: the search finds Tickets by their identifier, their CVE, or their packages.",
+      "duration": 6.177
+    },
+    "709ffa983c0166a312c2ee57": {
+      "text": "Select Submission, or another count, to list its Tickets in the All view.",
+      "duration": 4.365
+    },
+    "7a962ac5c42927d0c0a9718c": {
+      "text": "Open the Ticket by selecting its identifier.",
       "duration": 2.508
     },
-    "72a22934cd4fe185e385e7d7": {
-      "text": "To record a new one, select Add reference.",
-      "duration": 2.461
+    "8922c368139115ba340c996e": {
+      "text": "Press Escape to close it.",
+      "duration": 1.486
     },
-    "79d9b26883dfbf3d3d8dd27f": {
-      "text": "Next to the heading, the attention summary counts the active P1 Tickets, the embargoes that have expired, and the Tickets overdue in each phase, from Triage to QA.",
-      "duration": 10.31
+    "915e2670ad2ab077583edfc7": {
+      "text": "Next to the heading, the attention summary counts the Tickets that need attention: the active P1 Tickets, and the Tickets overdue in each phase, from Triage to QA.",
+      "duration": 10.96
     },
-    "8651d6204b36427f358ea7ba": {
-      "text": "Enter a title: it is optional, and makes the reference easier to find.",
-      "duration": 4.644
+    "9d069cfc971f8016c31d232c": {
+      "text": "Select QA, or another overdue count of the attention summary, to find late work in the All view.",
+      "duration": 5.991
     },
-    "96d153d8345e60924f21c4c7": {
-      "text": "Below, the packages show where SUSE stands for each codestream and its Products: here, affected.",
-      "duration": 6.734
+    "a562048eab336815a11fffc9": {
+      "text": "Open the view Assigned to me to see your Tickets in Analysis or Analyzed.",
+      "duration": 4.923
     },
-    "98ccb6624a17bc27330cad3b": {
-      "text": "Press Enter to keep the Tickets that match: here, the Ticket of the CVE.",
-      "duration": 4.737
+    "abf7459f5f166715ba308245": {
+      "text": "Select Analyzed too, to keep the Tickets that have either status.",
+      "duration": 3.855
     },
-    "9de524aafabbfb1a44abef7c": {
-      "text": "Select Add reference in the dialog to add it to the Ticket.",
-      "duration": 3.39
+    "b6a5f069b0898ef78b24ee98": {
+      "text": "The most severe Tickets now come first; selecting the heading again reverses the order.",
+      "duration": 5.016
     },
-    "a6c4f00a060786ca3ac45e9e": {
-      "text": "From the Ticket list, enter the identifier of the CVE in the search.",
-      "duration": 4.598
+    "be04d7a5bde2df671ee0ed81": {
+      "text": "Select the priority of a Ticket to see its explanation.",
+      "duration": 3.204
     },
-    "ac3b2a6fa53d1e116d6e4d44": {
-      "text": "To open the Ticket, select its identifier.",
-      "duration": 2.461
+    "d8109c7ed4eb649a6d818713": {
+      "text": "Select Filters to narrow the list.",
+      "duration": 2.138
     },
-    "b47465e1764802dab8ef557b": {
-      "text": "As an analyst, you land on the New view, the queue of new Tickets.",
-      "duration": 4.319
+    "d811b7ce199165b61d8fa682": {
+      "text": "A queue is sorted by priority, then by deadline, so its most urgent Ticket comes first.",
+      "duration": 5.526
     },
-    "b80cf462dfd3e27635b06462": {
-      "text": "Enter your username.",
-      "duration": 1.394
+    "decf13eb744494622b86e223": {
+      "text": "In the list, the Deadline column shows the next deadline of a Ticket, in red once it has passed.",
+      "duration": 6.037
     },
-    "c4e041b3c93fff4ce22e8cd3": {
-      "text": "Enter the address of the page.",
-      "duration": 1.765
+    "e862f806ceb1cd79cf646946": {
+      "text": "Open the view All to return to every Ticket.",
+      "duration": 2.601
     },
-    "cf125205748aa0c5580c28bb": {
-      "text": "The priority in the heading explains itself: select it.",
-      "duration": 3.715
+    "ebef5e199826b316480f528d": {
+      "text": "As an analyst, you land on the New view, the queue of the new Tickets that no analyst has taken yet.",
+      "duration": 6.084
     },
-    "e75122461ca0850d9afca86f": {
-      "text": "This priority is an override: the explanation says who set it and when, and the priority that Sentinel computed from the severity and the exploitation.",
-      "duration": 9.52
+    "ec6afb983cc8cf3741bb0fc0": {
+      "text": "Sentinel Aura opens the Ticket list in its All view: every Ticket that you can see, the most recently modified first.",
+      "duration": 7.477
     },
-    "eaccfe487aa35d08eda3f6e6": {
-      "text": "Open Sentinel Aura in your browser. If you aren't signed in, it shows Sign in.",
-      "duration": 4.83
-    },
-    "fbaacf94c2a20db428d6ffbf": {
-      "text": "The heading of the Ticket shows its CVE, its status, its severity, and its priority.",
-      "duration": 5.619
+    "f9960020b65bb08e1398dd92": {
+      "text": "Open the view Analysis to see the Tickets in that status, sorted by priority, then by deadline.",
+      "duration": 5.944
     }
   }
 }

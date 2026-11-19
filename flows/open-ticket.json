@@ -16,7 +16,7 @@
         { "role": "region", "name": "Participants", "exact": true, "child": { "role": "toolbar", "name": "Participants" } }
       ],
       "caption": "Open the Ticket",
-      "narration": "To open the Ticket, select its identifier."
+      "narration": "Open the Ticket by selecting its identifier."
     }
   ]
 }
