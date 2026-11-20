@@ -51,3 +51,51 @@ aura_version() {
     git -C "${REPO_ROOT}/aura" describe --tags --exact-match 2>/dev/null ||
         git -C "${REPO_ROOT}/aura" rev-parse --short HEAD
 }
+
+# The repository on GitHub, and the image of the website that its releases
+# publish (docs/deployment.md), which a registry wants in lower case.
+REPOSITORY="${GITHUB_REPOSITORY:-vulnwatch/aura-tutorials}"
+# shellcheck disable=SC2034  # used by the scripts that source this file
+readonly REPOSITORY
+RELEASE_IMAGE="ghcr.io/${REPOSITORY,,}"
+readonly RELEASE_IMAGE
+
+# Succeeds when $1 is the tag of a release, such as aura-v0.10.0-r2: the
+# version of Aura that the videos show, and the number of the release for it.
+is_release_tag() {
+    [[ "$1" =~ ^aura-[0-9A-Za-z.+-]+-r[1-9][0-9]*$ ]]
+}
+
+# Succeeds when $1 is the digest of an image.
+is_digest() {
+    [[ "$1" =~ ^sha256:[0-9a-f]{64}$ ]]
+}
+
+# Succeeds when $1 is a reference by digest of the image of a release, such as
+# ghcr.io/vulnwatch/aura-tutorials@sha256:<64 hexadecimal digits>.
+is_release_reference() {
+    [[ "${1%@*}" == "${RELEASE_IMAGE}" ]] && is_digest "${1#*@}"
+}
+
+# Fails unless Docker's Buildx plugin is installed.
+require_buildx() {
+    docker buildx version >/dev/null 2>&1 || die "Docker's Buildx plugin is required"
+}
+
+# Prints the digest that the image tag $1, such as
+# ghcr.io/vulnwatch/aura-tutorials:aura-v0.10.0-r2, names in its registry.
+resolve_digest() {
+    local digest
+    require_buildx
+    digest="$(docker buildx imagetools inspect "$1" --format '{{.Manifest.Digest}}')" ||
+        die "cannot resolve $1 in the registry"
+    is_digest "${digest}" || die "unexpected digest '${digest}' for $1"
+    printf '%s\n' "${digest}"
+}
+
+# The website that src/site.mjs generates, and what its image is built from,
+# besides the site.
+# shellcheck disable=SC2034  # used by the scripts that source this file
+readonly SITE_DIR="${REPO_ROOT}/out/site"
+# shellcheck disable=SC2034  # used by the scripts that source this file
+readonly IMAGE_DIR="${REPO_ROOT}/site"

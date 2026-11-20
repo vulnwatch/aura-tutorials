@@ -1,9 +1,12 @@
 name: Publish
 
 # After a merge to main: render the videos that changed since the latest
-# release and publish a release with every video, its subtitles, and videos.json
-# (scripts/release.sh), then deploy the website of the tutorials to GitHub
-# Pages, with the videos of that release, also when no video changed
+# release and create a draft release with every video, its subtitles, and
+# videos.json (scripts/release.sh), also when only the website or what its
+# image is built from changed. Then build the image of the website of that
+# release, test it, and publish it with its SBOM and its signed attestations,
+# and the release itself, published last (docs/deployment.md). Then deploy the
+# same website to GitHub Pages, also when the latest release was current
 # (docs/authoring.md, Publication).
 
 on:
@@ -18,12 +21,21 @@ concurrency:
 permissions: {}
 
 jobs:
+  # Only main publishes: a run started by hand on another branch does
+  # nothing, so that every release, its image, and its attestations come from
+  # main, as the verification of a release requires (docs/deployment.md,
+  # Verify a Release). The other jobs need this one.
   publish:
-    name: Publish the videos
+    name: Draft the release
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      revision: ${{ steps.release.outputs.revision }}
+      draft: ${{ steps.release.outputs.draft }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -33,18 +45,27 @@ jobs:
           # version of Aura (scripts/lib/common.sh, aura_version).
           fetch-depth: 0
 
-      - name: Render and publish
+      - name: Render and draft the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/release.sh publish
 
-      # The videos just rendered, then those of the latest release, which
-      # this job published or found current.
-      - name: Generate the website
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # The release that this job drafted, or the latest one, which it found
+      # current, and the website that release.sh generated with its videos.
+      - name: Report the release and the website
+        id: release
         run: |
-          scripts/tutorials.sh site --release
+          tag="$(jq -er .release out/release/videos.json)"
+          revision="$(jq -er .commit out/release/videos.json)"
+          draft=false
+          if [[ -f out/release/draft ]]; then
+            draft=true
+          fi
+          {
+            echo "tag=${tag}"
+            echo "revision=${revision}"
+            echo "draft=${draft}"
+          } >>"${GITHUB_OUTPUT}"
           size="$(du -sm out/site | cut -f 1)"
           echo "The website holds ${size} MB, of the 1 GB that GitHub Pages allows." >>"${GITHUB_STEP_SUMMARY}"
           if ((size > 800)); then
@@ -55,9 +76,135 @@ jobs:
         with:
           path: out/site
 
+  # Builds the image of the website of the draft release, from the artifact
+  # that Pages receives, tests it, and inventories it. The job runs the image
+  # and the scanner, so it only reads the repository.
+  image:
+    name: Build the image of the website
+    needs: publish
+    if: needs.publish.outputs.draft == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ needs.publish.outputs.tag }}
+    steps:
+      # The commit of the release, which is the commit of this run.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.publish.outputs.revision }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/pages
+      - name: Build the image
+        run: |
+          mkdir -p out/site
+          tar -xf "${RUNNER_TEMP}/pages/artifact.tar" -C out/site
+          scripts/image.sh build "${TAG}"
+      - name: Test the image
+        run: scripts/image.sh test
+      - name: Generate and check the SBOM
+        run: scripts/image.sh sbom "${RUNNER_TEMP}/release/sbom.cdx.json"
+      - name: Export the image
+        run: scripts/image.sh save "${RUNNER_TEMP}/release/image.tar"
+      # Handed to the Publish the release job, so that the write permissions
+      # never reach the job that runs the image and the scanner.
+      - name: Retain the image and its SBOM
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release
+          path: |
+            ${{ runner.temp }}/release/image.tar
+            ${{ runner.temp }}/release/sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  # Publishes what the Build the image job retained, and runs neither the
+  # image nor a tool.
+  release:
+    name: Publish the release
+    needs: [publish, image]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+      packages: write
+    env:
+      TAG: ${{ needs.publish.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.publish.outputs.revision }}
+      # Before the first push: a published release is final, and only a
+      # draft release publishes an image.
+      - name: Check the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/release.sh check "${TAG}"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: ${{ runner.temp }}/release
+      - name: Load the image
+        run: scripts/image.sh load "${RUNNER_TEMP}/release/image.tar"
+      - name: Log in to the registry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: docker login ghcr.io --username "${GITHUB_ACTOR}" --password-stdin <<<"${GH_TOKEN}"
+      - name: Push the image
+        id: push
+        run: |
+          set -euo pipefail
+          reference="$(scripts/image.sh push "${TAG}")"
+          echo "name=${reference%@*}" >>"${GITHUB_OUTPUT}"
+          echo "digest=${reference#*@}" >>"${GITHUB_OUTPUT}"
+          echo "The image of ${TAG} is ${reference}." >>"${GITHUB_STEP_SUMMARY}"
+      # Both attestations name the image by its digest. Each is stored in
+      # GitHub's attestations API and in the registry, beside the image, and
+      # its bundle becomes a release asset; no storage record is created.
+      - name: Attest the SBOM
+        id: attest-sbom
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-name: ${{ steps.push.outputs.name }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          sbom-path: ${{ runner.temp }}/release/sbom.cdx.json
+          push-to-registry: true
+          create-storage-record: false
+      - name: Attest the build provenance
+        id: attest-provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-name: ${{ steps.push.outputs.name }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false
+      # The last step: the assets and the notes, then the publication.
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE: ${{ steps.push.outputs.name }}@${{ steps.push.outputs.digest }}
+          SBOM_BUNDLE: ${{ steps.attest-sbom.outputs.bundle-path }}
+          PROVENANCE_BUNDLE: ${{ steps.attest-provenance.outputs.bundle-path }}
+        run: >-
+          scripts/release.sh finish "${TAG}" "${IMAGE}" "${RUNNER_TEMP}/release/sbom.cdx.json"
+          "${SBOM_BUNDLE}" "${PROVENANCE_BUNDLE}"
+
+  # The website of the latest release: once the release of this run is
+  # published, or at once when the run found the latest release current.
   deploy:
     name: Deploy the website
-    needs: publish
+    needs: [publish, release]
+    if: >
+      always() && needs.publish.result == 'success' &&
+      (needs.release.result == 'success' || needs.publish.outputs.draft == 'false')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

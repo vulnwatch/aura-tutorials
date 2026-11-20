@@ -13,7 +13,8 @@ name: Checks
 # of them when the tooling or src/tutorials.mjs changes, are rendered too, with
 # the checks of their composition, which fail the job, and kept with their
 # subtitles and contact sheets as an artifact to review (docs/authoring.md, Review). The
-# website is generated too, and kept as an artifact.
+# website is generated too, and kept as an artifact, and its image is built,
+# tested, and inventoried, without publishing it (docs/deployment.md).
 
 on:
   pull_request:
@@ -147,6 +148,17 @@ jobs:
           name: site
           path: out/site/
           retention-days: 14
+
+      # The image of that website, as Publish builds it, with its tests and
+      # its SBOM, so that a change of site/, such as a new base image, or of
+      # the site shows before the merge whether the image still serves it and
+      # still has its inventory (docs/deployment.md).
+      - name: Build and test the image of the website
+        if: github.event_name == 'pull_request'
+        run: |
+          scripts/image.sh build
+          scripts/image.sh test
+          scripts/image.sh sbom "${RUNNER_TEMP}/sbom.cdx.json"
 
       - name: Keep the videos, their subtitles, their contact sheets, and the report
         if: always()

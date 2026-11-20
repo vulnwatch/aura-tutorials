@@ -86,7 +86,7 @@ request.
 | A render that changes the frames of a video: a change of `src/compose.mjs` or `src/capture.mjs`, another voice (`narration/voice.json`), which changes the times of the steps, or screens that a new version of Aura or of the tooling changes | `@visual-reviewer`, on the videos that changed |
 | A new version of Aura (`aura-bump`) | `@accuracy-reviewer`, on the tutorials whose screens changed and on the catalog; `@visual-reviewer`, on the videos rendered again |
 | The Style of `docs/authoring.md` | `@consistency-reviewer`, on every tutorial |
-| A workflow, a script of `scripts/`, `renovate.json`, `.gitmodules`, or the tooling (`Containerfile`, `package.json`, `package-lock.json`) | `@cicd-reviewer` |
+| A workflow, a script of `scripts/`, `renovate.json`, `.gitmodules`, the tooling (`Containerfile`, `package.json`, `package-lock.json`), or the image of the website (`site/`, `docs/deployment.md`) | `@cicd-reviewer` |
 
 - Invoke each reviewer from your own session, after any task that you
   delegated has returned: a subagent cannot invoke another, and must never
