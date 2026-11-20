@@ -1,0 +1,25 @@
+# The image of the website of the tutorials (docs/deployment.md): nginx and
+# the site that src/site.mjs generates. scripts/image.sh builds it from this
+# directory, with the site as the build context `content`, and sets its
+# labels. No instruction runs a command, so a build runs nothing of the base
+# image.
+
+# The official unprivileged nginx image, the one of Aura's image, pinned by
+# version and digest and updated by Renovate.
+FROM docker.io/nginx/nginx-unprivileged:1.31.8-alpine-slim@sha256:27da685f577f3c225952d974c9bace07204ac16c9cc9ceb7cedc3663c324bc7f
+
+# The configuration replaces the one of the base image, and the site has a
+# directory of its own, beside the base image's default site, which nothing
+# serves. Both belong to root, so the runtime user can read them but not
+# change them.
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=content . /srv/site
+
+# The base image's non-root user, declared numerically so that an orchestrator
+# can verify that the container does not run as root.
+USER 101:101
+EXPOSE 8080
+# Without the entrypoint of the base image, whose scripts adapt a
+# configuration that this image replaces.
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD []

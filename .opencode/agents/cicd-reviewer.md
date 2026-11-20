@@ -1,10 +1,11 @@
 ---
 description: >
-  Reviews the workflows, the scripts of scripts/, renovate.json, and the
-  tooling image for pipeline correctness, pinning, permissions, the isolation
+  Reviews the workflows, the scripts of scripts/, renovate.json, the
+  tooling image, and the image of the website for pipeline correctness, pinning, permissions, the isolation
   from Aura and from the host, and drift from the documents that describe
   them. Use after changing a workflow, a script, the Renovate configuration,
-  the Containerfile, or the dependencies of the tooling. Read-only.
+  a Containerfile, the image of the website, or the dependencies of the
+  tooling. Read-only.
 mode: subagent
 permission:
   edit: deny
@@ -126,6 +127,7 @@ Artifacts in scope:
   make the videos;
 - `renovate.json` and `.gitmodules`, which Renovate reads;
 - the tooling: `Containerfile`, `package.json`, and `package-lock.json`;
+- the image of the website: `site/` and its contract, `docs/deployment.md`;
 - the documentation of a command that the change adds, removes, or alters:
   the header of its script, and the places that name the command.
 
@@ -134,6 +136,8 @@ Your authorities:
 - `README.md` (Isolation From Aura; Environment);
 - `docs/authoring.md` (Workflows, in particular Update the Tools and Move to
   a New Version of Aura; Review; Publication);
+- `docs/deployment.md`, the contract of the image of the website, its
+  publication, and its scan;
 - `AGENTS.md` (Isolation From Aura; Environment; Verification; Git and
   GitHub);
 - the header of each script, which owns the syntax of its commands.
@@ -177,7 +181,9 @@ scope, and report what it finds.
 - Is every action pinned by its full commit SHA, with the inline `# vX.Y.Z`
   comment of its version? A mutable reference is always a finding.
 - Is every image pinned by version and digest, such as the Playwright image
-  of the `Containerfile` and the Renovate image of the validation workflow,
+  of the `Containerfile`, the nginx image of `site/Containerfile`, the
+  Trivy image of `scripts/image.sh`, and the Renovate image of the
+  validation workflow,
   and is every pinned tool tracked by Renovate, through a manager or a custom
   manager of `renovate.json`?
 

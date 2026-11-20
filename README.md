@@ -8,7 +8,10 @@ On the website `https://vulnwatch.github.io/aura-tutorials/`, a visitor chooses
 a role and follows its videos in order, or searches them. The latest
 video of each tutorial is also at
 `https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`,
-and the release lists them all in `videos.json`.
+and the release lists them all in `videos.json`. Each release also has a
+container image of the website, `ghcr.io/vulnwatch/aura-tutorials:<tag of
+the release>`, with its SBOM and signed build provenance, to host it
+elsewhere (`docs/deployment.md`).
 
 ## Approach
 
@@ -56,8 +59,10 @@ network, and only a new or changed sentence, or another voice, costs a call
 | `catalog/tasks.json` | The tasks of Aura's users, and which ones Aura can show |
 | `tutorials.lock.json` | What each video was made from |
 | `src/` | The capture, the composition, the commands of the set of tutorials, and the website (`src/site.mjs`) |
-| `scripts/` | The commands: `tutorials.sh`, `backend.sh`, and `tooling.sh` |
+| `scripts/` | The commands: `tutorials.sh`, `backend.sh`, and `tooling.sh`; `release.sh`, `image.sh`, and `image-scan-issue.sh`, with which CI publishes and scans |
+| `site/` | What the image of the website is built from, with the site: its `Containerfile` and the configuration of its web server |
 | `docs/authoring.md` | The format of the scripts, their style, the workflows, and the review |
+| `docs/deployment.md` | The contract of the image of the website, for who deploys it |
 | `aura/` | The submodule of Sentinel Aura, pinned to a release |
 | `.opencode/` | The skills that guide agents, `tutorial-author` and `aura-bump`, and the reviewers (`.opencode/README.md`) |
 

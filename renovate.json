@@ -50,6 +50,15 @@
   "customManagers": [
     {
       "customType": "regex",
+      "description": "The image of Trivy that scripts/image.sh runs, by version and digest, as in Aura; the package name omits docker.io/, the default registry",
+      "managerFilePatterns": ["/^scripts/image\\.sh$/"],
+      "matchStrings": [
+        "[A-Z]+_IMAGE=\"docker\\.io/(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)@(?<currentDigest>sha256:[a-f0-9]+)\""
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "description": "The Renovate image of renovate-validation.yml, by version and digest",
       "managerFilePatterns": ["/^\\.github/workflows/renovate-validation\\.yml$/"],
       "matchStrings": [

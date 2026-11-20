@@ -309,6 +309,11 @@ generator, or their screens change. When a new version of a tool changes the
 screens, such as the rendering of Chromium, `check` reports them changed:
 render them again (`scripts/tutorials.sh render --strict --stale` after
 `check`) and commit the lock in the pull request.
+The base image of the image of the website (`site/Containerfile`), nginx,
+and the image of Trivy, which inventories and scans it (`scripts/image.sh`),
+are among the other tooling. Their pull request builds the image and checks
+that it still serves the site and still has its SBOM; the merge of a new
+base image makes a release, whose image has the new base (Publication).
 
 ### Move to a New Version of Aura
 
@@ -437,10 +442,24 @@ repository with every video and its subtitles, `<id>.vtt`: the unchanged
 ones copied from the previous release, and `videos.json`, which lists them. The latest video of a tutorial
 is always at
 `https://github.com/vulnwatch/aura-tutorials/releases/latest/download/<id>.mp4`.
+`videos.json` also records, as `site`, the hash of the website of the release
+and of what its image is built from, the directory `site/`: a merge that
+changes either, such as a change of the catalog or a new base image, makes a
+release too, with every video copied, and a merge that changes none of these
+makes none.
 
-Then CI deploys the website of the tutorials to GitHub Pages, at
-`https://vulnwatch.github.io/aura-tutorials/`, also when no video changed,
-so that a change of the catalog shows at once: `src/site.mjs` generates it
+A release is first a draft. CI builds the image of its website,
+`ghcr.io/vulnwatch/aura-tutorials`, tagged with the tag of the release,
+tests it, and publishes it with its SBOM and its signed attestations, and
+then the release, last, as Aura publishes its own; the image of a published
+release never changes, which is why whatever changes the site makes a
+release. `docs/deployment.md` is the contract of that image, for who deploys
+it, and describes its publication, its verification, and its weekly scan;
+`scripts/image.sh` builds and tests it locally.
+
+Then CI deploys the same website to GitHub Pages, at
+`https://vulnwatch.github.io/aura-tutorials/`, also when it found the latest
+release current: `src/site.mjs` generates it
 from the lock, the catalog, and the videos of the latest release, and the
 summary of the workflow reports its size, of the 1 GB that Pages allows.
 The site serves the MP4s itself, as `video/mp4` with range requests, which
@@ -464,5 +483,7 @@ holds:
 A new tutorial, or a change of a script or of the catalog, needs nothing
 more: the site follows the lock and the catalog. Each pull request keeps the
 site as the artifact `site`, with the videos that it renders and those of
-the latest release; `scripts/tutorials.sh site --release --serve` makes the
+the latest release, and builds and tests its image, with its SBOM, without
+publishing it;
+`scripts/tutorials.sh site --release --serve` makes the
 same site locally and serves it on `http://localhost:3003`.
