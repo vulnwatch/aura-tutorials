@@ -4,7 +4,7 @@
 # HyperFrames needs to encode the videos. Keep the version in sync with
 # playwright in package.json, so that its browsers are the ones that
 # Playwright expects.
-FROM mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+FROM mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
 
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends ffmpeg \
