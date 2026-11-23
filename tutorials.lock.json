@@ -3,7 +3,7 @@
     "ticket-list": {
       "title": "Find your way in the Ticket list",
       "subtitle": "Views, search, sorting, filters, and the Tickets that need attention",
-      "aura": "v0.10.0",
+      "aura": "v0.11.0",
       "script": "sha256:e7601ee4573b0272cd51394d81f8e48f16b31066b6b446d70f7e8ff17b4d3119",
       "generator": "sha256:b4af023bc96cdf85d40dbd4787b67899eb76ebcd0184a38f1716b8443f853c16",
       "narration": "sha256:9ef36b52266721283ab85294f2043c5a6aa59715d0bf8d917015837b773a0920",
@@ -240,14 +240,14 @@
         "sha256:2bf2cefaef8873563b4d17099a76778a1ca981b2d31da02beaaeb3acdca2884a",
         "sha256:7d4002f0d205bca74ec5cd3a1dc6fe3cd50cf37758cc483ec5dd7121233ee7db",
         "sha256:7d4002f0d205bca74ec5cd3a1dc6fe3cd50cf37758cc483ec5dd7121233ee7db",
-        "sha256:28aa65ef316ee8328d981093a5fd598ee9fc3792c3549fa5ecad4b92b6db7bbb",
-        "sha256:28aa65ef316ee8328d981093a5fd598ee9fc3792c3549fa5ecad4b92b6db7bbb"
+        "sha256:86a0664c83c399a910b8b06d21d6807372d22cbcbc8950f69a06f841b31f66a9",
+        "sha256:86a0664c83c399a910b8b06d21d6807372d22cbcbc8950f69a06f841b31f66a9"
       ]
     },
     "ticket-list-for-analysts": {
       "title": "The Ticket list for analysts",
       "subtitle": "The queues, your Tickets, and the embargoes",
-      "aura": "v0.10.0",
+      "aura": "v0.11.0",
       "script": "sha256:6672f9770611494ec1b7706444a40feb94c2a476e310784eb13e9f860790298e",
       "generator": "sha256:b4af023bc96cdf85d40dbd4787b67899eb76ebcd0184a38f1716b8443f853c16",
       "narration": "sha256:18255f52d1e0ca21e593e98fed1365e9223a47499001f381a983533caf2b7dac",
