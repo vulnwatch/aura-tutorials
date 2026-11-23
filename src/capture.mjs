@@ -245,9 +245,11 @@ async function runStep(page, step, recording) {
       await settle(page);
       await record("focus");
       // One screenshot for each character, so that the video types with the
-      // pixels of the UI.
+      // pixels of the UI. Each goes where the click left the focus, as a
+      // user types: a field of parts, such as a date and time, moves the
+      // focus from part to part, which a focus of the target would undo.
       for (const character of step.value) {
-        await target.pressSequentially(character);
+        await page.keyboard.type(character);
         await record(`type-${frames.length - 1}`);
       }
       if (!recording) await settle(page);
