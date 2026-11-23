@@ -1,0 +1,405 @@
+{
+  "title": "Analyze the packages of a Ticket",
+  "subtitle": "Tracks, Products, affectedness, exclusions, and Add package",
+  "outro": {
+    "title": "The package tree is the analysis",
+    "subtitle": "Sentinel evaluates the status of the Ticket again after each change."
+  },
+  "user": "asmith",
+  "covers": [
+    "analyze-packages"
+  ],
+  "changesData": true,
+  "vars": {
+    "ticket": "SNTL-12",
+    "product": "Fictional Linux Enterprise Server 16.0",
+    "term": "openss",
+    "suggested": "fictional-openssl-3"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    },
+    {
+      "include": "go-to-ticket"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Read the package tree",
+      "steps": [
+        {
+          "id": "tree",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "heading",
+              "level": 3,
+              "name": "fictional-openssl",
+              "exact": true
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "Each package lists its tracks",
+          "narration": "Below the CVE, each package of the Ticket lists its tracks, and each track its Products, with its phases and its affectedness."
+        },
+        {
+          "id": "product",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "{product}",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "{product}"
+          },
+          "caption": "Select a Product",
+          "narration": "Select a Product for its eligibility, its lifecycle, its release, and its actions."
+        },
+        {
+          "id": "product-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close it",
+          "narration": "Press Escape to close it."
+        }
+      ]
+    },
+    {
+      "title": "Set the affectedness",
+      "steps": [
+        {
+          "id": "affectedness",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Affectedness of fictional-zlib, fles-16.0: Affected",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "menu",
+            "name": "Affectedness of fictional-zlib, fles-16.0: Affected"
+          },
+          "zoom": 1,
+          "caption": "Select the affectedness of a track",
+          "narration": "Select the affectedness of a track to change it."
+        },
+        {
+          "id": "not-affected",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Affectedness of fictional-zlib, fles-16.0: Affected"
+            },
+            {
+              "role": "menuitemradio",
+              "name": "Not affected",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Packages",
+            "exact": true,
+            "child": {
+              "role": "button",
+              "name": "Affectedness of fictional-zlib, fles-16.0: Not affected",
+              "exact": true
+            }
+          },
+          "caption": "Select Not affected",
+          "narration": "Select Not affected when the issue doesn't affect the track: it has no work left."
+        }
+      ]
+    },
+    {
+      "title": "Exclude and restore",
+      "steps": [
+        {
+          "id": "package-actions",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Actions of fictional-zlib",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of fictional-zlib"
+          },
+          "zoom": 1,
+          "caption": "Select the actions of a package",
+          "narration": "Select the actions of a package, the three dots at the end of its band."
+        },
+        {
+          "id": "exclude",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of fictional-zlib"
+            },
+            {
+              "role": "menuitem",
+              "name": "Exclude",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Packages",
+            "exact": true,
+            "child": {
+              "text": "Show hidden 1"
+            }
+          },
+          "caption": "Select Exclude",
+          "narration": "Select Exclude when the package doesn't concern the Ticket."
+        },
+        {
+          "id": "excluded-message",
+          "action": "show",
+          "target": {
+            "text": "Package fictional-zlib excluded.",
+            "exact": true
+          },
+          "zoom": 1.6,
+          "caption": "A message says the package is excluded",
+          "narration": "The tree hides the package, and a message says so."
+        },
+        {
+          "id": "dismiss",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Dismiss",
+            "exact": true
+          },
+          "zoom": 1,
+          "caption": "Select Dismiss",
+          "narration": "Select Dismiss to close the message."
+        },
+        {
+          "id": "show-hidden",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "text": "Show hidden 1"
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Packages",
+            "exact": true,
+            "child": {
+              "text": "Excluded",
+              "exact": true
+            }
+          },
+          "caption": "Select Show hidden",
+          "narration": "Select Show hidden to see the hidden records."
+        },
+        {
+          "id": "excluded-label",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "text": "Excluded",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "The label Excluded marks the package",
+          "narration": "The label Excluded marks the package that you excluded."
+        },
+        {
+          "id": "package-actions-again",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Actions of fictional-zlib",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of fictional-zlib"
+          },
+          "zoom": 1,
+          "caption": "Select the actions of the package",
+          "narration": "Select the actions of the package again."
+        },
+        {
+          "id": "restore",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of fictional-zlib"
+            },
+            {
+              "role": "menuitem",
+              "name": "Restore",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Packages",
+            "exact": true,
+            "child": {
+              "text": "Show hidden 0"
+            }
+          },
+          "caption": "Select Restore",
+          "narration": "Select Restore to include it again."
+        }
+      ]
+    },
+    {
+      "title": "Add a package",
+      "steps": [
+        {
+          "id": "add-package",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Add package",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Add package"
+          },
+          "zoom": 1,
+          "caption": "Select Add package",
+          "narration": "Select Add package when Sentinel missed a package of the Ticket."
+        },
+        {
+          "id": "package-name",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add package"
+            },
+            {
+              "role": "combobox",
+              "name": "Package name"
+            }
+          ],
+          "value": "{term}",
+          "caption": "Enter part of the name",
+          "narration": "Enter part of its name."
+        },
+        {
+          "id": "suggestions",
+          "action": "show",
+          "target": {
+            "role": "listbox",
+            "name": "Package name"
+          },
+          "waitFor": {
+            "role": "listbox",
+            "name": "Package name",
+            "child": {
+              "role": "option",
+              "name": "{suggested}",
+              "exact": true
+            }
+          },
+          "zoom": 1.6,
+          "caption": "The field suggests the maintained packages",
+          "narration": "The field suggests the source packages that SMELT maintains whose names match."
+        },
+        {
+          "id": "choose-package",
+          "action": "click",
+          "target": [
+            {
+              "role": "listbox",
+              "name": "Package name"
+            },
+            {
+              "role": "option",
+              "name": "{suggested}",
+              "exact": true
+            }
+          ],
+          "caption": "Select the package",
+          "narration": "Select the package."
+        },
+        {
+          "id": "add-button",
+          "action": "show",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add package"
+            },
+            {
+              "role": "button",
+              "name": "Add package",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "Add package adds it with its tracks",
+          "narration": "Add package then adds it, with the tracks and Products that Sentinel finds for it in SMELT."
+        }
+      ]
+    }
+  ]
+}

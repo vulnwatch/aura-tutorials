@@ -1,0 +1,308 @@
+{
+  "title": "Maintain the references of a Ticket",
+  "subtitle": "Add, edit, and delete the pages that analysts read",
+  "outro": {
+    "title": "Analysts keep the references",
+    "subtitle": "The fetchers of the CVE add the others, which no one edits by hand."
+  },
+  "user": "asmith",
+  "covers": [
+    "maintain-references"
+  ],
+  "changesData": true,
+  "vars": {
+    "ticket": "SNTL-12",
+    "address": "https://git.example.com/fictional-openssl/commit/4d5e6f7",
+    "title": "Fictional upstream fix",
+    "description": "Fixes the flaw in fictional-openssl 3.0.100."
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    },
+    {
+      "include": "go-to-ticket"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Read the references",
+      "steps": [
+        {
+          "id": "open-references",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Ticket"
+            },
+            {
+              "role": "tab",
+              "name": "References"
+            }
+          ],
+          "waitForUrl": "^/tickets/{ticket}/references$",
+          "waitFor": {
+            "role": "tabpanel",
+            "name": "References",
+            "child": {
+              "role": "grid",
+              "name": "References"
+            }
+          },
+          "caption": "Open the tab References",
+          "narration": "Open the tab References for the advisories, patches, and other pages about the Ticket."
+        },
+        {
+          "id": "table",
+          "action": "show",
+          "target": [
+            {
+              "role": "tabpanel",
+              "name": "References"
+            },
+            {
+              "role": "grid",
+              "name": "References"
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "Each reference has a type and a source",
+          "narration": "Each reference shows its type, its source, and when it was added: Manual marks those that you and other analysts add."
+        }
+      ]
+    },
+    {
+      "title": "Add a reference",
+      "steps": [
+        {
+          "id": "add",
+          "action": "click",
+          "target": [
+            {
+              "role": "tabpanel",
+              "name": "References"
+            },
+            {
+              "role": "button",
+              "name": "Add reference",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Add reference"
+          },
+          "caption": "Select Add reference",
+          "narration": "Select Add reference."
+        },
+        {
+          "id": "address",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add reference"
+            },
+            {
+              "role": "textbox",
+              "name": "Address",
+              "exact": true
+            }
+          ],
+          "value": "{address}",
+          "caption": "Enter the address",
+          "narration": "Enter the address of the page."
+        },
+        {
+          "id": "title",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add reference"
+            },
+            {
+              "role": "textbox",
+              "name": "Title (optional)"
+            }
+          ],
+          "value": "{title}",
+          "caption": "Enter a title",
+          "narration": "Enter a title, which the table shows above the address."
+        },
+        {
+          "id": "type",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add reference"
+            },
+            {
+              "role": "button",
+              "name": "Type"
+            }
+          ],
+          "waitFor": {
+            "role": "listbox",
+            "name": "Type"
+          },
+          "caption": "Select Type",
+          "narration": "Select Type: Detect from the address leaves the type to Sentinel."
+        },
+        {
+          "id": "patch",
+          "action": "click",
+          "target": [
+            {
+              "role": "listbox",
+              "name": "Type"
+            },
+            {
+              "role": "option",
+              "name": "Patch",
+              "exact": true
+            }
+          ],
+          "caption": "Select Patch",
+          "narration": "Select Patch to set the type yourself."
+        },
+        {
+          "id": "submit",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Add reference"
+            },
+            {
+              "role": "button",
+              "name": "Add reference",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "grid",
+            "name": "References",
+            "child": {
+              "role": "link",
+              "name": "{title} (another site)",
+              "exact": true
+            }
+          },
+          "caption": "Select Add reference in the dialog",
+          "narration": "Select Add reference: the reference joins the table, with the source Manual."
+        }
+      ]
+    },
+    {
+      "title": "Edit and delete",
+      "steps": [
+        {
+          "id": "edit",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "References"
+            },
+            {
+              "role": "button",
+              "name": "Edit reference “{title}”",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Edit reference"
+          },
+          "zoom": 1,
+          "caption": "Select Edit reference",
+          "narration": "Select Edit reference, the pencil on its row, to change it."
+        },
+        {
+          "id": "description",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit reference"
+            },
+            {
+              "role": "textbox",
+              "name": "Description (optional)"
+            }
+          ],
+          "value": "{description}",
+          "caption": "Enter a description",
+          "narration": "Enter a description."
+        },
+        {
+          "id": "save",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit reference"
+            },
+            {
+              "role": "button",
+              "name": "Save",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "grid",
+            "name": "References",
+            "child": {
+              "text": "{description}",
+              "exact": true
+            }
+          },
+          "caption": "Select Save",
+          "narration": "Select Save: the description shows below the address."
+        },
+        {
+          "id": "delete",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "References"
+            },
+            {
+              "role": "button",
+              "name": "Delete reference “{title}”",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Delete reference “{title}”?"
+          },
+          "zoom": 1,
+          "caption": "Select Delete reference",
+          "narration": "Select Delete reference, the trash can on its row, to remove it."
+        },
+        {
+          "id": "confirm-delete",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Delete reference “{title}”?"
+            },
+            {
+              "role": "button",
+              "name": "Delete reference",
+              "exact": true
+            }
+          ],
+          "caption": "Select Delete reference to confirm",
+          "narration": "Select Delete reference to confirm, since it can't be undone."
+        }
+      ]
+    }
+  ]
+}

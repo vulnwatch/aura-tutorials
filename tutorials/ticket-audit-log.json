@@ -1,0 +1,221 @@
+{
+  "title": "Reconstruct the history of a Ticket",
+  "subtitle": "Search and filter its audit log",
+  "outro": {
+    "title": "Every change leaves an event",
+    "subtitle": "Filters also narrow the events by kind and by period."
+  },
+  "user": "asmith",
+  "covers": [
+    "investigate-history"
+  ],
+  "vars": {
+    "ticket": "SNTL-12",
+    "term": "fictional-zlib"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    },
+    {
+      "include": "go-to-ticket"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Read the timeline",
+      "steps": [
+        {
+          "id": "open-audit-log",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Ticket"
+            },
+            {
+              "role": "tab",
+              "name": "Audit log"
+            }
+          ],
+          "waitForUrl": "^/tickets/{ticket}/audit-log$",
+          "waitFor": {
+            "role": "tabpanel",
+            "name": "Audit log",
+            "child": {
+              "text": "assigned the Ticket to"
+            }
+          },
+          "caption": "Open the tab Audit log",
+          "narration": "Open the tab Audit log for the history of the Ticket, the newest events first."
+        },
+        {
+          "id": "events",
+          "action": "show",
+          "target": [
+            {
+              "role": "tabpanel",
+              "name": "Audit log"
+            },
+            {
+              "role": "listitem",
+              "nth": 0
+            }
+          ],
+          "zoom": 1,
+          "caption": "Each event says who changed what",
+          "narration": "Each event says who changed what, and when: a user, or System for what Sentinel did by itself."
+        }
+      ]
+    },
+    {
+      "title": "Search the events",
+      "steps": [
+        {
+          "id": "search",
+          "action": "fill",
+          "target": {
+            "role": "searchbox",
+            "name": "Search events"
+          },
+          "value": "{term}",
+          "caption": "Enter a value in the search",
+          "narration": "Enter a value, such as a package: the search looks in the values that the events record."
+        },
+        {
+          "id": "submit",
+          "action": "press",
+          "key": "Enter",
+          "target": {
+            "role": "searchbox",
+            "name": "Search events"
+          },
+          "waitForUrl": "^/tickets/{ticket}/audit-log$",
+          "waitFor": {
+            "role": "tabpanel",
+            "name": "Audit log",
+            "child": {
+              "text": "{term} · fles-16.0 from Analysis to Affected"
+            }
+          },
+          "caption": "Press Enter to search",
+          "narration": "Press Enter to keep the events that match."
+        },
+        {
+          "id": "clear-search",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Clear filters"
+          },
+          "waitFor": {
+            "role": "tabpanel",
+            "name": "Audit log",
+            "child": {
+              "text": "assigned the Ticket to"
+            }
+          },
+          "zoom": 1,
+          "caption": "Select Clear filters",
+          "narration": "Select Clear filters to remove the search."
+        }
+      ]
+    },
+    {
+      "title": "Filter by actor",
+      "steps": [
+        {
+          "id": "filters",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Filters",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "dialog",
+            "name": "Filters",
+            "child": {
+              "role": "group",
+              "name": "From"
+            },
+            "allHaveText": "^\\d{2}/\\d{2}/\\d{4}$"
+          },
+          "zoom": 1,
+          "caption": "Select Filters",
+          "narration": "Select Filters to narrow the events by actor, by kind, or by period."
+        },
+        {
+          "id": "actor",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Filters"
+            },
+            {
+              "role": "button",
+              "name": "Actor"
+            }
+          ],
+          "waitFor": {
+            "role": "listbox",
+            "child": {
+              "role": "option",
+              "name": "System",
+              "exact": true
+            }
+          },
+          "caption": "Select Actor",
+          "narration": "Select Actor: it lists System, then the users who acted on the Ticket."
+        },
+        {
+          "id": "system",
+          "action": "click",
+          "target": [
+            {
+              "role": "listbox"
+            },
+            {
+              "role": "option",
+              "name": "System",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "tabpanel",
+            "name": "Audit log",
+            "child": {
+              "text": "added the maintainer @dbrown to fictional-openssl"
+            }
+          },
+          "caption": "Select System",
+          "narration": "Select System for what Sentinel did by itself."
+        },
+        {
+          "id": "close-filters",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close the filters",
+          "narration": "Press Escape to close the filters."
+        },
+        {
+          "id": "system-events",
+          "action": "show",
+          "target": [
+            {
+              "role": "tabpanel",
+              "name": "Audit log"
+            },
+            {
+              "text": "added the maintainer @dbrown to fictional-openssl"
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "System added the maintainers",
+          "narration": "Here, Sentinel created the Ticket from its CVE, and added the maintainers of its packages."
+        }
+      ]
+    }
+  ]
+}

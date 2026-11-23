@@ -1,5 +1,882 @@
 {
   "tutorials": {
+    "cve-status": {
+      "title": "Find SUSE's status for a CVE",
+      "subtitle": "Search for its Ticket, read its packages, and open a shared link",
+      "aura": "v0.11.0",
+      "script": "sha256:cc26aac7da8d504dc1aafc78c6442c6afaaed05cccfc1d1137ee121480256947",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:a3b2851e36c6327ec95a391267c2a4dee76c69ce9c8b440fc3ea94d0619dcc13",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 73.051,
+      "chapters": [
+        {
+          "title": "Find the Ticket",
+          "start": 0
+        },
+        {
+          "title": "Read SUSE's status",
+          "start": 21.384
+        },
+        {
+          "title": "Open a shared link",
+          "start": 53.549
+        }
+      ],
+      "steps": [
+        {
+          "id": "search",
+          "chapter": 1,
+          "caption": "Enter a CVE in the search",
+          "start": 5.9,
+          "end": 12.594
+        },
+        {
+          "id": "submit",
+          "chapter": 1,
+          "caption": "Press Enter to search",
+          "start": 12.594,
+          "end": 16.084
+        },
+        {
+          "id": "open-ticket-select",
+          "chapter": 1,
+          "caption": "Open the Ticket",
+          "start": 16.084,
+          "end": 20.684
+        },
+        {
+          "id": "status",
+          "chapter": 2,
+          "caption": "The heading row gives the status",
+          "start": 23.684,
+          "end": 29.404
+        },
+        {
+          "id": "packages",
+          "chapter": 2,
+          "caption": "The package tree shows the tracks",
+          "start": 29.404,
+          "end": 40.649
+        },
+        {
+          "id": "product",
+          "chapter": 2,
+          "caption": "Select a Product",
+          "start": 40.649,
+          "end": 45.249
+        },
+        {
+          "id": "released",
+          "chapter": 2,
+          "caption": "The fix of the Product is released",
+          "start": 45.249,
+          "end": 49.449
+        },
+        {
+          "id": "product-close",
+          "chapter": 2,
+          "caption": "Press Escape to close it",
+          "start": 49.449,
+          "end": 52.849
+        },
+        {
+          "id": "shared-link",
+          "chapter": 3,
+          "caption": "Open a link that a colleague shares",
+          "start": 55.849,
+          "end": 62.961
+        },
+        {
+          "id": "shared-filters",
+          "chapter": 3,
+          "caption": "The filters of the link apply",
+          "start": 62.961,
+          "end": 67.751
+        }
+      ],
+      "covers": [
+        "search",
+        "cve-status",
+        "open-shared-links"
+      ],
+      "frames": [
+        "sha256:6c17be768eccb56033a89e37321e387826d98ff0cad9955d6f61b656a91e732a",
+        "sha256:cee7925cbde811950e90c5fa873871769beaed2b2bcfc06b63f71b79fd9662e3",
+        "sha256:8aaf20d23c8f897e788e0546eba910d5e133cc48833c3e86d7f9057346bf3a9b",
+        "sha256:86b8b5b3b1afda115d55334b8c079aee0f2fb6a98341936c24f08a75091639e9",
+        "sha256:e53a09d947fa50ebac3dc882a220519c2127d701a8c38654936384357b3335b2",
+        "sha256:ca162314225d9f9698312a38c05479e0f923c2a5c3c1bc949d0f3ed5177b1c98",
+        "sha256:ed323b9e3d3b6b04b790e97021b8a59fed065db9d69719eaf80b097025c686f5",
+        "sha256:01e0ca7df4e6d55dda0943f6518316273cd1ba9c27f2ff2d450f2bb72fba4329",
+        "sha256:bd067a1418d800cc3df8e4d228bcb9ee3d1d4f5b943de27fab68d461c215b3a5",
+        "sha256:4eb6f5b51529ee1723eaa1e053ff7098d8c485d47597b77dd1e17131561bd9b2",
+        "sha256:c8ed4f4977d7f0156a60b33dbdc8a13d75ae01a6b0e1523839709a33116e0ac4",
+        "sha256:8469fbdea8fd2e638484e259b5365c60bf449fd679265116e0c38bfe7591b55a",
+        "sha256:5952176d7ae8e1b5b4c75a0d55fad100276600f6817238583f2638503ea83bf1",
+        "sha256:b24d7777b61349ef74486dddcae93f16a7ed6391a0fc5829406091a6e0dd16c8",
+        "sha256:1dad130f3e60e31f3aa2094cf6c42324b35555179df02905df2a09327f118eb4",
+        "sha256:1dad130f3e60e31f3aa2094cf6c42324b35555179df02905df2a09327f118eb4",
+        "sha256:87045c166232664d09d6441de0ae4f675b1dde3b101981ffdf3e14dde98e39b4",
+        "sha256:87045c166232664d09d6441de0ae4f675b1dde3b101981ffdf3e14dde98e39b4",
+        "sha256:10b6ba30293b8934d71371907db7dced750411c1d6e72dc0593d7d99b42e35e0",
+        "sha256:10b6ba30293b8934d71371907db7dced750411c1d6e72dc0593d7d99b42e35e0",
+        "sha256:10b6ba30293b8934d71371907db7dced750411c1d6e72dc0593d7d99b42e35e0",
+        "sha256:10b6ba30293b8934d71371907db7dced750411c1d6e72dc0593d7d99b42e35e0",
+        "sha256:0ae62b7f915e9954ceb06fd16bc8e29f0206e67021f11579c9ff2c6604d33f56",
+        "sha256:0ae62b7f915e9954ceb06fd16bc8e29f0206e67021f11579c9ff2c6604d33f56",
+        "sha256:0ae62b7f915e9954ceb06fd16bc8e29f0206e67021f11579c9ff2c6604d33f56",
+        "sha256:0224aa75d3b7f119892b8864d5f5f49e8266cecf7462fcd0b116990613bb44e8",
+        "sha256:8bfd1f87c74f6b0128f0984ba78afefa3e5f7534eef9caf568f8a89c073ee1fb",
+        "sha256:8bfd1f87c74f6b0128f0984ba78afefa3e5f7534eef9caf568f8a89c073ee1fb"
+      ]
+    },
+    "manage-an-embargo": {
+      "title": "Manage an embargo",
+      "subtitle": "Confidentiality, access grants, and the Coordinated Release Date",
+      "aura": "v0.11.0",
+      "script": "sha256:d02a3b878dc95c4d5e431654e669e1e63db794611e588b833bf9f141d2d000f0",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:be981882aa05671f8a556b11cc003afb8610cc7dab8a24f36fb7404ab4543be0",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 161.547,
+      "chapters": [
+        {
+          "title": "Make a Ticket confidential",
+          "start": 0
+        },
+        {
+          "title": "Grant access",
+          "start": 40.234
+        },
+        {
+          "title": "Move the release date",
+          "start": 74.601
+        },
+        {
+          "title": "Disclose a Ticket",
+          "start": 113.131
+        }
+      ],
+      "steps": [
+        {
+          "id": "actions",
+          "chapter": 1,
+          "caption": "Select Actions",
+          "start": 5.9,
+          "end": 11.294
+        },
+        {
+          "id": "make-confidential",
+          "chapter": 1,
+          "caption": "Select Make confidential…",
+          "start": 11.294,
+          "end": 15.894
+        },
+        {
+          "id": "who-keeps-seeing",
+          "chapter": 1,
+          "caption": "Aura says who keeps seeing it",
+          "start": 15.894,
+          "end": 23.796
+        },
+        {
+          "id": "confirm-confidential",
+          "chapter": 1,
+          "caption": "Select Make confidential",
+          "start": 23.796,
+          "end": 28.129
+        },
+        {
+          "id": "confidential",
+          "chapter": 1,
+          "caption": "A lock marks the Ticket",
+          "start": 28.129,
+          "end": 32.329
+        },
+        {
+          "id": "release-field",
+          "chapter": 1,
+          "caption": "The details gain the release date field",
+          "start": 32.329,
+          "end": 39.534
+        },
+        {
+          "id": "access-grants",
+          "chapter": 2,
+          "caption": "Select Access grants",
+          "start": 42.534,
+          "end": 48.16
+        },
+        {
+          "id": "user",
+          "chapter": 2,
+          "caption": "Enter the name of the user",
+          "start": 48.16,
+          "end": 51.31
+        },
+        {
+          "id": "users",
+          "chapter": 2,
+          "caption": "The field lists the users who match",
+          "start": 51.31,
+          "end": 55.51
+        },
+        {
+          "id": "choose-user",
+          "chapter": 2,
+          "caption": "Select the user",
+          "start": 55.51,
+          "end": 59.61
+        },
+        {
+          "id": "grant",
+          "chapter": 2,
+          "caption": "Select Grant access",
+          "start": 59.61,
+          "end": 64.035
+        },
+        {
+          "id": "granted",
+          "chapter": 2,
+          "caption": "Revoke access ends a grant",
+          "start": 64.035,
+          "end": 69.801
+        },
+        {
+          "id": "close-grants",
+          "chapter": 2,
+          "caption": "Select Close",
+          "start": 69.801,
+          "end": 73.901
+        },
+        {
+          "id": "embargoed",
+          "chapter": 3,
+          "caption": "This Ticket has a Coordinated Release Date",
+          "start": 76.901,
+          "end": 83.781
+        },
+        {
+          "id": "edit-release",
+          "chapter": 3,
+          "caption": "Select Edit Coordinated Release Date",
+          "start": 83.781,
+          "end": 90.847
+        },
+        {
+          "id": "earlier",
+          "chapter": 3,
+          "caption": "Press the Down arrow to move the day",
+          "start": 90.847,
+          "end": 95.871
+        },
+        {
+          "id": "time-zone",
+          "chapter": 3,
+          "caption": "Aura gives the instant in UTC too",
+          "start": 95.871,
+          "end": 103.494
+        },
+        {
+          "id": "save-release",
+          "chapter": 3,
+          "caption": "Select Save",
+          "start": 103.494,
+          "end": 107.455
+        },
+        {
+          "id": "deadlines",
+          "chapter": 3,
+          "caption": "The deadlines follow the new date",
+          "start": 107.455,
+          "end": 112.431
+        },
+        {
+          "id": "tickets",
+          "chapter": 4,
+          "caption": "Select Tickets",
+          "start": 115.431,
+          "end": 120.031
+        },
+        {
+          "id": "expired",
+          "chapter": 4,
+          "caption": "Select Embargo expired",
+          "start": 120.031,
+          "end": 127.468
+        },
+        {
+          "id": "open-ticket-select",
+          "chapter": 4,
+          "caption": "Open the Ticket",
+          "start": 127.468,
+          "end": 132.068
+        },
+        {
+          "id": "actions-expired",
+          "chapter": 4,
+          "caption": "Select Actions",
+          "start": 132.068,
+          "end": 136.308
+        },
+        {
+          "id": "make-non-confidential",
+          "chapter": 4,
+          "caption": "Select Make non-confidential…",
+          "start": 136.308,
+          "end": 140.908
+        },
+        {
+          "id": "disclosure",
+          "chapter": 4,
+          "caption": "A disclosure can't be undone",
+          "start": 140.908,
+          "end": 148.717
+        },
+        {
+          "id": "confirm-disclosure",
+          "chapter": 4,
+          "caption": "Select Make non-confidential",
+          "start": 148.717,
+          "end": 156.247
+        }
+      ],
+      "covers": [
+        "manage-confidentiality"
+      ],
+      "frames": [
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:a2ca0915921acef81f74cf7bb963c44a549e104969588b94105b2c50c5d58ed3",
+        "sha256:a2ca0915921acef81f74cf7bb963c44a549e104969588b94105b2c50c5d58ed3",
+        "sha256:657f20f0a3152e397a04491a24575bfc286eda2b527fdf70ddf325768d69f1f8",
+        "sha256:657f20f0a3152e397a04491a24575bfc286eda2b527fdf70ddf325768d69f1f8",
+        "sha256:657f20f0a3152e397a04491a24575bfc286eda2b527fdf70ddf325768d69f1f8",
+        "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
+        "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
+        "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
+        "sha256:79f04f76717c371ec0f758cc33782b40f0045625e8f5d61140ec48b943e7b7f0",
+        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
+        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
+        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
+        "sha256:37967ccfbd6b56504af78b0d284ec1aa6d668475aa368b021a75e8f267d6e433",
+        "sha256:1940021c8e4b43eda1e0fbe2d5f3c221a08fc540d5166103366207bcc0ff17ac",
+        "sha256:57c361aa8bbe6053ef4e5ae8b523f0433bd18857f5caf6e45475df66f18fff86",
+        "sha256:0f2e9a6b3ad44f4cec1e2a69a71747fac4618b444d4c0da97d5a313dc0cc0f61",
+        "sha256:25b370073151c0f0e3060d7e379ae849f52a2662885a3c9604781771dc818138",
+        "sha256:b21226caf6c3b8286f75a1112575ce2f9821b325420ae03b8e2b1c9b99699e6e",
+        "sha256:b21226caf6c3b8286f75a1112575ce2f9821b325420ae03b8e2b1c9b99699e6e",
+        "sha256:fb1acd69f6831f8d4ef9fdf7910166e7711f1008bdd4c78017eddd47a7d278e1",
+        "sha256:fb1acd69f6831f8d4ef9fdf7910166e7711f1008bdd4c78017eddd47a7d278e1",
+        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
+        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
+        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
+        "sha256:42e25884a2abe73b4d551cbff164a03825837a5a379d6b0aab746faef2a5f4eb",
+        "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
+        "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
+        "sha256:b3fdbac486e4773d6ab7a57bd93254ca7a3014133df73792fe6d25c432bc45b0",
+        "sha256:b3fdbac486e4773d6ab7a57bd93254ca7a3014133df73792fe6d25c432bc45b0",
+        "sha256:b3fdbac486e4773d6ab7a57bd93254ca7a3014133df73792fe6d25c432bc45b0",
+        "sha256:b3fdbac486e4773d6ab7a57bd93254ca7a3014133df73792fe6d25c432bc45b0",
+        "sha256:b3fdbac486e4773d6ab7a57bd93254ca7a3014133df73792fe6d25c432bc45b0",
+        "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
+        "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
+        "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
+        "sha256:14c768743b8923feb9c86f68e2832df56f2a0b8fd6360c925108b3649eae43f3",
+        "sha256:14c768743b8923feb9c86f68e2832df56f2a0b8fd6360c925108b3649eae43f3",
+        "sha256:133330259b4c31d44d892c6ec09e967c4b6ffd4499170f38a490bdffb89f69ce",
+        "sha256:45d8c548ccba909be66d9bdccb2c0c762d0bf03bc64208a8e5cb9c079b8390f1",
+        "sha256:d38442dd9737cd353bf9fc7d1d79770a36bfb35b035ffd1264a9527cc4ea7eda",
+        "sha256:d38442dd9737cd353bf9fc7d1d79770a36bfb35b035ffd1264a9527cc4ea7eda",
+        "sha256:18192a47365ea64b38d8b14a9d0f05317c9c98e7fc203dcf8f03dd1a50e673bf",
+        "sha256:18192a47365ea64b38d8b14a9d0f05317c9c98e7fc203dcf8f03dd1a50e673bf",
+        "sha256:60d082c47b1a0e18aefa764163159db8a40c55f6ebbdd06f84cee11b62bf74c2",
+        "sha256:60d082c47b1a0e18aefa764163159db8a40c55f6ebbdd06f84cee11b62bf74c2",
+        "sha256:60d082c47b1a0e18aefa764163159db8a40c55f6ebbdd06f84cee11b62bf74c2",
+        "sha256:1826fda3458410aa4a7cc51ab0236b058f5f47dce581b76fdbd4c71dcf809bab"
+      ]
+    },
+    "shared-ticket-for-maintainers": {
+      "title": "Find the work that waits for you",
+      "subtitle": "A Ticket that an analyst shares, and your deliveries in progress",
+      "aura": "v0.11.0",
+      "script": "sha256:56724dd465033fd56a9d669d80502f1f2e76be200c380949794e1e713015a142",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:9a581745da993676f2679139f93e5b2ddde67453d30daccc0db01b60d499050a",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 59.448,
+      "chapters": [
+        {
+          "title": "A shared Ticket",
+          "start": 0
+        },
+        {
+          "title": "A delivery in progress",
+          "start": 29.154
+        }
+      ],
+      "steps": [
+        {
+          "id": "shared-link",
+          "chapter": 1,
+          "caption": "Open the link that an analyst shares",
+          "start": 5.9,
+          "end": 10.783
+        },
+        {
+          "id": "needs-action",
+          "chapter": 1,
+          "caption": "Needs your action marks your track",
+          "start": 10.783,
+          "end": 17.059
+        },
+        {
+          "id": "phases",
+          "chapter": 1,
+          "caption": "Select the phases of the track",
+          "start": 17.059,
+          "end": 25.054
+        },
+        {
+          "id": "phases-close",
+          "chapter": 1,
+          "caption": "Press Escape to close them",
+          "start": 25.054,
+          "end": 28.454
+        },
+        {
+          "id": "delivery",
+          "chapter": 2,
+          "caption": "This Ticket has your delivery in progress",
+          "start": 31.454,
+          "end": 37.452
+        },
+        {
+          "id": "delivery-phases",
+          "chapter": 2,
+          "caption": "Select the phases of the track",
+          "start": 37.452,
+          "end": 43.496
+        },
+        {
+          "id": "requests",
+          "chapter": 2,
+          "caption": "The latest submission request shows",
+          "start": 43.496,
+          "end": 50.748
+        },
+        {
+          "id": "delivery-close",
+          "chapter": 2,
+          "caption": "Press Escape to close them",
+          "start": 50.748,
+          "end": 54.148
+        }
+      ],
+      "covers": [
+        "open-shared-ticket",
+        "follow-deliveries"
+      ],
+      "frames": [
+        "sha256:234cf2141cfe4cb91a296a04d8a7fe276cd82753367a6f4a987a1209f7e8f948",
+        "sha256:234cf2141cfe4cb91a296a04d8a7fe276cd82753367a6f4a987a1209f7e8f948",
+        "sha256:234cf2141cfe4cb91a296a04d8a7fe276cd82753367a6f4a987a1209f7e8f948",
+        "sha256:cab725410971f171f516538295f950ba92275f05236c5979ee6afb8f38ff0d5c",
+        "sha256:cab725410971f171f516538295f950ba92275f05236c5979ee6afb8f38ff0d5c",
+        "sha256:898662f82c8e52bf6ef53ef0659ce184e8a8fec0d476f71a974da4b09761669a",
+        "sha256:d1b03a9755be48c7e58b5a79b7fd14bd4bae6a0a673e92e5cfae583c3c4ee5d4",
+        "sha256:d1b03a9755be48c7e58b5a79b7fd14bd4bae6a0a673e92e5cfae583c3c4ee5d4",
+        "sha256:e04865a8b5cfcab2769348260c4607a8da1e6acdcd4e18a061feeef732178b58",
+        "sha256:e04865a8b5cfcab2769348260c4607a8da1e6acdcd4e18a061feeef732178b58",
+        "sha256:e04865a8b5cfcab2769348260c4607a8da1e6acdcd4e18a061feeef732178b58",
+        "sha256:f5bc88688eb298626c11c911d14e19d813c13a12173ac011c8b383d36384a7da"
+      ]
+    },
+    "ticket-assessments": {
+      "title": "Maintain the priority and the severity",
+      "subtitle": "Override a priority, edit the SUSE assessment, and set a severity",
+      "aura": "v0.11.0",
+      "script": "sha256:e1f0b6519a6f88da7d697fb121e80f27bdc23867791550140998c8869b99b3cb",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:d5a3ae95b1678530fede64f3f5fcad155317ddbeda0f3b4950dd60873372108e",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 142.583,
+      "chapters": [
+        {
+          "title": "Override a priority",
+          "start": 0
+        },
+        {
+          "title": "Edit the SUSE assessment",
+          "start": 44.444
+        },
+        {
+          "title": "Set severity and CVE",
+          "start": 71.202
+        }
+      ],
+      "steps": [
+        {
+          "id": "priority",
+          "chapter": 1,
+          "caption": "The priority P1 is an override",
+          "start": 5.9,
+          "end": 14.452
+        },
+        {
+          "id": "actions",
+          "chapter": 1,
+          "caption": "Select Actions",
+          "start": 14.452,
+          "end": 19.052
+        },
+        {
+          "id": "override",
+          "chapter": 1,
+          "caption": "Select Override priority…",
+          "start": 19.052,
+          "end": 23.652
+        },
+        {
+          "id": "choices",
+          "chapter": 1,
+          "caption": "The dialog shows the automatic priority",
+          "start": 23.652,
+          "end": 30.625
+        },
+        {
+          "id": "p2",
+          "chapter": 1,
+          "caption": "Select P2",
+          "start": 30.625,
+          "end": 35.225
+        },
+        {
+          "id": "save-priority",
+          "chapter": 1,
+          "caption": "Select Save",
+          "start": 35.225,
+          "end": 39.186
+        },
+        {
+          "id": "priority-saved",
+          "chapter": 1,
+          "caption": "The heading row shows the new priority",
+          "start": 39.186,
+          "end": 43.744
+        },
+        {
+          "id": "assessments",
+          "chapter": 2,
+          "caption": "The SUSE assessment sets the severity",
+          "start": 46.744,
+          "end": 54.135
+        },
+        {
+          "id": "edit-assessment",
+          "chapter": 2,
+          "caption": "Select Edit SUSE assessment",
+          "start": 54.135,
+          "end": 59.575
+        },
+        {
+          "id": "availability",
+          "chapter": 2,
+          "caption": "Select a value of a metric",
+          "start": 59.575,
+          "end": 64.551
+        },
+        {
+          "id": "save-assessment",
+          "chapter": 2,
+          "caption": "Select Save",
+          "start": 64.551,
+          "end": 70.502
+        },
+        {
+          "id": "manual",
+          "chapter": 3,
+          "caption": "This Ticket has no CVE",
+          "start": 73.502,
+          "end": 78.246
+        },
+        {
+          "id": "actions-manual",
+          "chapter": 3,
+          "caption": "Select Actions",
+          "start": 78.246,
+          "end": 82.486
+        },
+        {
+          "id": "menu-manual",
+          "chapter": 3,
+          "caption": "Without a CVE, the menu adds two actions",
+          "start": 82.486,
+          "end": 87.323
+        },
+        {
+          "id": "set-severity",
+          "chapter": 3,
+          "caption": "Select Set severity…",
+          "start": 87.323,
+          "end": 91.563
+        },
+        {
+          "id": "critical",
+          "chapter": 3,
+          "caption": "Select Critical",
+          "start": 91.563,
+          "end": 97.329
+        },
+        {
+          "id": "save-severity",
+          "chapter": 3,
+          "caption": "Select Save",
+          "start": 97.329,
+          "end": 103.141
+        },
+        {
+          "id": "actions-associate",
+          "chapter": 3,
+          "caption": "Select Actions",
+          "start": 103.141,
+          "end": 107.52
+        },
+        {
+          "id": "associate",
+          "chapter": 3,
+          "caption": "Select Associate CVE…",
+          "start": 107.52,
+          "end": 112.217
+        },
+        {
+          "id": "cve-id",
+          "chapter": 3,
+          "caption": "Enter the CVE ID",
+          "start": 112.217,
+          "end": 115.937
+        },
+        {
+          "id": "submit-cve",
+          "chapter": 3,
+          "caption": "Select Associate CVE",
+          "start": 115.937,
+          "end": 120.409
+        },
+        {
+          "id": "confirmation",
+          "chapter": 3,
+          "caption": "Aura asks first",
+          "start": 120.409,
+          "end": 126.36
+        },
+        {
+          "id": "confirm-cve",
+          "chapter": 3,
+          "caption": "Select Associate CVE to confirm",
+          "start": 126.36,
+          "end": 130.96
+        },
+        {
+          "id": "associated",
+          "chapter": 3,
+          "caption": "The Ticket now has its CVE",
+          "start": 130.96,
+          "end": 137.283
+        }
+      ],
+      "covers": [
+        "maintain-assessments"
+      ],
+      "frames": [
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:a2ca0915921acef81f74cf7bb963c44a549e104969588b94105b2c50c5d58ed3",
+        "sha256:a2ca0915921acef81f74cf7bb963c44a549e104969588b94105b2c50c5d58ed3",
+        "sha256:881969f4c355f9b72a666c6b7f42a451c893bba2400024479269118cbb86c998",
+        "sha256:881969f4c355f9b72a666c6b7f42a451c893bba2400024479269118cbb86c998",
+        "sha256:881969f4c355f9b72a666c6b7f42a451c893bba2400024479269118cbb86c998",
+        "sha256:4821e3200f1f96385d991c940cffae4ad17b289b8384ca17b353b02ba674c4a8",
+        "sha256:4821e3200f1f96385d991c940cffae4ad17b289b8384ca17b353b02ba674c4a8",
+        "sha256:e9917cd920a18112b3e1887359158fab36f051ed4e4507375692f8c564b7ce0e",
+        "sha256:e9917cd920a18112b3e1887359158fab36f051ed4e4507375692f8c564b7ce0e",
+        "sha256:e9917cd920a18112b3e1887359158fab36f051ed4e4507375692f8c564b7ce0e",
+        "sha256:e9917cd920a18112b3e1887359158fab36f051ed4e4507375692f8c564b7ce0e",
+        "sha256:4505bbfae3191624ccbbdf0127a2bd95d9851d875de16f051d75b03ae5a8ba1f",
+        "sha256:4505bbfae3191624ccbbdf0127a2bd95d9851d875de16f051d75b03ae5a8ba1f",
+        "sha256:d97c75e896e3166804179500180160b116c4069ea9d246754b7ec29524dbba72",
+        "sha256:d97c75e896e3166804179500180160b116c4069ea9d246754b7ec29524dbba72",
+        "sha256:b7067ffb9542799ee659cb7a511821801b5ac783e7e88ba970229d54a549a044",
+        "sha256:4183d2f9a913db1c871443f5b957f29ca3e59e4049ea7238e52fdad731fb49aa",
+        "sha256:4183d2f9a913db1c871443f5b957f29ca3e59e4049ea7238e52fdad731fb49aa",
+        "sha256:1020cebe3a05a7cfb635b9ed057ead332b711ee891939b6e4d050bd50b99578f",
+        "sha256:1020cebe3a05a7cfb635b9ed057ead332b711ee891939b6e4d050bd50b99578f",
+        "sha256:1020cebe3a05a7cfb635b9ed057ead332b711ee891939b6e4d050bd50b99578f",
+        "sha256:0da81f86cd971313931df6752181f778dff16a02d606107e6f7f4f0b14c71b0f",
+        "sha256:0da81f86cd971313931df6752181f778dff16a02d606107e6f7f4f0b14c71b0f",
+        "sha256:fdefb868c1782494ff09b46fc0f9dfbfd89a0294c7ed038e5d8d00b7877af741",
+        "sha256:fdefb868c1782494ff09b46fc0f9dfbfd89a0294c7ed038e5d8d00b7877af741",
+        "sha256:6ffcf2a97778bb64b4f2f212aeb796ede5c04c7a775195c8ae2e74e3bb5a42bb",
+        "sha256:6ffcf2a97778bb64b4f2f212aeb796ede5c04c7a775195c8ae2e74e3bb5a42bb",
+        "sha256:443961664446479eeb65e21c6a1ec371165d26588100f25e0b4499f2ef2a5902",
+        "sha256:443961664446479eeb65e21c6a1ec371165d26588100f25e0b4499f2ef2a5902",
+        "sha256:263b3a5497eedbbd18d289d4f35ce65e2b9470fa695cd909605468a484e2e9d2",
+        "sha256:263b3a5497eedbbd18d289d4f35ce65e2b9470fa695cd909605468a484e2e9d2",
+        "sha256:263b3a5497eedbbd18d289d4f35ce65e2b9470fa695cd909605468a484e2e9d2",
+        "sha256:a81f0e6a583904eea2f061ff6e322257432192da32255fa37b41bf4bd9fe3a18",
+        "sha256:a2ba18d8c2bc9fb0a2d3f1127c864e705033970e90ef5abc6b3a4d6bf728c601",
+        "sha256:8046963a11b5288823994de58f22c536a14fae6f4a02032027af7cbffcf0dc8d",
+        "sha256:8db3517a8a906bf1a86884d45bccc7d21e60e3645e54df5f126cc7bcc1e7756e",
+        "sha256:c14d9a8854fca22436daf45aeaafd5cbe0c213fcb62fee828725fafe35f5b426",
+        "sha256:cfcdea5b13ac3b000c8f622aca74bdcfb683337144d18bd60a93abdf3bbf407e",
+        "sha256:de7021ba3b2ab196543dc165455bd2addf150a74cf5e6ce70a4566e8daa206bd",
+        "sha256:9e8997397c0f06e6d698c9ab6eccf5b849f27436d5c1be5d15d24d3eeeb4fc4e",
+        "sha256:eb6a39e99f0165b1d19fae37c8b87d31dd57a837f8f093f9cb036398e16c3c91",
+        "sha256:08b75ae5ad2ba6b679d6d3022167242d13fcbd6db60f35eba5d3dd1ea2899f29",
+        "sha256:c9b1a75efb6fc21f1e5421848cb766254739d91c458e930a5aa9aa20377a4cba",
+        "sha256:a3ef730a62913d6668882b34b72d6ee1df136f0c8140812768cb1b504d52ee44",
+        "sha256:3ea5cc2ad437fc77fb3c96f149fbfa5ebe2a01561187ff7c5ec9267a798d052b",
+        "sha256:3ea5cc2ad437fc77fb3c96f149fbfa5ebe2a01561187ff7c5ec9267a798d052b",
+        "sha256:bac7c5c2fefa9585ed05531de5df7ae7e613a1787a34c7f92b69d2a496d9d753",
+        "sha256:bac7c5c2fefa9585ed05531de5df7ae7e613a1787a34c7f92b69d2a496d9d753",
+        "sha256:bac7c5c2fefa9585ed05531de5df7ae7e613a1787a34c7f92b69d2a496d9d753",
+        "sha256:7e6b6c36a13da79d133eae857a85898c8fec210909e23613e75d283300bce3af",
+        "sha256:7e6b6c36a13da79d133eae857a85898c8fec210909e23613e75d283300bce3af"
+      ]
+    },
+    "ticket-audit-log": {
+      "title": "Reconstruct the history of a Ticket",
+      "subtitle": "Search and filter its audit log",
+      "aura": "v0.11.0",
+      "script": "sha256:da090d63d7390746feec8e7d6bed19cdb1dba112652783059828ed62976a3e2d",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:6fe95c055ee55f7b3ee0447f7430142a6d52e89df8b41551159503096e2bf702",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 69.28,
+      "chapters": [
+        {
+          "title": "Read the timeline",
+          "start": 0
+        },
+        {
+          "title": "Search the events",
+          "start": 19.199
+        },
+        {
+          "title": "Filter by actor",
+          "start": 36.29
+        }
+      ],
+      "steps": [
+        {
+          "id": "open-audit-log",
+          "chapter": 1,
+          "caption": "Open the tab Audit log",
+          "start": 5.9,
+          "end": 11.526
+        },
+        {
+          "id": "events",
+          "chapter": 1,
+          "caption": "Each event says who changed what",
+          "start": 11.526,
+          "end": 18.499
+        },
+        {
+          "id": "search",
+          "chapter": 2,
+          "caption": "Enter a value in the search",
+          "start": 21.499,
+          "end": 27.59
+        },
+        {
+          "id": "submit",
+          "chapter": 2,
+          "caption": "Press Enter to search",
+          "start": 27.59,
+          "end": 30.99
+        },
+        {
+          "id": "clear-search",
+          "chapter": 2,
+          "caption": "Select Clear filters",
+          "start": 30.99,
+          "end": 35.59
+        },
+        {
+          "id": "filters",
+          "chapter": 3,
+          "caption": "Select Filters",
+          "start": 38.59,
+          "end": 43.659
+        },
+        {
+          "id": "actor",
+          "chapter": 3,
+          "caption": "Select Actor",
+          "start": 43.659,
+          "end": 49.471
+        },
+        {
+          "id": "system",
+          "chapter": 3,
+          "caption": "Select System",
+          "start": 49.471,
+          "end": 54.071
+        },
+        {
+          "id": "close-filters",
+          "chapter": 3,
+          "caption": "Press Escape to close the filters",
+          "start": 54.071,
+          "end": 57.471
+        },
+        {
+          "id": "system-events",
+          "chapter": 3,
+          "caption": "System added the maintainers",
+          "start": 57.471,
+          "end": 63.98
+        }
+      ],
+      "covers": [
+        "investigate-history"
+      ],
+      "frames": [
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:b3325f6b204efd862a253a031a201efa3d5138c0180432882169dfd9ecb88a81",
+        "sha256:b3325f6b204efd862a253a031a201efa3d5138c0180432882169dfd9ecb88a81",
+        "sha256:b3325f6b204efd862a253a031a201efa3d5138c0180432882169dfd9ecb88a81",
+        "sha256:593c0bae88bf8fbb7bd291c30b318a1ec226c87447d87e58045e34850af80081",
+        "sha256:a046b4be9c032418f39ad4091091ee874fa4be532402c1d7ef8cc76fc3fa1474",
+        "sha256:512f87dd3801636ce8213aa99a4d86926628c9d9701d5a6b95c0d37b97678854",
+        "sha256:05b1e099bcf74fbe395c1eb6461151da251b18a34a263c3bea65e465fa2416f0",
+        "sha256:1db970f77e721648c1eea0767f1b9c2e148ea82fadff2f1d6bc0268a1401cd12",
+        "sha256:756675dab518d89c3ca9341ca6499ec62eea5b0a6aee1454fde0e494388712ca",
+        "sha256:dd608ce9e1f1e4f96f8e35e9749e476994c2d0d745ff20f5360a41ef7e9124aa",
+        "sha256:4e6be443cc708770b733b62b32680c8c9501ebab580d2837eac1545e4efe0f9b",
+        "sha256:a471b02aa63e4354af382dea4565c81a0dfa073159b59e67319cdfce7e1579df",
+        "sha256:1a6c178ff44f80e94338d077867c988d380f6255f367519477cfb8813e39a805",
+        "sha256:7466276e8f57bd0baa8f9b127b85f5acf043f179fd69df84ee55dd623ce1f871",
+        "sha256:23d2368adef2b6f3a068d3556d7f5d5bdd4184c401e7cec7e844f00a692871bc",
+        "sha256:26b02945db9ff90ee065b7433648ef9b7bbe78d3f9c3911b65a6dc86174fb211",
+        "sha256:3a1b80abc53c5959378bfa445d887b37446d529919b0230c9f2889176250b3e3",
+        "sha256:b7b26a0acd975aa9185043d5239099a7d625283b94d031781851ca9b49a85def",
+        "sha256:b7b26a0acd975aa9185043d5239099a7d625283b94d031781851ca9b49a85def",
+        "sha256:c9c502c981ebabffc887226bcdbaad0fd373dd7de4adfddf58ba81fc94361b2e",
+        "sha256:c9c502c981ebabffc887226bcdbaad0fd373dd7de4adfddf58ba81fc94361b2e",
+        "sha256:b3325f6b204efd862a253a031a201efa3d5138c0180432882169dfd9ecb88a81",
+        "sha256:b3325f6b204efd862a253a031a201efa3d5138c0180432882169dfd9ecb88a81",
+        "sha256:70a0ba89d6a5f1dd97ffeaa0b11fc4617fa579356d1b0a73c598964d709a5995",
+        "sha256:70a0ba89d6a5f1dd97ffeaa0b11fc4617fa579356d1b0a73c598964d709a5995",
+        "sha256:69b4cdb800b89e38686da23cd514c53bbd5e3bb26e3b748d0b05f4571a044f3e",
+        "sha256:69b4cdb800b89e38686da23cd514c53bbd5e3bb26e3b748d0b05f4571a044f3e",
+        "sha256:8b0e9b24b5183bdcf2750a3605685fb5a8644f91d9d3f21657b64f59086bd5a8",
+        "sha256:8b0e9b24b5183bdcf2750a3605685fb5a8644f91d9d3f21657b64f59086bd5a8",
+        "sha256:99d12ccd2bf228c01db7a888745208038dcd94a114b1abf88546552a3b817430",
+        "sha256:99d12ccd2bf228c01db7a888745208038dcd94a114b1abf88546552a3b817430"
+      ]
+    },
     "ticket-list": {
       "title": "Find your way in the Ticket list",
       "subtitle": "Views, search, sorting, filters, and the Tickets that need attention",
@@ -352,6 +1229,721 @@
         "sha256:7ac93c9466662cd6f2cb850b0b6d62cf0263743666d8306b3489e4706fc1ab4d",
         "sha256:7ac93c9466662cd6f2cb850b0b6d62cf0263743666d8306b3489e4706fc1ab4d",
         "sha256:42f631c403a537c91f49ba33e441a0ac91226f08dad50d6f68e8aff2ec683100"
+      ]
+    },
+    "ticket-packages": {
+      "title": "Analyze the packages of a Ticket",
+      "subtitle": "Tracks, Products, affectedness, exclusions, and Add package",
+      "aura": "v0.11.0",
+      "script": "sha256:2120b1eab88491f020dc429a9c743e8ae74f27da890888b4b11abbe268bdd985",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:c4b02fb064fef7fca9e3da5eb1aa715acce97c3dececbe86ab200f59d313c577",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 108.272,
+      "chapters": [
+        {
+          "title": "Read the package tree",
+          "start": 0
+        },
+        {
+          "title": "Set the affectedness",
+          "start": 24.549
+        },
+        {
+          "title": "Exclude and restore",
+          "start": 37.729
+        },
+        {
+          "title": "Add a package",
+          "start": 77.198
+        }
+      ],
+      "steps": [
+        {
+          "id": "tree",
+          "chapter": 1,
+          "caption": "Each package lists its tracks",
+          "start": 5.9,
+          "end": 14.591
+        },
+        {
+          "id": "product",
+          "chapter": 1,
+          "caption": "Select a Product",
+          "start": 14.591,
+          "end": 20.449
+        },
+        {
+          "id": "product-close",
+          "chapter": 1,
+          "caption": "Press Escape to close it",
+          "start": 20.449,
+          "end": 23.849
+        },
+        {
+          "id": "affectedness",
+          "chapter": 2,
+          "caption": "Select the affectedness of a track",
+          "start": 26.849,
+          "end": 31.449
+        },
+        {
+          "id": "not-affected",
+          "chapter": 2,
+          "caption": "Select Not affected",
+          "start": 31.449,
+          "end": 37.029
+        },
+        {
+          "id": "package-actions",
+          "chapter": 3,
+          "caption": "Select the actions of a package",
+          "start": 40.029,
+          "end": 45.098
+        },
+        {
+          "id": "exclude",
+          "chapter": 3,
+          "caption": "Select Exclude",
+          "start": 45.098,
+          "end": 49.698
+        },
+        {
+          "id": "excluded-message",
+          "chapter": 3,
+          "caption": "A message says the package is excluded",
+          "start": 49.698,
+          "end": 53.898
+        },
+        {
+          "id": "dismiss",
+          "chapter": 3,
+          "caption": "Select Dismiss",
+          "start": 53.898,
+          "end": 58.498
+        },
+        {
+          "id": "show-hidden",
+          "chapter": 3,
+          "caption": "Select Show hidden",
+          "start": 58.498,
+          "end": 63.098
+        },
+        {
+          "id": "excluded-label",
+          "chapter": 3,
+          "caption": "The label Excluded marks the package",
+          "start": 63.098,
+          "end": 67.298
+        },
+        {
+          "id": "package-actions-again",
+          "chapter": 3,
+          "caption": "Select the actions of the package",
+          "start": 67.298,
+          "end": 71.898
+        },
+        {
+          "id": "restore",
+          "chapter": 3,
+          "caption": "Select Restore",
+          "start": 71.898,
+          "end": 76.498
+        },
+        {
+          "id": "add-package",
+          "chapter": 4,
+          "caption": "Select Add package",
+          "start": 79.498,
+          "end": 84.098
+        },
+        {
+          "id": "package-name",
+          "chapter": 4,
+          "caption": "Enter part of the name",
+          "start": 84.098,
+          "end": 87.248
+        },
+        {
+          "id": "suggestions",
+          "chapter": 4,
+          "caption": "The field suggests the maintained packages",
+          "start": 87.248,
+          "end": 92.688
+        },
+        {
+          "id": "choose-package",
+          "chapter": 4,
+          "caption": "Select the package",
+          "start": 92.688,
+          "end": 96.835
+        },
+        {
+          "id": "add-button",
+          "chapter": 4,
+          "caption": "Add package adds it with its tracks",
+          "start": 96.835,
+          "end": 102.972
+        }
+      ],
+      "covers": [
+        "analyze-packages"
+      ],
+      "frames": [
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:6243fa119ad12705b8933d68911bd208c14138237d2d7ec14ca3a97d73468377",
+        "sha256:819952337ceab177aae2a8e405dcd43e8dad2c8cea4ea95cd5b3b2430e7b9847",
+        "sha256:819952337ceab177aae2a8e405dcd43e8dad2c8cea4ea95cd5b3b2430e7b9847",
+        "sha256:0063d0eaba77a2d10706b90896aedd0b3ec609a79b8741096ef05385ef328615",
+        "sha256:0063d0eaba77a2d10706b90896aedd0b3ec609a79b8741096ef05385ef328615",
+        "sha256:f2f0eb53b00f4ce02147a938d21f5bfd55fda498942d821ddb138255a85f424d",
+        "sha256:f2f0eb53b00f4ce02147a938d21f5bfd55fda498942d821ddb138255a85f424d",
+        "sha256:7f6eebb0ffa7bdfddb096d7fb631108224501a4461fb20aefc0a741dfa39d27d",
+        "sha256:7f6eebb0ffa7bdfddb096d7fb631108224501a4461fb20aefc0a741dfa39d27d",
+        "sha256:ecd09e2e4439cfd15451cd97f601153dffbe177c0e02f8a956b2f53a86b44575",
+        "sha256:ecd09e2e4439cfd15451cd97f601153dffbe177c0e02f8a956b2f53a86b44575",
+        "sha256:1a274aadd637c5084ff338c372e9caed613915cc416c99ab366893b09946e6ad",
+        "sha256:1a274aadd637c5084ff338c372e9caed613915cc416c99ab366893b09946e6ad",
+        "sha256:1a274aadd637c5084ff338c372e9caed613915cc416c99ab366893b09946e6ad",
+        "sha256:cbc758b39faf5bde5e57ca5187d2db9457811afb916c87690a72ff5688bf8f84",
+        "sha256:cbc758b39faf5bde5e57ca5187d2db9457811afb916c87690a72ff5688bf8f84",
+        "sha256:19d170a6cbdde8c7daa117707a8c0c4ada0efe2c87ae2b2a9924b3d9e4d67a35",
+        "sha256:19d170a6cbdde8c7daa117707a8c0c4ada0efe2c87ae2b2a9924b3d9e4d67a35",
+        "sha256:19d170a6cbdde8c7daa117707a8c0c4ada0efe2c87ae2b2a9924b3d9e4d67a35",
+        "sha256:7b6b9db22248d2e76475a6048c2ef9bf392be251ee6b62af2607766d527ada31",
+        "sha256:7b6b9db22248d2e76475a6048c2ef9bf392be251ee6b62af2607766d527ada31",
+        "sha256:77f16537ed0776afc8327be3bf3d6913f71a9ea4e20e38003174ea092aaeee4b",
+        "sha256:77f16537ed0776afc8327be3bf3d6913f71a9ea4e20e38003174ea092aaeee4b",
+        "sha256:d2ac2f8c8f4498ac63f9f4c02919cd7844854fd1a1dfa96404123827bd140ec5",
+        "sha256:d2ac2f8c8f4498ac63f9f4c02919cd7844854fd1a1dfa96404123827bd140ec5",
+        "sha256:d2ac2f8c8f4498ac63f9f4c02919cd7844854fd1a1dfa96404123827bd140ec5",
+        "sha256:16d915d437b24c3a62c898286e3724ff770c47b1b750a481b5c32ee56b8c9fb4",
+        "sha256:a07f904f13c0d2d660fb41ebeb174eb7423f03f6bcef969195df7e87fc122bf2",
+        "sha256:588035fcf68c0226b8b296457f50cf789c5159e33e79cac856a128c1959216d5",
+        "sha256:8e8b9edf744b4f097a95b485b8dc2bad3ce20fdaf10732daf43e2f34762e5098",
+        "sha256:9a6e715e1ed0c2343cb5cc9f562476add7b8db0a7ad6b13c5bbc0136eb596eca",
+        "sha256:66d14f275bfaf35b72120e7eee5ec83af121b5c9cb0265fe56bcf820e2e5e387",
+        "sha256:66d14f275bfaf35b72120e7eee5ec83af121b5c9cb0265fe56bcf820e2e5e387",
+        "sha256:66d14f275bfaf35b72120e7eee5ec83af121b5c9cb0265fe56bcf820e2e5e387",
+        "sha256:a0e141eadbb4c367fd3aeb0434cc87659c7857e4cd6cf5151a2b4db25e65f143",
+        "sha256:a0e141eadbb4c367fd3aeb0434cc87659c7857e4cd6cf5151a2b4db25e65f143"
+      ]
+    },
+    "ticket-references": {
+      "title": "Maintain the references of a Ticket",
+      "subtitle": "Add, edit, and delete the pages that analysts read",
+      "aura": "v0.11.0",
+      "script": "sha256:8e728ad14086f17ab14a0235e64bf5a4c6c3d386374219854f99c3c42182fdad",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:897a8061aa22489d752ef5946725e94928238976dce2b8163a7f67e3877e68d2",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 81.258,
+      "chapters": [
+        {
+          "title": "Read the references",
+          "start": 0
+        },
+        {
+          "title": "Add a reference",
+          "start": 20.593
+        },
+        {
+          "title": "Edit and delete",
+          "start": 51.308
+        }
+      ],
+      "steps": [
+        {
+          "id": "open-references",
+          "chapter": 1,
+          "caption": "Open the tab References",
+          "start": 5.9,
+          "end": 11.573
+        },
+        {
+          "id": "table",
+          "chapter": 1,
+          "caption": "Each reference has a type and a source",
+          "start": 11.573,
+          "end": 19.893
+        },
+        {
+          "id": "add",
+          "chapter": 2,
+          "caption": "Select Add reference",
+          "start": 22.893,
+          "end": 27.226
+        },
+        {
+          "id": "address",
+          "chapter": 2,
+          "caption": "Enter the address",
+          "start": 27.226,
+          "end": 31.176
+        },
+        {
+          "id": "title",
+          "chapter": 2,
+          "caption": "Enter a title",
+          "start": 31.176,
+          "end": 35.126
+        },
+        {
+          "id": "type",
+          "chapter": 2,
+          "caption": "Select Type",
+          "start": 35.126,
+          "end": 40.15
+        },
+        {
+          "id": "patch",
+          "chapter": 2,
+          "caption": "Select Patch",
+          "start": 40.15,
+          "end": 44.75
+        },
+        {
+          "id": "submit",
+          "chapter": 2,
+          "caption": "Select Add reference in the dialog",
+          "start": 44.75,
+          "end": 50.608
+        },
+        {
+          "id": "edit",
+          "chapter": 3,
+          "caption": "Select Edit reference",
+          "start": 53.608,
+          "end": 58.208
+        },
+        {
+          "id": "description",
+          "chapter": 3,
+          "caption": "Enter a description",
+          "start": 58.208,
+          "end": 62.158
+        },
+        {
+          "id": "save",
+          "chapter": 3,
+          "caption": "Select Save",
+          "start": 62.158,
+          "end": 66.758
+        },
+        {
+          "id": "delete",
+          "chapter": 3,
+          "caption": "Select Delete reference",
+          "start": 66.758,
+          "end": 71.358
+        },
+        {
+          "id": "confirm-delete",
+          "chapter": 3,
+          "caption": "Select Delete reference to confirm",
+          "start": 71.358,
+          "end": 75.958
+        }
+      ],
+      "covers": [
+        "maintain-references"
+      ],
+      "frames": [
+        "sha256:c90db24026c8856cdf1ac8f66a0793c17a76843ca44e450cab4c60814f0352c1",
+        "sha256:7da1131b231d4a5905e8de178127d3bf47ca345f423f23f520a63edd05d010b4",
+        "sha256:7da1131b231d4a5905e8de178127d3bf47ca345f423f23f520a63edd05d010b4",
+        "sha256:7da1131b231d4a5905e8de178127d3bf47ca345f423f23f520a63edd05d010b4",
+        "sha256:a38eb418478a8fe69bafd0e78bb657ff002f139221672023b5393686a191d0f7",
+        "sha256:a38eb418478a8fe69bafd0e78bb657ff002f139221672023b5393686a191d0f7",
+        "sha256:a38eb418478a8fe69bafd0e78bb657ff002f139221672023b5393686a191d0f7",
+        "sha256:21a7fe2583314391b24b8d251ffa7410fa18fa104ef2f29fdb79cddba1336bdd",
+        "sha256:f7f8fbbf283ae45291f308f77ef1329541060035def819e5a296258887d13391",
+        "sha256:4c2e4c2406a7bab83710f9a9230e6968bb3e7d4931891ddbb506d823cc81c100",
+        "sha256:ddfaf73d99930b5a63132c007fd9ee74576e7115c866c92c4eac7c1a45c7c23f",
+        "sha256:1ece74c1b19fc0476655654fa8c220fd238b2ce9e59a21f3d368b6ff71477308",
+        "sha256:2ef10859fe280877e30cc1bbbc0c5ace703cf687f6905e503c710557fafed719",
+        "sha256:1b1f7e6b52ab4f71cea9faf70b0cd9ef38076e3979ff50bc06648d4ea2ce5446",
+        "sha256:d81939d4ee13b1d51bd09356ec935838c4e13818c1e321184331d675bdf156d4",
+        "sha256:8f4275253014d484670ad66945eb22bbfb258be638cf0dcb30b025908d09d8cc",
+        "sha256:8c1e5933cd88606957bf3ada019dffdcd75dde186d7b5df86218ac0578472872",
+        "sha256:a4dda51d86756cebda46855b3c95e5b3180a21dfb2615d47ffbe387bf33c95d7",
+        "sha256:64680ec0089bdd79ab8ec2dd6c69375c717c93fa1ab33a6a4726ac1941a8534f",
+        "sha256:de17eeb047afb915680d4bdc075f5e3f0d1700a7c7990f5c4f8764af9942a152",
+        "sha256:c01c1028989bd2321483502c8b5a1a0b8c760e240b35bb30e431e136ef9cb641",
+        "sha256:546a1665a679dd020fc6c3f158e1fd725cf969816cb8a41d4b4956ca5de96c2a",
+        "sha256:b0b1cee56e3565aee8c940dea905cbafa2cc498a3cb16ec18541b06159e7ed96",
+        "sha256:6a1a9d54906112a23f8b64065e87b2677ddbb29ac043851f5cd9749f866b0ff5",
+        "sha256:4af097b3030ae6e7d690ef614595d79eefa39e48af829610f05e569b5132d05c",
+        "sha256:8249b0f3a95579f3fb82c512cd1b68d16231163dbd21c2ecb472f2f9c87afdaf",
+        "sha256:0fcc4ed04a8c9372f7748e26d95d142eb1ebe41544f5a5277abee56a8ccba467",
+        "sha256:1c974df22b8f7450d5281ae1796a5987307afefdbc53884cb94024c2c7acc26f",
+        "sha256:aa5de8c65cf7097bdb33af2d4be1b3269332eb370d1b9b8496aa86152c6794c5",
+        "sha256:3c50c27ae299418070196ebb4c2e07388ae3dd266c961cdd88c4eb1ac780d299",
+        "sha256:2f065979dc1783bc4d3cbdd583aa31c7bf553b6d52010d51d2f1b62a9c652617",
+        "sha256:6bf8e3073c6ebb45e545ae5d4ef150b23823434d71d788e15a567b869e9881f8",
+        "sha256:ea0f5595fcf9a8742d4c8aa2952bac6854865979e937efd8a2c1ad216e1f7088",
+        "sha256:09befebf1ba5c72722abcd6651aa71f35fb22bd99ed3642264544b31df961f23",
+        "sha256:67af74822e33fb8f72dfbaf68b5b16e37513615d4bd8460829d136ade7862ac6",
+        "sha256:47f4a41b6a3a9262d341bbfcc1d0a957db1758e76e9f3aba835184111b124de0",
+        "sha256:28525591d3edfe627c00cbb55ad90d84c99781e86b92bcb8a97dd4f272b5157e",
+        "sha256:22b16d102b33ebe58f7f71798389753f0f4113a9d39ffdc33a19b6fd3707d881",
+        "sha256:36006302290e31e5864f64154ab6a5feb3b41d2a8e9c59fb1430148643f375ce",
+        "sha256:0012613e5890628823035f4558aef959406cace4f44ac6cae3f34ae1aeb36550",
+        "sha256:1526b28f5abaa20f77b0b0ed12c553de3cb6c9e947551e4e20725403ebe7c771",
+        "sha256:c08ef1c07fe9e5cf43556c109004f4b05bd2c4b064738246db417a1e0318c762",
+        "sha256:01c58065c056fba0f6415cc718005ad804bf9730c5ffb526c7d1a43f1d078f63",
+        "sha256:45221e60c7a2237161f3d4d3621bc0078a5aa93d90fc77efd4240b86f5b23bfc",
+        "sha256:9986de660e63b6fe9ed86931e90785a0406233d94e16c5f88751d3bea4291ae8",
+        "sha256:1fcaeeaef9cb362787aed338165e6b1cefba331cc032337deca889bc378bcb84",
+        "sha256:22273c1eceda111d01c0385ebf91bb2a0b371da8433c7857e73e3930c7b8658e",
+        "sha256:6e1f6e7e29f35f2543ca2e2a4e60b39568a87010707b6dfee79969f169e4e503",
+        "sha256:b17c6d4c9148c6a78e46591a5285c23ae92cff1a30d25bd93cb667d0c39954a4",
+        "sha256:007309cd7491ba6b1826821b8ac0a1958c633a8173eb17848d0de8b34b92d580",
+        "sha256:eafd39699f3eafaddd8f2b3d8564ad32d07937ef5e947494d19c598ee59a9323",
+        "sha256:0d96e4e5b7dea178b41d5d03d5a59f05aa44a01e8d59e99e060fd61c0d6089e8",
+        "sha256:b0962f3339ccc4fcaef413d27dae8dc740ac30e400f99ff21d6a3b8d27ba09fe",
+        "sha256:9345d465d80cf6e30fbba48b6c0e143df6051ccba7161298765c51905da104f2",
+        "sha256:20dff8a2deb890c207149d166cbf48d190979e75f99353ba30cd0cca87b50352",
+        "sha256:38175f4d9dcf706a871a5489c273eb49ca5445ee64347b39c1718c2ca1012793",
+        "sha256:95ee8a8d45a122f7d3eb63e5db7702b8a54fc940cdbdd7771eb763fba5c1bc57",
+        "sha256:be213a692b11b85ad43a2fc38b1326bd246ed0c238b745c3351aacc6214ea1ed",
+        "sha256:a622830e0a5d75d6a22cc91c181eb41140f29037321a70369b8c70690ad7d78f",
+        "sha256:4abae6d20cfa5536e57ec98e9d75bdb2b990523f2703793c4bfa744dc15252e4",
+        "sha256:1e7950866a4ff48e8f274b27b3cd72d095d8a61ecd2be9d46d7242721f2563ac",
+        "sha256:82c0d343e102d62817dfcd20636ca2c6195b41225c314334bfc321238cbb5ae4",
+        "sha256:a934ea43d3e565a5abbffd44bf8b54482c98564fd60d10813cadd4e94b107d65",
+        "sha256:a934ea43d3e565a5abbffd44bf8b54482c98564fd60d10813cadd4e94b107d65",
+        "sha256:2cbaff62acd5cf5e8d24b84df25bbca4fea629eacb9d39fca3e695e32278181a",
+        "sha256:0cf792446db20970b65463544734687792b4879fce15a79213b5da1b034ebbe7",
+        "sha256:b4d9130f909ead24a4938906392000f4cb3543bf7711e6b4c0568382e2415796",
+        "sha256:e3b6c92eacf77d8eb8c950eba08eefc03811b33c7f352dedb5fb09726cec7683",
+        "sha256:556ea37fcbfda4dc1f5f032fbc0987186f9222c14a2aed7428240763b05a817a",
+        "sha256:a5385075e3b3c49a2d6fd9d022e24b2b2d6e56bf8b3ea72778432508ae03938e",
+        "sha256:8b7d4c1dafe067c4d7e23458eab54c0ffc6dabfcee83222ba1164191ee8a44cb",
+        "sha256:3e103c936296784ed9068f189a749ce71da34e47735651aa6d98d651e56b1fea",
+        "sha256:4805edad22f7430e81700b7a4f2a2b1ded19f4d0d2cbf69f57d953488d5cf5b1",
+        "sha256:ca1bc36700058f4108e5dbfd5854f89366aae78d7c17c939198cc219144c4dee",
+        "sha256:ca1bc36700058f4108e5dbfd5854f89366aae78d7c17c939198cc219144c4dee",
+        "sha256:fc3641b09200cf4de083723772557d15c72b683f6e3c72504752044b609579cd",
+        "sha256:059851d935ebb8d0057308b50e631958173fd659e786468531fb2ec72ce6fb48",
+        "sha256:781a03da6d223683c5be8070d1765e962e4d8e357c4c6d967badb7214bfe7f3a",
+        "sha256:c4bbd1d3d9fe951a53f64fc2665727c2a4f9d3624f722880806845114359a976",
+        "sha256:e6b9319ccd7a57d6b6bc9388d0fcab20730124227cd1f30e986fe0847b2fe3e0",
+        "sha256:1a35c1743c48cc8c86e16b454f67ecbf0787bdcbdeb27f0809c5d2d114d06fdc",
+        "sha256:32f3e635780b2ce144559389d63580f9d8a7d55418223c3f84c94ca0d625a734",
+        "sha256:7fd1864eafbdf2e35ef08d47248893d9d4aad345712d0d9751981fc24dd250d4",
+        "sha256:7fd1864eafbdf2e35ef08d47248893d9d4aad345712d0d9751981fc24dd250d4",
+        "sha256:27d47426d3cadce4a7e4bcfbf2c700cdc4acf55d1b1e75f495527255fe30bc2c",
+        "sha256:7ab784d72e5645832685484f64e974523d5cdf4adbb09f62f54c5a671f301f17",
+        "sha256:e948554067c8b51870dece582b2d5d8a30520a461f236ea2ba01ae18d8e01641",
+        "sha256:e948554067c8b51870dece582b2d5d8a30520a461f236ea2ba01ae18d8e01641",
+        "sha256:303956c947a89f9220658b423b33e46f54df7162d75951f6385588929f601ec7",
+        "sha256:303956c947a89f9220658b423b33e46f54df7162d75951f6385588929f601ec7",
+        "sha256:a1c9ff3e228b144cbe3539613aea89e27de6b316565589b470eb9638363a5680",
+        "sha256:a1c9ff3e228b144cbe3539613aea89e27de6b316565589b470eb9638363a5680",
+        "sha256:f975beec929352f943b2104ff6a8bcd46a0674cf39aa209761b38a8af2065a44",
+        "sha256:f975beec929352f943b2104ff6a8bcd46a0674cf39aa209761b38a8af2065a44",
+        "sha256:21645a45177b316e6d806e29b4f4d6f9eb36cfd1aa193a1ce9dff8d2f66c1e40",
+        "sha256:21645a45177b316e6d806e29b4f4d6f9eb36cfd1aa193a1ce9dff8d2f66c1e40",
+        "sha256:b1846efbd8aff6e5cffc4b204ec0c67aabf4df091f5a1267f46f9cce5b07747d",
+        "sha256:bd3384412742e4287ccdbfef97d400a32f255bdb4ca5ce992f02319ffef46ef2",
+        "sha256:846c2faf085c14312743b007038379bd33eb762e288d5cdc1a86005111eceda6",
+        "sha256:d65f963236142bb7c727eb260fe37c22a13d27d0c47ef6f61666a336852e5e91",
+        "sha256:aedc000aaee84bbc867866b925b0074403810ac93a63cb20c00fae71694ab565",
+        "sha256:91b3b4e40741bf6db5ed4675b781d45be3769a6bb24ac063a4dcc896c56ec04d",
+        "sha256:91b3b4e40741bf6db5ed4675b781d45be3769a6bb24ac063a4dcc896c56ec04d",
+        "sha256:015a830f4591f41ebc4dc7071bf9a27ea979072d0e3a4f1daa05e0830fdc480c",
+        "sha256:72ec59e1b78dd338dff4c729f67d4eb57c06a5da6ada6f34a1f6520ae976bb95",
+        "sha256:24a9ebe20f3302e09a5770e88c982830a65ea0f794ae19c3aedacfac8be5c150",
+        "sha256:24a9ebe20f3302e09a5770e88c982830a65ea0f794ae19c3aedacfac8be5c150",
+        "sha256:859eac1eeb5527c0255cf987bdaa1efcc876b5047a67faa861e8e948602619b0",
+        "sha256:692583196c68a7c3b0145134a9030bc31b143a6f547b2e0f95873ccd448e05da",
+        "sha256:d73eb06470b8ef0c20b993c27142668e7ee691f947651af6f0d0444a635ba541",
+        "sha256:7b8a1d0fbafe00b9939a3309dc9d9584aef215153b2b0ba90da38a6bbb1a2a60",
+        "sha256:7b8a1d0fbafe00b9939a3309dc9d9584aef215153b2b0ba90da38a6bbb1a2a60",
+        "sha256:60a072aa6b9d94eb4c1e33a4b6301089dee8289dce83315909fb48d52ea8be41",
+        "sha256:9eefd55c02826ba29d23e497904d869c2f98ac5a47f484b56752e07a13343695",
+        "sha256:9eefd55c02826ba29d23e497904d869c2f98ac5a47f484b56752e07a13343695",
+        "sha256:7eb84cab9733eda09a2c26abb9f05f5ef8c858f010f6dfb229a644ccbe10f1b7",
+        "sha256:b3f2063bd364d8bc66e6ded4eaa5c5cd1420421b9a23ee27890c5a4662ecadaf",
+        "sha256:6bb26897d900f3c52dbe645919484bf1a4e8b3733567c2d63d246468276c11d4",
+        "sha256:8359b9e96a77e9645276b1840a44b8280b834f3f31aa602f16a2290b2f596317",
+        "sha256:53e02ab7b53b17d8d1cc9fa80f7500e1e47a7231f65ed00ae7acad32ed0603d8",
+        "sha256:0e14e494af274f08e3f0003ab734690be4598b41573b14a1a2b202027666be55",
+        "sha256:f7d01b190a795ebf443d20ec01c8a9a7108a11ef90f109032a8ee5e75c62f575",
+        "sha256:6ef950b8cca395fb61f85580241fc77b8b1d7db3fea2ccc1db5836a6e6738e4b",
+        "sha256:f1c56a921a79efa093a23da2dd23143152d11487d3ec291e47207e326ce66ad8",
+        "sha256:b30134b212646ca8d8dcaa6cb404613ea4643dd88e9076a158524f9df5930114",
+        "sha256:c9ea43621f26f302200f6f42b6172e0c2ebdc8bca9a393192624f7fc12cbff37",
+        "sha256:e707420ed7f506fecb854383773dd119c8c2a18845ca82f7e471825b5cff0eac",
+        "sha256:dd321f3a8285b423f7993f909b8e85f735eba5b7ba986d6443a53fbf040883fb",
+        "sha256:04b9c543b34c21a3fee7f5b3f221e677fb2bfc2b730a2798197181e9ea1dc8d7",
+        "sha256:a1dbd80f2508c57de263e22b96480a4b3c997952d29bb730079ca63839dad26e",
+        "sha256:2157c81dada4af5e6dfc6c883a131e8a9c339f1a1c0c5f5a33b9d3727a167388",
+        "sha256:1a4940963df61e8315b6d4bee523053d56d193c5ff7b76f7b323879267fc48cc",
+        "sha256:1a4940963df61e8315b6d4bee523053d56d193c5ff7b76f7b323879267fc48cc",
+        "sha256:f99c02fc742fd72bebcf5271c3907afdb60aa429573312caa6b82e7771db918c",
+        "sha256:3c0eb31131b78691bdb08312772f333351a3a1517fbf2b8045143c04e37f91a6",
+        "sha256:0716fd9db9c007f1d3f6e3dacf19fa299d07d229ffeeae26abebdab4eb616164",
+        "sha256:25d8854a0d34d87f99050dbcd92d484e577920cada42e91fb692cad6b018ab27",
+        "sha256:2288590466e566e9d8aed88c445693e7565813e93b602a174853191195c1840b",
+        "sha256:e670ecbc3bb52100d0704000a94a4bacdef67e1c4ae56b4b8828868618ceb35d",
+        "sha256:980ae3c1e0281d0ee598434c10220c48aed55a0e060ceaf0c853c0d80744c0ec",
+        "sha256:ecef7322668010bf7ac4646969ca96cce3789f8c05d80277c76ebf90da6f5593",
+        "sha256:ecef7322668010bf7ac4646969ca96cce3789f8c05d80277c76ebf90da6f5593",
+        "sha256:3978e32b150cb3bb5ab2576d70fe41348b7d3a6535947216573ffb4975a48aa9",
+        "sha256:3978e32b150cb3bb5ab2576d70fe41348b7d3a6535947216573ffb4975a48aa9",
+        "sha256:aac75b6de2e2d12b42732d1a578658484b58a6e16044d6250ab1bdc476d71a2f",
+        "sha256:aac75b6de2e2d12b42732d1a578658484b58a6e16044d6250ab1bdc476d71a2f",
+        "sha256:7da1131b231d4a5905e8de178127d3bf47ca345f423f23f520a63edd05d010b4"
+      ]
+    },
+    "triage-new-tickets": {
+      "title": "Work the queue of new Tickets",
+      "subtitle": "Take a Ticket, ignore one, or mark one as a duplicate",
+      "aura": "v0.11.0",
+      "script": "sha256:b97777183f557966f92d567c46c873a61f0d33b19b9c007e3598c23b2ce4b2cd",
+      "generator": "sha256:edb309ccfa86cc600e67442246abe5c1ca2d7c1414cf32ee83a8ca8f7c317df7",
+      "narration": "sha256:983855e046f2f14342b38b2bf0744ef1787880b250eaef212a4df9455f062f69",
+      "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
+      "duration": 137.665,
+      "chapters": [
+        {
+          "title": "Take a Ticket",
+          "start": 0
+        },
+        {
+          "title": "Ignore a Ticket",
+          "start": 32.882
+        },
+        {
+          "title": "Mark a duplicate",
+          "start": 85.668
+        }
+      ],
+      "steps": [
+        {
+          "id": "queue",
+          "chapter": 1,
+          "caption": "Analysts land on the New view",
+          "start": 5.9,
+          "end": 12.734
+        },
+        {
+          "id": "open-taken",
+          "chapter": 1,
+          "caption": "Open the first Ticket of the queue",
+          "start": 12.734,
+          "end": 17.334
+        },
+        {
+          "id": "edit-assignee",
+          "chapter": 1,
+          "caption": "Select Edit assignee",
+          "start": 17.334,
+          "end": 22.867
+        },
+        {
+          "id": "assign-yourself",
+          "chapter": 1,
+          "caption": "Select yourself to take the Ticket",
+          "start": 22.867,
+          "end": 27.982
+        },
+        {
+          "id": "taken",
+          "chapter": 1,
+          "caption": "The Ticket moves to Analysis",
+          "start": 27.982,
+          "end": 32.182
+        },
+        {
+          "id": "back-to-queue",
+          "chapter": 2,
+          "caption": "Select Tickets to return to the queue",
+          "start": 35.182,
+          "end": 39.782
+        },
+        {
+          "id": "open-ignored",
+          "chapter": 2,
+          "caption": "Open another Ticket of the queue",
+          "start": 39.782,
+          "end": 44.382
+        },
+        {
+          "id": "actions",
+          "chapter": 2,
+          "caption": "Select Actions",
+          "start": 44.382,
+          "end": 50.055
+        },
+        {
+          "id": "menu",
+          "chapter": 2,
+          "caption": "A new Ticket's menu starts with Ignore",
+          "start": 50.055,
+          "end": 57.26
+        },
+        {
+          "id": "ignore",
+          "chapter": 2,
+          "caption": "Select Ignore…",
+          "start": 57.26,
+          "end": 61.86
+        },
+        {
+          "id": "reasons",
+          "chapter": 2,
+          "caption": "Each reason says when it applies",
+          "start": 61.86,
+          "end": 69.948
+        },
+        {
+          "id": "not-shipped",
+          "chapter": 2,
+          "caption": "Press Space to choose Not shipped",
+          "start": 69.948,
+          "end": 73.809
+        },
+        {
+          "id": "confirm-ignore",
+          "chapter": 2,
+          "caption": "Select Ignore",
+          "start": 73.809,
+          "end": 78.692
+        },
+        {
+          "id": "ignore-reason",
+          "chapter": 2,
+          "caption": "The details show the reason",
+          "start": 78.692,
+          "end": 84.968
+        },
+        {
+          "id": "back-again",
+          "chapter": 3,
+          "caption": "Select Tickets to return to the queue",
+          "start": 87.968,
+          "end": 92.568
+        },
+        {
+          "id": "open-duplicate",
+          "chapter": 3,
+          "caption": "Open a third Ticket of the queue",
+          "start": 92.568,
+          "end": 97.168
+        },
+        {
+          "id": "actions-again",
+          "chapter": 3,
+          "caption": "Select Actions",
+          "start": 97.168,
+          "end": 101.408
+        },
+        {
+          "id": "mark",
+          "chapter": 3,
+          "caption": "Select Mark as duplicate…",
+          "start": 101.408,
+          "end": 106.008
+        },
+        {
+          "id": "original",
+          "chapter": 3,
+          "caption": "Enter a package of the original",
+          "start": 106.008,
+          "end": 109.958
+        },
+        {
+          "id": "suggestions",
+          "chapter": 3,
+          "caption": "The field suggests the Tickets that match",
+          "start": 109.958,
+          "end": 116.281
+        },
+        {
+          "id": "choose-original",
+          "chapter": 3,
+          "caption": "Select the Ticket that matches",
+          "start": 116.281,
+          "end": 120.881
+        },
+        {
+          "id": "confirm-duplicate",
+          "chapter": 3,
+          "caption": "Select Mark as duplicate",
+          "start": 120.881,
+          "end": 126.507
+        },
+        {
+          "id": "original-link",
+          "chapter": 3,
+          "caption": "The details link to the original",
+          "start": 126.507,
+          "end": 132.365
+        }
+      ],
+      "covers": [
+        "work-new-tickets"
+      ],
+      "frames": [
+        "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
+        "sha256:efdd184180d78815bc47697e0b0da9fd081d8f7414a321f0186bc3f4bf49a296",
+        "sha256:8d5da285db3eff21b40566cf114b94b617483fe3d2f1da812a4750ad4ecd3f87",
+        "sha256:8d5da285db3eff21b40566cf114b94b617483fe3d2f1da812a4750ad4ecd3f87",
+        "sha256:09522f5af3df6a686dda044afd00550ecd713742dedef487a59b2604aac5c4f3",
+        "sha256:09522f5af3df6a686dda044afd00550ecd713742dedef487a59b2604aac5c4f3",
+        "sha256:fad4d77cb0014cd209b97bcdb2f66e841551e4f146c3819899fd6ef1844d5fb4",
+        "sha256:fad4d77cb0014cd209b97bcdb2f66e841551e4f146c3819899fd6ef1844d5fb4",
+        "sha256:fad4d77cb0014cd209b97bcdb2f66e841551e4f146c3819899fd6ef1844d5fb4",
+        "sha256:d339ce30319783173adf0e1ca2340f139fa14397d64e2018497a48d666c556e8",
+        "sha256:d339ce30319783173adf0e1ca2340f139fa14397d64e2018497a48d666c556e8",
+        "sha256:f4c1a7b1208e51651c1ff9eff45ba8d24db5600d29b4ec06f36779d5951d8917",
+        "sha256:f4c1a7b1208e51651c1ff9eff45ba8d24db5600d29b4ec06f36779d5951d8917",
+        "sha256:684ffd9077b5a8ece121f55bba1e6ae889adbf3d29e472f06b221a393355b8bf",
+        "sha256:684ffd9077b5a8ece121f55bba1e6ae889adbf3d29e472f06b221a393355b8bf",
+        "sha256:684ffd9077b5a8ece121f55bba1e6ae889adbf3d29e472f06b221a393355b8bf",
+        "sha256:3c67ccb08e8a078b643d780e6848325913f85f01825ed351a6d03b3831a9e7d7",
+        "sha256:3c67ccb08e8a078b643d780e6848325913f85f01825ed351a6d03b3831a9e7d7",
+        "sha256:3c67ccb08e8a078b643d780e6848325913f85f01825ed351a6d03b3831a9e7d7",
+        "sha256:c5364e1e4dbda01a3a29f33d574e8f463969738f00c65ebda620966392b7e002",
+        "sha256:c5364e1e4dbda01a3a29f33d574e8f463969738f00c65ebda620966392b7e002",
+        "sha256:b7d5f2d313b47a56e9734c840f4ee2eda83eeb33151a9a4a4b2ff22f3150424b",
+        "sha256:b7d5f2d313b47a56e9734c840f4ee2eda83eeb33151a9a4a4b2ff22f3150424b",
+        "sha256:b7d5f2d313b47a56e9734c840f4ee2eda83eeb33151a9a4a4b2ff22f3150424b",
+        "sha256:8dc6af217424f05e140d9bb2f4789c324a73795047232401e80b979accdcce53",
+        "sha256:8dc6af217424f05e140d9bb2f4789c324a73795047232401e80b979accdcce53",
+        "sha256:e617023bcff6f351060c00437a6f275cd877254393e326cedb3ae14c4c7246e8",
+        "sha256:e617023bcff6f351060c00437a6f275cd877254393e326cedb3ae14c4c7246e8",
+        "sha256:6fa6469a3fb2cde119708205357acb171945329dbe9771289f0dbb861b346925",
+        "sha256:6fa6469a3fb2cde119708205357acb171945329dbe9771289f0dbb861b346925",
+        "sha256:6601dcc4de646510a60eea818cb5dc2ee9cda5c1b73c692dd330cee46d3a1950",
+        "sha256:6601dcc4de646510a60eea818cb5dc2ee9cda5c1b73c692dd330cee46d3a1950",
+        "sha256:6601dcc4de646510a60eea818cb5dc2ee9cda5c1b73c692dd330cee46d3a1950",
+        "sha256:03525bf3014b2b1bcab62dbde74370384c1f193e58a2e8266203225263d3979b",
+        "sha256:5e69a0a52c9d9859c65729a0a7d258f142a78cc70206ddb19b6db59cee89fc57",
+        "sha256:9650aca88640e1b14230fbdb4c12ddb540e3822bd6b164bd412024c72ae13b7d",
+        "sha256:0ab0fedc1d343f16d244f0ef0ff7e2e95f917e48600d181946f334c6ff87308c",
+        "sha256:e15fc8abae5551735d0dac5dcd14ba69d332b642e4754c0231b57fe3ab297ee1",
+        "sha256:4914bc55faf171c16ff68cef925ce3be7faf166a5aa6ee310c36e7013e7bb549",
+        "sha256:2387642d2a6b296e30b9ddecfe82eac2f5a4c261d64b09fa89512264a30b9a6e",
+        "sha256:7c95fad9355640c5fe0db09d491f532baa17029f195ff597d2afa297d303483a",
+        "sha256:ef4fce468572d3613f3db722781719140c646354246002e18baf189135bc3057",
+        "sha256:ecd53fe6a2319a322e251d3b494bfd00156f192dee29598b5f35b4a266238958",
+        "sha256:90d4cd4aecbcbeaa2da530d85ac91caa492f6ac02ce21f630f07d82934e50d0d",
+        "sha256:08d678fed842410a57d76b895bec2cfa45d24042ea184f55ad23f2cee3f3ae00",
+        "sha256:495898297d4d2a200fc586484d0ddade38ecb49c71165ba6c49e31a75db0bfbf",
+        "sha256:3f121504d1d8fd4928f119fe426a60307bd3b0da7aaaf93faf72e6a8aa1ddb84",
+        "sha256:110d5b641248e40bc6c88b309ae52358e4c41d61379ad59d635017b001dcf05e",
+        "sha256:2a25a0e7f439347153f982d9e77daf6a15127d5e04a56cbc7ce846260fdbaf2d",
+        "sha256:a2a7fd2e7942efccacfeaebf785681d4659ca7f7176699edafc4e9e2e1a4f65f",
+        "sha256:31e072f4dff2dcc4dd5ad5f14fceadc1c9c718ae529959416fa6e99cf7201252",
+        "sha256:31e072f4dff2dcc4dd5ad5f14fceadc1c9c718ae529959416fa6e99cf7201252",
+        "sha256:fba65fbc7511e4e07aebe11b8fa182ea984e0624d72ac2bebf8b60feb5c04fd5",
+        "sha256:fba65fbc7511e4e07aebe11b8fa182ea984e0624d72ac2bebf8b60feb5c04fd5",
+        "sha256:e4d87e86213d899b74858abfad6b66d7cdcccf16ad0830f16d21ab223bf67aaa",
+        "sha256:e4d87e86213d899b74858abfad6b66d7cdcccf16ad0830f16d21ab223bf67aaa"
       ]
     }
   }

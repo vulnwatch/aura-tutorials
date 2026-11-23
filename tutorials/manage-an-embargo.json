@@ -1,0 +1,610 @@
+{
+  "title": "Manage an embargo",
+  "subtitle": "Confidentiality, access grants, and the Coordinated Release Date",
+  "outro": {
+    "title": "A Ticket stays confidential until you disclose it",
+    "subtitle": "Its Coordinated Release Date stays, and still decides its deadlines."
+  },
+  "user": "asmith",
+  "covers": [
+    "manage-confidentiality"
+  ],
+  "changesData": true,
+  "vars": {
+    "ticket": "SNTL-12",
+    "embargoed": "SNTL-18",
+    "expired": "SNTL-27",
+    "grantee": "Carol White @cwhite"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    },
+    {
+      "include": "go-to-ticket"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Make a Ticket confidential",
+      "steps": [
+        {
+          "id": "actions",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {ticket}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {ticket}",
+            "exact": true
+          },
+          "zoom": 1,
+          "caption": "Select Actions",
+          "narration": "Select Actions, at the end of the heading row, to place the Ticket under embargo."
+        },
+        {
+          "id": "make-confidential",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {ticket}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Make confidential…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Make {ticket} confidential?",
+            "exact": true
+          },
+          "caption": "Select Make confidential…",
+          "narration": "Select Make confidential, the last item of the menu."
+        },
+        {
+          "id": "who-keeps-seeing",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Make {ticket} confidential?",
+            "exact": true
+          },
+          "zoom": 1.5,
+          "caption": "Aura says who keeps seeing it",
+          "narration": "Aura says who keeps seeing the Ticket: the users who see every Ticket, and the maintainers of its packages that are not excluded."
+        },
+        {
+          "id": "confirm-confidential",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Make {ticket} confidential?",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Make confidential",
+              "exact": true
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "main",
+              "child": {
+                "text": "Confidential",
+                "exact": true
+              }
+            },
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true,
+              "child": {
+                "role": "button",
+                "name": "Edit Coordinated Release Date",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Select Make confidential",
+          "narration": "Select Make confidential."
+        },
+        {
+          "id": "confidential",
+          "action": "show",
+          "target": [
+            {
+              "role": "main"
+            },
+            {
+              "text": "Confidential",
+              "exact": true
+            }
+          ],
+          "zoom": 1.8,
+          "caption": "A lock marks the Ticket",
+          "narration": "A lock and the label Confidential now mark the Ticket."
+        },
+        {
+          "id": "release-field",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "text": "Coordinated Release Date",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "The details gain the release date field",
+          "narration": "Its details gain the field Coordinated Release Date, the end of the embargo, empty until you set it."
+        }
+      ]
+    },
+    {
+      "title": "Grant access",
+      "steps": [
+        {
+          "id": "access-grants",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Access grants"
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Access grants",
+            "child": {
+              "role": "combobox",
+              "name": "User"
+            }
+          },
+          "zoom": 1,
+          "caption": "Select Access grants",
+          "narration": "Select Access grants, next to the participants, to let another user see the Ticket."
+        },
+        {
+          "id": "user",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Access grants"
+            },
+            {
+              "role": "combobox",
+              "name": "User"
+            }
+          ],
+          "value": "white",
+          "caption": "Enter the name of the user",
+          "narration": "Enter the name of the user."
+        },
+        {
+          "id": "users",
+          "action": "show",
+          "target": {
+            "role": "listbox",
+            "name": "User"
+          },
+          "waitFor": {
+            "role": "listbox",
+            "name": "User",
+            "child": {
+              "role": "option",
+              "name": "{grantee}"
+            }
+          },
+          "zoom": 1.6,
+          "caption": "The field lists the users who match",
+          "narration": "The field lists the active users who match."
+        },
+        {
+          "id": "choose-user",
+          "action": "click",
+          "target": [
+            {
+              "role": "listbox",
+              "name": "User"
+            },
+            {
+              "role": "option",
+              "name": "{grantee}"
+            }
+          ],
+          "caption": "Select the user",
+          "narration": "Select the user."
+        },
+        {
+          "id": "grant",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Access grants"
+            },
+            {
+              "role": "button",
+              "name": "Grant access",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "list",
+            "name": "Access grants",
+            "child": {
+              "role": "button",
+              "name": "Revoke access of {grantee}",
+              "exact": true
+            }
+          },
+          "caption": "Select Grant access",
+          "narration": "Select Grant access."
+        },
+        {
+          "id": "granted",
+          "action": "show",
+          "target": {
+            "role": "list",
+            "name": "Access grants"
+          },
+          "zoom": 1.6,
+          "caption": "Revoke access ends a grant",
+          "narration": "The grant shows below, with who granted it and when, and Revoke access to end it."
+        },
+        {
+          "id": "close-grants",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Access grants"
+            },
+            {
+              "role": "button",
+              "name": "Close",
+              "exact": true
+            }
+          ],
+          "caption": "Select Close",
+          "narration": "Select Close."
+        }
+      ]
+    },
+    {
+      "title": "Move the release date",
+      "steps": [
+        {
+          "id": "embargoed",
+          "action": "goto",
+          "path": "/tickets/{embargoed}",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "role": "toolbar",
+                "name": "Participants"
+              }
+            }
+          ],
+          "caption": "This Ticket has a Coordinated Release Date",
+          "narration": "The embargo of this Ticket ends at its Coordinated Release Date, and its deadlines lead up to that date."
+        },
+        {
+          "id": "edit-release",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Edit Coordinated Release Date",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Edit the Coordinated Release Date of {embargoed}",
+            "exact": true
+          },
+          "zoom": 1,
+          "caption": "Select Edit Coordinated Release Date",
+          "narration": "Select Edit Coordinated Release Date, the pencil in the details, when the parties agree on another date."
+        },
+        {
+          "id": "earlier",
+          "action": "press",
+          "key": "ArrowDown",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit the Coordinated Release Date of {embargoed}",
+              "exact": true
+            },
+            {
+              "role": "group",
+              "name": "Coordinated Release Date",
+              "exact": true
+            },
+            {
+              "role": "spinbutton",
+              "nth": 0
+            }
+          ],
+          "caption": "Press the Down arrow to move the day",
+          "narration": "Press the Down arrow to move the day earlier, or type the date and time agreed."
+        },
+        {
+          "id": "time-zone",
+          "action": "show",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit the Coordinated Release Date of {embargoed}",
+              "exact": true
+            },
+            {
+              "text": "In your time zone"
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "Aura gives the instant in UTC too",
+          "narration": "Below the field, Aura names your time zone, and the same instant in UTC, as the parties often state it."
+        },
+        {
+          "id": "save-release",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit the Coordinated Release Date of {embargoed}",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Save",
+              "exact": true
+            }
+          ],
+          "caption": "Select Save",
+          "narration": "Select Save."
+        },
+        {
+          "id": "deadlines",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "text": "Deadlines",
+              "exact": true
+            }
+          ],
+          "zoom": 1.3,
+          "caption": "The deadlines follow the new date",
+          "narration": "The deadlines of the Ticket follow the new date, which they lead up to."
+        }
+      ]
+    },
+    {
+      "title": "Disclose a Ticket",
+      "steps": [
+        {
+          "id": "tickets",
+          "action": "click",
+          "target": [
+            {
+              "role": "navigation",
+              "name": "Main"
+            },
+            {
+              "role": "link",
+              "name": "Tickets",
+              "exact": true
+            },
+            {
+              "text": "Tickets",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets$",
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "list",
+              "name": "Tickets that need attention",
+              "child": {
+                "role": "link"
+              },
+              "allHaveText": "^\\d[\\d,]*\\s"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              }
+            }
+          ],
+          "caption": "Select Tickets",
+          "narration": "Select Tickets in the sidebar."
+        },
+        {
+          "id": "expired",
+          "action": "click",
+          "target": [
+            {
+              "role": "list",
+              "name": "Tickets that need attention"
+            },
+            {
+              "role": "link",
+              "name": "Embargo expired"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^{expired}\\b"
+            }
+          ],
+          "caption": "Select Embargo expired",
+          "narration": "Select Embargo expired to list the Tickets whose Coordinated Release Date has passed, and that are still confidential."
+        },
+        {
+          "include": "open-ticket",
+          "with": {
+            "ticket": "SNTL-27"
+          }
+        },
+        {
+          "id": "actions-expired",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {expired}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {expired}",
+            "exact": true
+          },
+          "zoom": 1,
+          "caption": "Select Actions",
+          "narration": "Select Actions."
+        },
+        {
+          "id": "make-non-confidential",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {expired}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Make non-confidential…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Make {expired} non-confidential?",
+            "exact": true
+          },
+          "caption": "Select Make non-confidential…",
+          "narration": "Select Make non-confidential to disclose it."
+        },
+        {
+          "id": "disclosure",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Make {expired} non-confidential?",
+            "exact": true
+          },
+          "zoom": 1.5,
+          "caption": "A disclosure can't be undone",
+          "narration": "Aura asks first: every user can then see the Ticket, which can't be undone, and its access grants are deleted."
+        },
+        {
+          "id": "confirm-disclosure",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Make {expired} non-confidential?",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Make non-confidential",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Participants",
+            "exact": true,
+            "child": {
+              "role": "toolbar",
+              "name": "Participants"
+            }
+          },
+          "caption": "Select Make non-confidential",
+          "narration": "Select Make non-confidential: the lock goes, and the Coordinated Release Date stays in the details."
+        }
+      ]
+    }
+  ]
+}
