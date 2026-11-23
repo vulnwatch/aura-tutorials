@@ -24,6 +24,11 @@ const DEVICE_SCALE_FACTOR = 2;
 // sidebar, as in Aura's end-to-end tests, so that it marks nothing.
 const POINTER_REST = { x: 100, y: 500 };
 const TIMEOUT = 15_000;
+// How long the page has sent and received no request before a screenshot:
+// longer than the pause after which a field of Aura that searches as the user
+// types sends its search, 250 ms (Aura docs/design-system.md, Forms), so that
+// each character typed shows the outcome of its search.
+const QUIET = 500;
 
 // What the fingerprints mask, as the reference screenshots of Aura's
 // end-to-end tests do (Aura test/e2e/fixtures.ts, avatars, dateTimes, and
@@ -93,10 +98,30 @@ async function waitFor(page, condition) {
   }
 }
 
+// The requests of the page in flight, and when the last one started or ended:
+// the load state networkidle tracks the load of a page alone, not the requests
+// that the page sends later, such as a search.
+let requests = 0;
+let activity = Date.now();
+const track = (delta) => () => {
+  requests += delta;
+  activity = Date.now();
+};
+
+// Waits until no request is in flight and none has started or ended for QUIET.
+async function quiet(page) {
+  const deadline = Date.now() + TIMEOUT;
+  while (requests > 0 || Date.now() - activity < QUIET) {
+    if (Date.now() > deadline) throw new Error(`timed out waiting for ${requests} request(s) of the page to end`);
+    await page.waitForTimeout(50);
+  }
+}
+
 // Waits until the page is still: no requests in flight, the fonts loaded,
 // the pointer at rest, and a moment for the last layout.
 async function settle(page) {
   await page.waitForLoadState("networkidle");
+  await quiet(page);
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.mouse.move(POINTER_REST.x, POINTER_REST.y);
   await page.waitForTimeout(400);
@@ -204,6 +229,7 @@ let shots = 0;
 // the setup runs.
 async function shoot(page, step, kind, recording) {
   if (!recording) return null;
+  await quiet(page);
   shots += 1;
   const file = `${String(shots).padStart(3, "0")}-${step.id}-${kind}.png`;
   await page.screenshot({ path: join(captureDir, file), caret: "hide", animations: "disabled" });
@@ -250,6 +276,9 @@ async function runStep(page, step, recording) {
       // focus from part to part, which a focus of the target would undo.
       for (const character of step.value) {
         await page.keyboard.type(character);
+        // A search that the character starts follows after a pause, which
+        // the screenshot waits for.
+        activity = Date.now();
         await record(`type-${frames.length - 1}`);
       }
       if (!recording) await settle(page);
@@ -300,6 +329,9 @@ const context = await browser.newContext({
   locale: "en-US",
 });
 const page = await context.newPage();
+page.on("request", track(1));
+page.on("requestfinished", track(-1));
+page.on("requestfailed", track(-1));
 const steps = [];
 try {
   for (const step of tutorial.setup) {
