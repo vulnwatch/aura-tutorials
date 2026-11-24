@@ -213,6 +213,9 @@ they leave in doubt.
 
 - Do the ring, the pointer, the ripple, or the keycap overlap
   each other, or the content of the UI, in a way that hides what matters?
+- Does a focus ring or another outline of Aura show near the ring of the
+  video, so that a viewer could take it for the element that the step means,
+  such as the Cancel of a confirmation, which holds the focus as it opens?
 - Does a crossfade mix two screens long enough to confuse? Does the address
   bar show the path of the page in view?
 

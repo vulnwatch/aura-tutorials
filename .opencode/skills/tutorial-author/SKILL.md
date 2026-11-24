@@ -38,7 +38,10 @@ published link of its video, so never rename one without the user's consent.
 
 - Read the screen document of every screen that the steps visit
   (`aura/docs/screens/<screen>.md`): its content, its actions, and its words.
-  Captions use the words of the UI.
+  Captions and narrations use the words of the UI, but name the systems
+  behind Sentinel only as the Style allows: SMELT never, IBS only where the
+  step shows what is its own (`docs/authoring.md`, Style, Systems behind
+  Sentinel).
 - Take the locators and the waits from Aura's end-to-end tests
   (`aura/test/e2e/<screen>.spec.ts` and `fixtures.ts`): they already find
   each element by role and name, and wait for what arrives late, such as the

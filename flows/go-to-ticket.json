@@ -1,0 +1,18 @@
+{
+  "description": "Open the Ticket of the variable ticket by its address, as a shared link does, and wait until every part of its Overview has arrived, as Aura's end-to-end tests do (expectOverviewShown): its details, the CVSS assessments and the sources of its CVE, and its participants. Its waits need a Ticket with a CVE, CVSS assessments, and participants, such as SNTL-12.",
+  "steps": [
+    {
+      "id": "open",
+      "action": "goto",
+      "path": "/tickets/{ticket}",
+      "waitFor": [
+        { "role": "region", "name": "Details", "exact": true },
+        { "role": "region", "name": "CVSS assessments", "exact": true, "child": { "role": "grid", "name": "CVSS assessments" } },
+        { "role": "region", "name": "Sources of the CVE", "exact": true, "child": { "role": "listitem" } },
+        { "role": "region", "name": "Participants", "exact": true, "child": { "role": "toolbar", "name": "Participants" } }
+      ],
+      "caption": "The Ticket opens on its Overview",
+      "narration": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details."
+    }
+  ]
+}

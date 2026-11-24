@@ -1,0 +1,218 @@
+{
+  "title": "Find the work that waits for you",
+  "subtitle": "A Ticket that an analyst shares, and your deliveries in progress",
+  "outro": {
+    "title": "Needs your action marks your part",
+    "subtitle": "Phases shows the deadlines of a track, and its latest IBS requests."
+  },
+  "user": "dbrown",
+  "covers": [
+    "open-shared-ticket",
+    "follow-deliveries"
+  ],
+  "vars": {
+    "ticket": "SNTL-12",
+    "delivery": "SNTL-13"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Open a shared Ticket",
+      "steps": [
+        {
+          "id": "shared-link",
+          "action": "goto",
+          "path": "/tickets/{ticket}",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "role": "toolbar",
+                "name": "Participants"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true,
+              "child": {
+                "text": "Needs your action",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Open the link that an analyst shares",
+          "narration": "Open the link that an analyst shares with you: it leads to the Ticket."
+        },
+        {
+          "id": "needs-action",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "text": "Needs your action",
+              "exact": true
+            }
+          ],
+          "zoom": 1.8,
+          "caption": "Needs your action marks your track",
+          "narration": "In the package tree, Needs your action marks the track of your package that waits for your submission."
+        },
+        {
+          "id": "phases",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Phases of fictional-openssl, SUSE:FLES-15-SP7:Update"
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Phases"
+          },
+          "caption": "Select the phases of the track",
+          "narration": "Select the phases of the track, the circles of its pipeline, for their deadlines: here, the submission is overdue."
+        },
+        {
+          "id": "phases-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close them",
+          "narration": "Press Escape to close them."
+        }
+      ]
+    },
+    {
+      "title": "Follow a delivery",
+      "steps": [
+        {
+          "id": "delivery",
+          "action": "goto",
+          "path": "/tickets/{delivery}",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "role": "toolbar",
+                "name": "Participants"
+              }
+            }
+          ],
+          "caption": "This Ticket has your delivery in progress",
+          "narration": "This other Ticket of one of your packages has your fix submitted, and its delivery in progress."
+        },
+        {
+          "id": "delivery-phases",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Phases of fictional-httpd, SUSE:FLES-15-SP7:Update"
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Phases",
+            "child": {
+              "role": "link",
+              "name": "SR 900001"
+            }
+          },
+          "caption": "Select the phases of the track",
+          "narration": "Select the phases of its track, the circles of its pipeline, to follow the delivery."
+        },
+        {
+          "id": "requests",
+          "action": "show",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Phases"
+            },
+            {
+              "role": "link",
+              "name": "SR 900001"
+            }
+          ],
+          "zoom": 2,
+          "caption": "The latest submission request shows",
+          "narration": "Submission shows your latest submission request in IBS, as a link to it; the plus counts the earlier ones."
+        },
+        {
+          "id": "delivery-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close them",
+          "narration": "Press Escape to close them."
+        }
+      ]
+    }
+  ]
+}

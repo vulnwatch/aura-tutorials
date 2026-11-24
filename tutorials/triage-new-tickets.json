@@ -1,0 +1,639 @@
+{
+  "title": "Work the queue of new Tickets",
+  "subtitle": "Take a Ticket, ignore one, or mark one as a duplicate",
+  "outro": {
+    "title": "Every new Ticket gets a decision",
+    "subtitle": "Taken, ignored, or marked as a duplicate, it leaves the queue."
+  },
+  "user": "asmith",
+  "covers": [
+    "work-new-tickets"
+  ],
+  "changesData": true,
+  "vars": {
+    "taken": "SNTL-1",
+    "ignored": "SNTL-23",
+    "duplicate": "SNTL-24",
+    "original": "SNTL-12",
+    "package": "fictional-openssl"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Take a Ticket",
+      "steps": [
+        {
+          "id": "queue",
+          "action": "show",
+          "hold": 2,
+          "caption": "Analysts land on the New view",
+          "narration": "As an analyst, you land on the New view, the queue of the new Tickets that no analyst has taken yet."
+        },
+        {
+          "id": "open-taken",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "link",
+              "name": "{taken}",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets/{taken}$",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "text": "No participants.",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Open the first Ticket of the queue",
+          "narration": "Open the first Ticket of the queue by selecting its identifier."
+        },
+        {
+          "id": "edit-assignee",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Edit assignee"
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Assignee",
+            "child": {
+              "role": "option"
+            }
+          },
+          "caption": "Select Edit assignee",
+          "narration": "Select Edit assignee, the pencil next to Unassigned in the details, to take the Ticket.",
+          "zoom": 1
+        },
+        {
+          "id": "assign-yourself",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Assignee"
+            },
+            {
+              "role": "option",
+              "name": "Alice Smith @asmith You"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true,
+              "child": {
+                "text": "Alice Smith",
+                "exact": true
+              }
+            },
+            {
+              "role": "main",
+              "child": {
+                "text": "Analysis",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Select yourself to take the Ticket",
+          "narration": "Select yourself, first in the list: the Ticket is now assigned to you."
+        },
+        {
+          "id": "taken",
+          "action": "show",
+          "target": [
+            {
+              "role": "main"
+            },
+            {
+              "text": "Analysis",
+              "exact": true
+            }
+          ],
+          "zoom": 1.8,
+          "caption": "The Ticket moves to Analysis",
+          "narration": "Taking a new Ticket moves it to Analysis, and out of the queue."
+        }
+      ]
+    },
+    {
+      "title": "Ignore a Ticket",
+      "steps": [
+        {
+          "id": "back-to-queue",
+          "action": "click",
+          "target": [
+            {
+              "role": "navigation",
+              "name": "Main"
+            },
+            {
+              "role": "link",
+              "name": "Tickets",
+              "exact": true
+            },
+            {
+              "text": "Tickets",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets$",
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "list",
+              "name": "Tickets that need attention",
+              "child": {
+                "role": "link"
+              },
+              "allHaveText": "^\\d[\\d,]*\\s"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-7\\b"
+            }
+          ],
+          "caption": "Select Tickets to return to the queue",
+          "narration": "Select Tickets in the sidebar to return to the queue."
+        },
+        {
+          "id": "open-ignored",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "link",
+              "name": "{ignored}",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets/{ignored}$",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "text": "No participants.",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Open another Ticket of the queue",
+          "narration": "Open another Ticket of the queue."
+        },
+        {
+          "id": "actions",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {ignored}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {ignored}",
+            "exact": true
+          },
+          "caption": "Select Actions",
+          "narration": "Select Actions, at the end of the heading row, for what you can do with the Ticket.",
+          "zoom": 1
+        },
+        {
+          "id": "menu",
+          "action": "show",
+          "target": {
+            "role": "menu",
+            "name": "Actions of {ignored}",
+            "exact": true
+          },
+          "zoom": 1.8,
+          "caption": "A new Ticket's menu starts with Ignore",
+          "narration": "On a new Ticket, the menu starts with Ignore, Ignore as not shipped by SUSE, and Mark as duplicate."
+        },
+        {
+          "id": "ignore",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {ignored}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Ignore…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Ignore {ignored}",
+            "exact": true
+          },
+          "caption": "Select Ignore…",
+          "narration": "Select Ignore to stop working the Ticket, with a reason."
+        },
+        {
+          "id": "reasons",
+          "action": "show",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Ignore {ignored}",
+              "exact": true
+            },
+            {
+              "role": "radiogroup",
+              "name": "Reason",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "Each reason says when it applies",
+          "narration": "Each reason says when it applies: Not shipped, when SUSE ships none of the affected software, or Other."
+        },
+        {
+          "id": "not-shipped",
+          "action": "press",
+          "key": "Space",
+          "caption": "Press Space to choose Not shipped",
+          "narration": "Press Space to choose Not shipped, the first reason."
+        },
+        {
+          "id": "confirm-ignore",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Ignore {ignored}",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Ignore",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Details",
+            "exact": true,
+            "child": {
+              "text": "Ignore reason",
+              "exact": true
+            }
+          },
+          "caption": "Select Ignore",
+          "narration": "Select Ignore: the Ticket becomes Ignored, and leaves the queue."
+        },
+        {
+          "id": "ignore-reason",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "text": "Ignore reason",
+              "exact": true
+            }
+          ],
+          "zoom": 1.8,
+          "caption": "The details show the reason",
+          "narration": "Its details show the reason. Reopen, in Actions, returns the Ticket to work."
+        }
+      ]
+    },
+    {
+      "title": "Mark a duplicate",
+      "steps": [
+        {
+          "id": "back-again",
+          "action": "click",
+          "target": [
+            {
+              "role": "navigation",
+              "name": "Main"
+            },
+            {
+              "role": "link",
+              "name": "Tickets",
+              "exact": true
+            },
+            {
+              "text": "Tickets",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets$",
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "list",
+              "name": "Tickets that need attention",
+              "child": {
+                "role": "link"
+              },
+              "allHaveText": "^\\d[\\d,]*\\s"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader",
+                "nth": 0
+              },
+              "allHaveText": "^SNTL-7\\b"
+            }
+          ],
+          "caption": "Select Tickets to return to the queue",
+          "narration": "Select Tickets again to return to the queue."
+        },
+        {
+          "id": "open-duplicate",
+          "action": "click",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "link",
+              "name": "{duplicate}",
+              "exact": true
+            }
+          ],
+          "waitForUrl": "^/tickets/{duplicate}$",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "role": "grid",
+                "name": "CVSS assessments"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Sources of the CVE",
+              "exact": true,
+              "child": {
+                "role": "listitem"
+              }
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "text": "No participants.",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Open a third Ticket of the queue",
+          "narration": "Open a third Ticket of the queue."
+        },
+        {
+          "id": "actions-again",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {duplicate}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {duplicate}",
+            "exact": true
+          },
+          "caption": "Select Actions",
+          "narration": "Select Actions.",
+          "zoom": 1
+        },
+        {
+          "id": "mark",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {duplicate}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Mark as duplicate…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Mark {duplicate} as a duplicate",
+            "exact": true
+          },
+          "caption": "Select Mark as duplicate…",
+          "narration": "Select Mark as duplicate to name the Ticket that it duplicates."
+        },
+        {
+          "id": "original",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Mark {duplicate} as a duplicate",
+              "exact": true
+            },
+            {
+              "role": "combobox",
+              "name": "Original",
+              "exact": true
+            }
+          ],
+          "value": "{package}",
+          "caption": "Enter a package of the original",
+          "narration": "Enter the original, such as one of its packages."
+        },
+        {
+          "id": "suggestions",
+          "action": "show",
+          "target": {
+            "role": "listbox",
+            "name": "Original"
+          },
+          "waitFor": {
+            "role": "listbox",
+            "name": "Original",
+            "child": {
+              "role": "option",
+              "name": "{original}"
+            }
+          },
+          "zoom": 1.6,
+          "caption": "The field suggests the Tickets that match",
+          "narration": "The field suggests the Tickets that match by identifier, by CVE, or by package."
+        },
+        {
+          "id": "choose-original",
+          "action": "click",
+          "target": [
+            {
+              "role": "listbox",
+              "name": "Original"
+            },
+            {
+              "role": "option",
+              "name": "{original}"
+            }
+          ],
+          "caption": "Select the Ticket that matches",
+          "narration": "Select the Ticket that matches."
+        },
+        {
+          "id": "confirm-duplicate",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Mark {duplicate} as a duplicate",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Mark as duplicate",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "region",
+            "name": "Details",
+            "exact": true,
+            "child": {
+              "role": "link",
+              "name": "{original}",
+              "exact": true
+            }
+          },
+          "caption": "Select Mark as duplicate",
+          "narration": "Select Mark as duplicate: the Ticket becomes Duplicated, and leaves the queue."
+        },
+        {
+          "id": "original-link",
+          "action": "show",
+          "target": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "link",
+              "name": "{original}",
+              "exact": true
+            }
+          ],
+          "zoom": 1.8,
+          "caption": "The details link to the original",
+          "narration": "Its details link to the original. Revert duplicate, in Actions, undoes the change."
+        }
+      ]
+    }
+  ]
+}

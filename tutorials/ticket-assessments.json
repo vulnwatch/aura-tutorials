@@ -1,0 +1,537 @@
+{
+  "title": "Maintain the priority and the severity",
+  "subtitle": "Override a priority, edit the SUSE assessment, and set a severity",
+  "outro": {
+    "title": "Sentinel keeps calculating",
+    "subtitle": "An override stays until Automatic clears it; a severity set by hand, until you change it or associate a CVE."
+  },
+  "user": "asmith",
+  "covers": [
+    "maintain-assessments"
+  ],
+  "changesData": true,
+  "vars": {
+    "ticket": "SNTL-12",
+    "manual": "SNTL-21",
+    "cve": "CVE-2099-1234"
+  },
+  "setup": [
+    {
+      "include": "sign-in"
+    },
+    {
+      "include": "go-to-ticket"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Override a priority",
+      "steps": [
+        {
+          "id": "priority",
+          "action": "show",
+          "target": [
+            {
+              "role": "main"
+            },
+            {
+              "role": "button",
+              "name": "P1, override",
+              "exact": true
+            }
+          ],
+          "zoom": 2,
+          "caption": "The priority P1 is an override",
+          "narration": "The priority of this Ticket, P1, is an override: it replaces the automatic priority until someone clears it."
+        },
+        {
+          "id": "actions",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {ticket}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {ticket}",
+            "exact": true
+          },
+          "caption": "Select Actions",
+          "narration": "Select Actions, at the end of the heading row.",
+          "zoom": 1
+        },
+        {
+          "id": "override",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {ticket}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Override priority…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Override the priority of {ticket}",
+            "exact": true
+          },
+          "caption": "Select Override priority…",
+          "narration": "Select Override priority to change it."
+        },
+        {
+          "id": "choices",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Override the priority of {ticket}",
+            "exact": true
+          },
+          "zoom": 1.3,
+          "caption": "The dialog shows the automatic priority",
+          "narration": "The dialog shows the automatic priority and what it is based on, then each priority with its meaning."
+        },
+        {
+          "id": "p2",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Override the priority of {ticket}",
+              "exact": true
+            },
+            {
+              "role": "radiogroup",
+              "name": "Priority",
+              "exact": true
+            },
+            {
+              "text": "P2",
+              "exact": true
+            }
+          ],
+          "caption": "Select P2",
+          "narration": "Select P2, to remediate with high urgency."
+        },
+        {
+          "id": "save-priority",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Override the priority of {ticket}",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Save",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "main",
+            "child": {
+              "role": "button",
+              "name": "P2, override",
+              "exact": true
+            }
+          },
+          "caption": "Select Save",
+          "narration": "Select Save."
+        },
+        {
+          "id": "priority-saved",
+          "action": "show",
+          "target": [
+            {
+              "role": "main"
+            },
+            {
+              "role": "button",
+              "name": "P2, override",
+              "exact": true
+            }
+          ],
+          "zoom": 2,
+          "caption": "The heading row shows the new priority",
+          "narration": "The heading row now shows P2, still marked as an override."
+        }
+      ]
+    },
+    {
+      "title": "Edit the SUSE assessment",
+      "steps": [
+        {
+          "id": "assessments",
+          "action": "show",
+          "target": {
+            "role": "region",
+            "name": "CVSS assessments",
+            "exact": true
+          },
+          "zoom": 1.3,
+          "caption": "The SUSE assessment sets the severity",
+          "narration": "The SUSE assessment of the CVE sets the severity of the Ticket, and the eligibility score of the Products."
+        },
+        {
+          "id": "edit-assessment",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Edit SUSE assessment v3.1",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Edit SUSE assessment v3.1",
+            "exact": true
+          },
+          "caption": "Select Edit SUSE assessment",
+          "narration": "Select Edit SUSE assessment, the pencil on its row, to change its vector."
+        },
+        {
+          "id": "availability",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit SUSE assessment v3.1",
+              "exact": true
+            },
+            {
+              "role": "radiogroup",
+              "name": "Availability",
+              "exact": true
+            },
+            {
+              "role": "radio",
+              "name": "None",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Edit SUSE assessment v3.1",
+            "exact": true,
+            "child": {
+              "text": "7.4",
+              "exact": true
+            }
+          },
+          "caption": "Select a value of a metric",
+          "narration": "Select None for Availability: the vector and the Base score follow."
+        },
+        {
+          "id": "save-assessment",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Edit SUSE assessment v3.1",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Save",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "row",
+            "name": "SUSE v3.1",
+            "exact": true,
+            "child": {
+              "text": "7.4",
+              "exact": true
+            }
+          },
+          "caption": "Select Save",
+          "narration": "Select Save: Sentinel calculates the severity again from the new vector."
+        }
+      ]
+    },
+    {
+      "title": "Set severity and CVE",
+      "steps": [
+        {
+          "id": "manual",
+          "action": "goto",
+          "path": "/tickets/{manual}",
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "Details",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "Participants",
+              "exact": true,
+              "child": {
+                "role": "toolbar",
+                "name": "Participants"
+              }
+            }
+          ],
+          "caption": "This Ticket has no CVE",
+          "narration": "This Ticket, created by hand, has no CVE, so you set its severity."
+        },
+        {
+          "id": "actions-manual",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {manual}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {manual}",
+            "exact": true
+          },
+          "caption": "Select Actions",
+          "narration": "Select Actions.",
+          "zoom": 1
+        },
+        {
+          "id": "menu-manual",
+          "action": "show",
+          "target": {
+            "role": "menu",
+            "name": "Actions of {manual}",
+            "exact": true
+          },
+          "zoom": 1.8,
+          "caption": "Without a CVE, the menu adds two actions",
+          "narration": "Without a CVE, the menu adds Set severity and Associate CVE."
+        },
+        {
+          "id": "set-severity",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {manual}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Set severity…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Set the severity of {manual}",
+            "exact": true
+          },
+          "caption": "Select Set severity…",
+          "narration": "Select Set severity."
+        },
+        {
+          "id": "critical",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Set the severity of {manual}",
+              "exact": true
+            },
+            {
+              "role": "radiogroup",
+              "name": "Severity",
+              "exact": true
+            },
+            {
+              "text": "Critical",
+              "exact": true
+            }
+          ],
+          "caption": "Select Critical",
+          "narration": "Select Critical: the severity decides the deadlines and the automatic priority."
+        },
+        {
+          "id": "save-severity",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Set the severity of {manual}",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Save",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "main",
+            "child": {
+              "role": "button",
+              "name": "P2",
+              "exact": true
+            }
+          },
+          "caption": "Select Save",
+          "narration": "Select Save: the Ticket is now Critical, with the automatic priority P2."
+        },
+        {
+          "id": "actions-associate",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Actions of {manual}",
+            "exact": true
+          },
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {manual}",
+            "exact": true
+          },
+          "caption": "Select Actions",
+          "narration": "Select Actions again.",
+          "zoom": 1
+        },
+        {
+          "id": "associate",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {manual}",
+              "exact": true
+            },
+            {
+              "role": "menuitem",
+              "name": "Associate CVE…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Associate a CVE with {manual}",
+            "exact": true
+          },
+          "caption": "Select Associate CVE…",
+          "narration": "Select Associate CVE once the issue of the Ticket has a CVE."
+        },
+        {
+          "id": "cve-id",
+          "action": "fill",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Associate a CVE with {manual}",
+              "exact": true
+            },
+            {
+              "role": "textbox",
+              "name": "CVE ID"
+            }
+          ],
+          "value": "{cve}",
+          "caption": "Enter the CVE ID",
+          "narration": "Enter its CVE ID."
+        },
+        {
+          "id": "submit-cve",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Associate a CVE with {manual}",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Associate CVE",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Associate {cve} with {manual}?",
+            "exact": true
+          },
+          "caption": "Select Associate CVE",
+          "narration": "Select Associate CVE."
+        },
+        {
+          "id": "confirmation",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Associate {cve} with {manual}?",
+            "exact": true
+          },
+          "zoom": 1.5,
+          "caption": "Aura asks first",
+          "narration": "No action removes a CVE from a Ticket, so Aura asks first, and says what changes."
+        },
+        {
+          "id": "confirm-cve",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Associate {cve} with {manual}?",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Associate CVE",
+              "exact": true
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "region",
+              "name": "{cve}",
+              "exact": true
+            },
+            {
+              "role": "region",
+              "name": "CVSS assessments",
+              "exact": true,
+              "child": {
+                "text": "No CVSS assessments.",
+                "exact": true
+              }
+            }
+          ],
+          "caption": "Select Associate CVE to confirm",
+          "narration": "Select Associate CVE to confirm."
+        },
+        {
+          "id": "associated",
+          "action": "show",
+          "target": [
+            {
+              "role": "main"
+            },
+            {
+              "text": "Severity not set",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "The Ticket now has its CVE",
+          "narration": "The Ticket now has its CVE, and no severity until the CVE has a CVSS assessment."
+        }
+      ]
+    }
+  ]
+}

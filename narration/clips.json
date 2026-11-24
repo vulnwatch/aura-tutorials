@@ -1,40 +1,176 @@
 {
   "clips": {
+    "00dc5659057bb703745bdadb": {
+      "text": "Select Mark as duplicate: the Ticket becomes Duplicated, and leaves the queue.",
+      "duration": 4.876
+    },
+    "020b78907947d31acdd47331": {
+      "text": "The dialog shows the automatic priority and what it is based on, then each priority with its meaning.",
+      "duration": 6.223
+    },
     "0601636641ff59bb9e55e3f3": {
       "text": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details.",
       "duration": 7.802
+    },
+    "090a9a5edc4da279733b098c": {
+      "text": "Select P2, to remediate with high urgency.",
+      "duration": 2.972
+    },
+    "09bd6c5bc47b41352816fa44": {
+      "text": "Select Show hidden to see the hidden records.",
+      "duration": 2.461
     },
     "0b5fdd68c0c4771132c84ad9": {
       "text": "Select Clear filters: it removes the search and the filters, and keeps the view and its sorting.",
       "duration": 5.759
     },
+    "0bb6bb6576c5295da7617acc": {
+      "text": "Here, Sentinel created the Ticket from its CVE, and added the maintainers of its packages.",
+      "duration": 5.759
+    },
+    "0d3e9ad653dca8eb75e3b6b6": {
+      "text": "Enter a description.",
+      "duration": 1.394
+    },
+    "0d544e653aa9682d69b003d7": {
+      "text": "In the package tree, Needs your action marks the track of your package that waits for your submission.",
+      "duration": 5.526
+    },
+    "0db3207a9d89621ad1970c23": {
+      "text": "Select Filters to narrow the events by actor, by kind, or by period.",
+      "duration": 4.319
+    },
+    "0fd26cf706a8a91f345ab25e": {
+      "text": "Add package then adds it, with the tracks and Products that Sentinel finds for it.",
+      "duration": 4.551
+    },
+    "10697e1ea19c2fb39c5bf7ec": {
+      "text": "The heading row gives SUSE's status for the CVE: this Ticket is Resolved.",
+      "duration": 4.97
+    },
+    "10eb5bb60fe87d8647e73a43": {
+      "text": "The heading row now shows P2, still marked as an override.",
+      "duration": 3.808
+    },
+    "1356c596be7521bd762ca02f": {
+      "text": "Select Access grants, next to the participants, to let another user see the Ticket.",
+      "duration": 4.876
+    },
+    "1372103e6c164e6ece501ba8": {
+      "text": "Enter part of its name.",
+      "duration": 1.486
+    },
     "14b8991c6696ebb4930a4341": {
       "text": "Select Clear filters to remove the search.",
       "duration": 2.415
+    },
+    "162ae835217d4f015f4e26a1": {
+      "text": "Taking a new Ticket moves it to Analysis, and out of the queue.",
+      "duration": 3.344
+    },
+    "1aab47d6e1312b325fc9b9c4": {
+      "text": "Select Tickets in the sidebar to return to the queue.",
+      "duration": 2.879
     },
     "1ae4b60c9fe41136148e728f": {
       "text": "Select Embargo expired to list the Tickets whose Coordinated Release Date has passed, and that are still confidential.",
       "duration": 6.687
     },
+    "1b247fa8f2a0c8942043ee4e": {
+      "text": "Select Ignore to stop working the Ticket, with a reason.",
+      "duration": 3.204
+    },
+    "1de84779525af6a52e8fe867": {
+      "text": "When the package has maintainers, Aura asks first: they would stop seeing the Ticket, unless a role, an access grant, or another of their packages lets them, and Restore would give them access back.",
+      "duration": 11.564
+    },
     "1e6155e494e0a806fd1e0651": {
       "text": "Press Enter to keep the Tickets of the view that match.",
       "duration": 2.74
+    },
+    "27e0c613868403371054e722": {
+      "text": "Select Override priority to change it.",
+      "duration": 2.415
+    },
+    "2899a7560788e1be15afe1df": {
+      "text": "Select Edit assignee, the pencil next to Unassigned in the details, to take the Ticket.",
+      "duration": 4.783
+    },
+    "28b703767a885ad35e8d01ea": {
+      "text": "The Ticket now has its CVE, and no severity until the CVE has a CVSS assessment.",
+      "duration": 5.573
     },
     "28c16733914a2c9deb5e6fa1": {
       "text": "Select Severity, or the heading of another sortable column, to sort the list by it.",
       "duration": 5.108
     },
+    "2b60e02d6c1f925995db0482": {
+      "text": "Open the first Ticket of the queue by selecting its identifier.",
+      "duration": 3.39
+    },
+    "2e6a18a2d852ccc6f65ff76b": {
+      "text": "The priority of this Ticket, P1, is an override: it replaces the automatic priority until someone clears it.",
+      "duration": 7.802
+    },
+    "2e6fc3deb491ca40e596e72d": {
+      "text": "A lock and the label Confidential now mark the Ticket.",
+      "duration": 3.251
+    },
+    "316c6d7f30e7d433a022482c": {
+      "text": "The grant shows below, with who granted it and when, and Revoke access to end it.",
+      "duration": 5.016
+    },
+    "33855a4eed71666eb1d78091": {
+      "text": "Select the actions of the package, the three dots at the end of its band.",
+      "duration": 4.412
+    },
     "3455cb9825a48544af5e3132": {
       "text": "Open the view Embargo for the confidential Tickets, sorted by Coordinated Release Date, the earliest first.",
       "duration": 6.873
+    },
+    "3539b78ba6bf10fd13f205a4": {
+      "text": "Select Add reference: the reference joins the table, with the source Manual.",
+      "duration": 5.108
     },
     "357ec1ee2e8b6b1051f2e7ca": {
       "text": "Select Analysis, a value of the status filter: the list follows at once.",
       "duration": 5.108
     },
+    "35b6ca9986180c1e1c6a76ba": {
+      "text": "Open the tab Audit log for the history of the Ticket, the newest events first.",
+      "duration": 4.876
+    },
+    "3872bc9402e8d7b5ce962d26": {
+      "text": "The maintainers of each package that is not excluded see the Ticket, and so do those of a package that you add.",
+      "duration": 6.41
+    },
+    "39c26bffbe7b9c2c721d773a": {
+      "text": "Select the maintainers of a package, the icon and the count next to its name.",
+      "duration": 5.155
+    },
     "3b38e324f988843f579101f3": {
       "text": "Here, the priority is an override: the explanation shows who set it and when, and the automatic priority that it replaces.",
       "duration": 8.034
+    },
+    "3b8b3b507b6d4ce1dca5cc1e": {
+      "text": "Enter its CVE ID.",
+      "duration": 1.579
+    },
+    "429ca952c5ddd715c13a33a0": {
+      "text": "Open another Ticket of the queue.",
+      "duration": 1.904
+    },
+    "43249056e8a2da54f69d4d27": {
+      "text": "Open a link that a colleague shares: it keeps the view, the search, and the filters, so you see the same list.",
+      "duration": 6.362
+    },
+    "432c771bd426b3c8d7fcfe98": {
+      "text": "Select the phases of its track, the circles of its pipeline, to follow the delivery.",
+      "duration": 5.294
+    },
+    "43a01a07160ae43327ec87d3": {
+      "text": "Select Edit Coordinated Release Date, the pencil in the details, when the parties agree on another date.",
+      "duration": 6.316
     },
     "460e344555503fc2b8b3dabb": {
       "text": "The views are tabs, and each counts its Tickets. New and Unassigned are the queues of the Tickets that wait for an analyst; Analysis, Analyzed, and All follow.",
@@ -44,53 +180,345 @@
       "text": "In every view, a lock after its identifier marks a confidential Ticket.",
       "duration": 4.505
     },
+    "4d2a7e08cfca5fdad17d86d0": {
+      "text": "Select Save: Sentinel calculates the severity again from the new vector.",
+      "duration": 5.201
+    },
+    "506b2255dc9d82c030870956": {
+      "text": "Press Escape to close them.",
+      "duration": 1.579
+    },
+    "5170dd378d6016b5a4330248": {
+      "text": "The embargo of this Ticket ends at its Coordinated Release Date, and its deadlines lead up to that date.",
+      "duration": 6.13
+    },
+    "519750206ac9cb8c893d25fc": {
+      "text": "On a new Ticket, the menu starts with Ignore, Ignore as not shipped by SUSE, and Mark as duplicate.",
+      "duration": 6.455
+    },
     "51b14610bc9c0fc32c835f56": {
       "text": "Press Escape to close the filters.",
       "duration": 2.09
+    },
+    "52b9c24ef304916aae166621": {
+      "text": "Select Close.",
+      "duration": 1.3
+    },
+    "5543124c9bfb2abff1aaa222": {
+      "text": "Select Dismiss, the cross at the end of the message, to close it.",
+      "duration": 3.622
+    },
+    "5870d6af322e61231c76c4b3": {
+      "text": "Select System for what Sentinel did by itself.",
+      "duration": 2.879
+    },
+    "5ac76fe9f92da1395348a3c6": {
+      "text": "Select Critical: the severity decides the deadlines and the automatic priority.",
+      "duration": 5.016
     },
     "5d84ae6c5dc8168c679202a4": {
       "text": "Open the view Unassigned for the Tickets in Analysis or Analyzed that wait for an assignee.",
       "duration": 5.714
     },
+    "5e97d09fe73938449fa00dfe": {
+      "text": "Select the phases of the track, the circles of its pipeline, for their deadlines: here, the submission is overdue.",
+      "duration": 7.245
+    },
     "6004e87552687ba31c872ad4": {
       "text": "Enter the name of a package: the search finds Tickets by their identifier, their CVE, or their packages.",
       "duration": 6.177
+    },
+    "607d30a6f13ed4bdadc9b55b": {
+      "text": "Enter the original, such as one of its packages.",
+      "duration": 2.834
+    },
+    "60af882a84f0e5ac2aaa022f": {
+      "text": "This other Ticket of one of your packages has your fix submitted, and its delivery in progress.",
+      "duration": 5.248
+    },
+    "67eb6159a6a97a008428390c": {
+      "text": "Select Exclude.",
+      "duration": 1.3
+    },
+    "687c3a80d7bd289b0340efb0": {
+      "text": "Select Make confidential.",
+      "duration": 1.533
+    },
+    "6ab6d727304c3314570afc7f": {
+      "text": "Select Actions again.",
+      "duration": 1.579
+    },
+    "6e229045f7a8dae7388184d4": {
+      "text": "Select Actions, at the end of the heading row.",
+      "duration": 2.786
+    },
+    "6e6c39f6de0f852ad0c902be": {
+      "text": "Below the field, Aura names your time zone, and the same instant in UTC, as the parties often state it.",
+      "duration": 6.873
+    },
+    "6e6c40756f21edff79c08803": {
+      "text": "Select Make non-confidential to disclose it.",
+      "duration": 2.647
+    },
+    "6f72946712b3d0db08630eb4": {
+      "text": "Select yourself, first in the list: the Ticket is now assigned to you.",
+      "duration": 4.365
+    },
+    "7093d3b77ae0f993f1227313": {
+      "text": "Every other user, such as a reader or a restricted analyst who maintains none of its packages, sees the Ticket only through an access grant.",
+      "duration": 8.173
     },
     "709ffa983c0166a312c2ee57": {
       "text": "Select Submission, or another count, to list its Tickets in the All view.",
       "duration": 4.365
     },
+    "70bad4488b7b72472af29acb": {
+      "text": "The field suggests the maintained source packages whose names match.",
+      "duration": 4.04
+    },
+    "721d804d67cdc85baf626552": {
+      "text": "Select the Ticket that matches.",
+      "duration": 1.904
+    },
+    "7911e4883b8f1d2a340bf31a": {
+      "text": "Select the package.",
+      "duration": 1.347
+    },
+    "7a45496ec27e6e7fa8304cdb": {
+      "text": "Select Tickets in the sidebar.",
+      "duration": 1.858
+    },
     "7a962ac5c42927d0c0a9718c": {
       "text": "Open the Ticket by selecting its identifier.",
       "duration": 2.508
+    },
+    "7d31cf5d1df95321242943d5": {
+      "text": "Select Actions, at the end of the heading row, to place the Ticket under embargo.",
+      "duration": 4.644
+    },
+    "7e3585aac3e68326d57e03e0": {
+      "text": "Select Actions, at the end of the heading row, for what you can do with the Ticket.",
+      "duration": 4.923
+    },
+    "836e8337fabf12ed6e4c2c13": {
+      "text": "Select the actions of the package again.",
+      "duration": 2.322
+    },
+    "8417e05c8818ffdfc069400d": {
+      "text": "Select the user.",
+      "duration": 1.3
+    },
+    "845a33a6f33a8fed9d0c96ba": {
+      "text": "The deadlines of the Ticket follow the new date, which they lead up to.",
+      "duration": 4.226
+    },
+    "849e2b2964c62b9111da2f43": {
+      "text": "Select None for Availability: the vector and the Base score follow.",
+      "duration": 4.226
+    },
+    "84f75ddcd08b0dc9be2068c5": {
+      "text": "The field suggests the Tickets that match by identifier, by CVE, or by package.",
+      "duration": 5.573
+    },
+    "864498c1f782ba0d68c396df": {
+      "text": "The tree hides the package, and a message says so.",
+      "duration": 3.019
+    },
+    "87eacffc1a8940f3b5ad124a": {
+      "text": "Enter the name of the user, here a reader without a role.",
+      "duration": 3.39
     },
     "8922c368139115ba340c996e": {
       "text": "Press Escape to close it.",
       "duration": 1.486
     },
+    "8984e18b08aa8f6277c83c5e": {
+      "text": "Press Enter to keep the events that match.",
+      "duration": 2.138
+    },
+    "89cc83c7717fc1daf3c96478": {
+      "text": "Submission shows your latest submission request in IBS, as a link to it; the plus counts the earlier ones.",
+      "duration": 6.502
+    },
+    "8a41c474a9e3f821848d0f78": {
+      "text": "Select Restore to include it again.",
+      "duration": 2.322
+    },
+    "909369362fb216ea1dce7f75": {
+      "text": "Press Space to choose Not shipped, the first reason.",
+      "duration": 3.111
+    },
+    "90fe96322b1d7b23f8de7a03": {
+      "text": "Select Mark as duplicate to name the Ticket that it duplicates.",
+      "duration": 3.576
+    },
     "915e2670ad2ab077583edfc7": {
       "text": "Next to the heading, the attention summary counts the Tickets that need attention: the active P1 Tickets, and the Tickets overdue in each phase, from Triage to QA.",
       "duration": 10.96
+    },
+    "957812851d66d2b9dea2426c": {
+      "text": "Select Make confidential, the last item of the menu.",
+      "duration": 3.39
+    },
+    "97636cc51facc711884a81ec": {
+      "text": "Select Save: the Ticket is now Critical, with the automatic priority P2.",
+      "duration": 5.062
     },
     "9d069cfc971f8016c31d232c": {
       "text": "Select QA, or another overdue count of the attention summary, to find late work in the All view.",
       "duration": 5.991
     },
+    "9d906a997b94e4e227c4fab6": {
+      "text": "Select Edit SUSE assessment, the pencil on its row, to change its vector.",
+      "duration": 4.69
+    },
+    "9f31f8cd1d733749b273ee2a": {
+      "text": "Its details gain the field Coordinated Release Date, the end of the embargo, empty until you set it.",
+      "duration": 6.455
+    },
+    "9fbc9d10e90c55e776390d49": {
+      "text": "Its details link to the original. Revert duplicate, in Actions, undoes the change.",
+      "duration": 5.108
+    },
+    "a1758f1460b1e3946205a608": {
+      "text": "Open the link that an analyst shares with you: it leads to the Ticket.",
+      "duration": 4.133
+    },
+    "a2278fab73fb90c65683e00a": {
+      "text": "Here, the link searches for a package and keeps the Analyzed Tickets.",
+      "duration": 4.04
+    },
+    "a290ccc686f07735f3bd9a29": {
+      "text": "No action removes a CVE from a Ticket, so Aura asks first, and says what changes.",
+      "duration": 5.201
+    },
+    "a2de13403341b267aedb6e60": {
+      "text": "Below the CVE, each package of the Ticket lists its tracks, and each track its Products, with its phases and its affectedness.",
+      "duration": 7.941
+    },
+    "a373ad9aedbb1a2a519136dc": {
+      "text": "Select Associate CVE once the issue of the Ticket has a CVE.",
+      "duration": 3.947
+    },
+    "a444935bb3b8d92151d08706": {
+      "text": "Enter a title, which the table shows above the address.",
+      "duration": 2.972
+    },
     "a562048eab336815a11fffc9": {
       "text": "Open the view Assigned to me to see your Tickets in Analysis or Analyzed.",
+      "duration": 4.923
+    },
+    "a6fb555ba70cb015658ea0f9": {
+      "text": "Without a CVE, the menu adds Set severity and Associate CVE.",
+      "duration": 4.087
+    },
+    "a824bb8b804bba80820d64cb": {
+      "text": "Press the Down arrow to move the day earlier, or type the date and time agreed.",
+      "duration": 4.274
+    },
+    "a9a815e13289975e44326741": {
+      "text": "Open the tab References for the advisories, patches, and other pages about the Ticket.",
       "duration": 4.923
     },
     "abf7459f5f166715ba308245": {
       "text": "Select Analyzed too, to keep the Tickets that have either status.",
       "duration": 3.855
     },
+    "ade525849e2503b61d0cd359": {
+      "text": "Select Ignore: the Ticket becomes Ignored, and leaves the queue.",
+      "duration": 4.133
+    },
+    "b1a0fc3ffd50ed96e02c40df": {
+      "text": "Open a third Ticket of the queue.",
+      "duration": 1.811
+    },
+    "b3d9c8fb788d84ac06cbbb79": {
+      "text": "Its release says Released, with the date of the release.",
+      "duration": 3.39
+    },
+    "b622366ea26141b5d84b7447": {
+      "text": "Select Edit reference, the pencil on its row, to change it.",
+      "duration": 3.251
+    },
     "b6a5f069b0898ef78b24ee98": {
       "text": "The most severe Tickets now come first; selecting the heading again reverses the order.",
       "duration": 5.016
     },
+    "b80c60f90d1658be96cad971": {
+      "text": "Each reason says when it applies: Not shipped, when SUSE ships none of the affected software, or Other.",
+      "duration": 7.338
+    },
+    "bbb5549ce8cbdd338fabf94e": {
+      "text": "Select Save.",
+      "duration": 1.161
+    },
+    "bbf82a5973d7d22dada905ed": {
+      "text": "Select Save: the description shows below the address.",
+      "duration": 3.204
+    },
     "be04d7a5bde2df671ee0ed81": {
       "text": "Select the priority of a Ticket to see its explanation.",
       "duration": 3.204
+    },
+    "be8c2ccc55cccfe4bffe8c43": {
+      "text": "The package tree shows each package of the Ticket, its tracks, and their Products: here, the track is Fixed.",
+      "duration": 6.827
+    },
+    "bfe54d1683709a514add2f53": {
+      "text": "Select Tickets again to return to the queue.",
+      "duration": 2.368
+    },
+    "c0fbd589f3bb47ffd7cb0141": {
+      "text": "Select Not affected when the issue doesn't affect the track: it has no work left.",
+      "duration": 4.83
+    },
+    "c1b1c77394d6409065cc9c03": {
+      "text": "Select Actor: it lists System, then the users who acted on the Ticket.",
+      "duration": 5.062
+    },
+    "c4e041b3c93fff4ce22e8cd3": {
+      "text": "Enter the address of the page.",
+      "duration": 1.811
+    },
+    "c549a1b6be1b25eb818de941": {
+      "text": "Select a Product for its eligibility, its lifecycle, its release, and its actions.",
+      "duration": 5.108
+    },
+    "c6650f6bafdff7ee654259a9": {
+      "text": "Aura asks first: every user can then see the Ticket, which can't be undone, and its access grants are deleted.",
+      "duration": 7.059
+    },
+    "c989d8bdade9e43f27d07c49": {
+      "text": "Enter the CVE ID: the search finds Tickets by their identifier, their CVE, or their packages.",
+      "duration": 5.944
+    },
+    "cb68500f0966013ea9a2848d": {
+      "text": "Select Delete reference to confirm, since it can't be undone.",
+      "duration": 3.437
+    },
+    "cbdd0084142bbe9cad2f1e12": {
+      "text": "Select Associate CVE to confirm.",
+      "duration": 2.415
+    },
+    "ce5ebd9cf4a4a01cd75db890": {
+      "text": "Select Type: Detect from the address leaves the type to Sentinel.",
+      "duration": 4.274
+    },
+    "ced0a06e76455ee97515ecaf": {
+      "text": "Each event says who changed what, and when: a user, or System for what Sentinel did by itself.",
+      "duration": 6.223
+    },
+    "d32d5e22b68777f27aeef0a7": {
+      "text": "Select Cancel to keep the package.",
+      "duration": 2.138
+    },
+    "d336b3b73b0935df8a3c2a01": {
+      "text": "Enter a value, such as a package: the search looks in the values that the events record.",
+      "duration": 5.341
+    },
+    "d73b89e5d2997acac44ca9d7": {
+      "text": "This Ticket, created by hand, has no CVE, so you set its severity.",
+      "duration": 3.994
     },
     "d8109c7ed4eb649a6d818713": {
       "text": "Select Filters to narrow the list.",
@@ -100,13 +528,49 @@
       "text": "A queue is sorted by priority, then by deadline, so its most urgent Ticket comes first.",
       "duration": 5.526
     },
+    "dc0854fa5408fdc2ebd16a27": {
+      "text": "Select a Product to see whether its fix is released.",
+      "duration": 2.879
+    },
+    "de9edae940695e2cb38b442a": {
+      "text": "Select Set severity.",
+      "duration": 1.44
+    },
     "decf13eb744494622b86e223": {
       "text": "In the list, the Deadline column shows the next deadline of a Ticket, in red once it has passed.",
       "duration": 6.037
     },
+    "e153d5d4a735214d874fc73a": {
+      "text": "Select Exclude when the package doesn't concern the Ticket.",
+      "duration": 3.297
+    },
+    "e4198e22672905e2c4ac7c77": {
+      "text": "Aura says who keeps seeing the Ticket: vulnerability analysts and administrators, who see every Ticket, and the maintainers of its packages that are not excluded. Every other user loses access.",
+      "duration": 11.982
+    },
+    "e4d330b75f3d99737348dbc1": {
+      "text": "Select Add reference.",
+      "duration": 1.533
+    },
+    "e6136c8b743df36e6dcba01d": {
+      "text": "Select Actions.",
+      "duration": 1.44
+    },
     "e862f806ceb1cd79cf646946": {
       "text": "Open the view All to return to every Ticket.",
       "duration": 2.601
+    },
+    "e89d5cb8d0e886c254302107": {
+      "text": "Each reference shows its type, its source, and when it was added: Manual marks those that you and other analysts add.",
+      "duration": 7.57
+    },
+    "ea071bc5e62cdbf55e769b59": {
+      "text": "Select Delete reference, the trash can on its row, to remove it.",
+      "duration": 3.669
+    },
+    "ea3d3044ace6c0916c226d49": {
+      "text": "Select Patch to set the type yourself.",
+      "duration": 2.368
     },
     "ebef5e199826b316480f528d": {
       "text": "As an analyst, you land on the New view, the queue of the new Tickets that no analyst has taken yet.",
@@ -116,9 +580,49 @@
       "text": "Sentinel Aura opens the Ticket list in its All view: every Ticket that you can see, the most recently modified first.",
       "duration": 7.477
     },
+    "f1415e5e280e22562cbe865a": {
+      "text": "The label Excluded marks the package that you excluded.",
+      "duration": 3.158
+    },
+    "f1452a5255dbda6f839ecb1f": {
+      "text": "Select the actions of a package, the three dots at the end of its band.",
+      "duration": 4.319
+    },
+    "f42092d3257f92458b5c3b87": {
+      "text": "Select Make non-confidential: the lock goes, and the Coordinated Release Date stays in the details.",
+      "duration": 6.78
+    },
+    "f76dae8691fdf7b02c2811c1": {
+      "text": "Its details show the reason. Reopen, in Actions, returns the Ticket to work.",
+      "duration": 5.526
+    },
+    "f7fad82f045ebd23bdf7639c": {
+      "text": "Select Grant access.",
+      "duration": 1.625
+    },
+    "f845de294684a805e8b1e591": {
+      "text": "Select Add package when Sentinel missed a package of the Ticket.",
+      "duration": 3.483
+    },
     "f9960020b65bb08e1398dd92": {
       "text": "Open the view Analysis to see the Tickets in that status, sorted by priority, then by deadline.",
       "duration": 5.944
+    },
+    "f9ca9bd8e0b256d8658fc042": {
+      "text": "The field lists the active users who match.",
+      "duration": 2.786
+    },
+    "fce3efd04843710c0531dc00": {
+      "text": "The SUSE assessment of the CVE sets the severity of the Ticket, and the eligibility score of the Products.",
+      "duration": 6.641
+    },
+    "febd53c63743e2fbc58da98d": {
+      "text": "Select the affectedness of a track to change it.",
+      "duration": 2.647
+    },
+    "fed95a68fe023ae3bda85f65": {
+      "text": "Select Associate CVE.",
+      "duration": 1.672
     }
   }
 }

@@ -163,27 +163,53 @@ the example dataset. An unknown variable fails the validation.
 - **Data**: only Sentinel's example dataset, whose data is fictional. A step
   that types data uses fictional values, such as addresses under
   `example.com`.
+- **Titles**: the title of a tutorial names the task that the viewer learns,
+  in sentence case and in the imperative, the form in which the catalog
+  states its tasks, but in a few words ("Manage an embargo" for the
+  catalog's "Manage the confidentiality of embargoed Tickets…"). A tour of a
+  screen, whose chapters are noun phrases (Chapters), takes an imperative
+  title too ("Find your way in the Ticket list").
 - **Captions**: the title of each step, which the video does not show: the
   voice and the subtitles tell the step. In English, sentence case, at most
   about eight words, in the imperative for an action ("Select Sign in") and as a statement for what a
   screen shows ("The Ticket opens on its Overview"). Name controls as the UI
   does, and use Aura's words: "select", not "click"; "Ticket", capitalized.
 - **Verbs**: one verb for each kind of action, in captions and narrations:
-  "Select" for a button or a link that the text names ("Select Sign in");
+  "Select" for a button or a link, by the name that its text gives, or that
+  the UI gives an icon button (Narration) ("Select Sign in");
   "Open" for a tab, a view, or a Ticket ("Open the tab References", "Open the
   Ticket"); "Enter" for a value typed into a field ("Enter your username");
   and "Press" for a key, with its purpose ("Press Escape to close it").
+- **Systems behind Sentinel**: titles, subtitles, chapter titles, captions,
+  narrations, and outros name what the viewer sees and works with: Aura, its
+  screens, and Sentinel, whose name the sidebar shows. They don't name the
+  systems from which Sentinel takes its data, such as SMELT, even where a
+  screen's text mentions them: they say what those systems give the viewer,
+  in Aura's words where it has them, such as "the maintained packages". A
+  control or a value that carries such a name is named as the UI writes it,
+  such as Refetch NVD. The exception is IBS, and Git likewise: named only
+  where the step shows what is theirs, such as the submission and release
+  requests of IBS, and in an outro that recalls such a step; never as another
+  word for a track or a delivery, which can be of either.
 - **Narration**: one or two full sentences that the caption shortens, written
   to be read aloud, and addressed to the viewer as "you", whatever the
   profile. The narration of a click starts with its action, "Select" or
   "Open", names what it selects or opens next, and gives its purpose, when
   it has one, after that ("Select Filters to narrow the list."), because the click lands early
   in the sentence (Narration, Timing); the validation fails on another
-  start.
+  start. A click on a control that shows an icon and no words, such as an
+  icon button or an icon with a count, names it as the UI does, with the
+  record that its name holds put in words or left out ("the actions of the
+  package", "Edit reference"), then, the first time the video selects it,
+  says what the viewer sees and where ("Select Edit reference, the pencil on
+  its row").
 - **One idea per step**: a step that both acts and explains becomes two, an
   action and a `show`.
 - **Chapters**: a tutorial of several chapters gives each a title of two to
-  four words, which a player lists.
+  four words, which a player lists. Its chapter titles take one form: the
+  imperative when each chapter is something that the viewer does ("Grant
+  access"), noun phrases when each is a part of one screen that the tutorial
+  tours ("The views").
 - **Users**: the user of the task's profile in the catalog, so that the
   screens show what that profile sees.
 - **Tickets**: the same Ticket across tutorials when the task allows it,
@@ -234,8 +260,9 @@ text as subtitles.
 - **Subtitles**: `out/<id>/<id>.vtt`, WebVTT, the narrations while the voice
   reads them, a long one in cues of at most 84 characters, where a player
   puts them, at the bottom of the video, or at the top during a step whose
-  target is at the bottom. The video itself shows no caption and no narration,
-  so the website turns the subtitles on.
+  target is at the bottom. The video itself shows no caption and no narration;
+  the website offers the subtitles off, and the visitor turns them on in the
+  player.
 - **The lock** records the hash of the keys, the durations, and the files of
   the clips of each video: a changed sentence makes its video stale through its
   script, and another voice, or another reading of a sentence, through its
@@ -366,9 +393,12 @@ request changes. A finding is fixed in its script, and no step is exempt: a
 lower `zoom` or a smaller `target` for a target or a ring out of view, a
 shorter caption.
 
-The ring surrounds its target with the same margin on every side. For a cell
-of a table, the capture takes the box of what the cell holds, its text and
-its images, since a cell is as wide as its column (`src/capture.mjs`).
+The ring surrounds its target with the same margin on every side, in amber,
+a color that Aura's palette lacks, so that it never reads as Aura's own focus
+ring, which is blue and which a screen keeps, such as on the Cancel of a
+confirmation. For a cell of a table, the capture takes the box of what the
+cell holds, its text and its images, since a cell is as wide as its column
+(`src/capture.mjs`).
 
 ### Frames
 
@@ -475,8 +505,8 @@ holds:
   their title, their subtitle, and the captions of their steps;
 - a page per tutorial, at `tutorials/<id>/`, always dark, which keeps to
   its video, with a poster, a frame of its intro card, its chapters as a
-  WebVTT track, and its subtitles as another, which shows unless the visitor turns it off:
-  around it, only the link back to its role, its title, its
+  WebVTT track, and its subtitles as another, which shows once the visitor
+  turns it on: around it, only the link back to its role, its title, its
   place in the path, and the link to the next video of its role, or to the
   directory after the last one.
 
