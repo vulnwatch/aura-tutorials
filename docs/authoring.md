@@ -163,6 +163,12 @@ the example dataset. An unknown variable fails the validation.
 - **Data**: only Sentinel's example dataset, whose data is fictional. A step
   that types data uses fictional values, such as addresses under
   `example.com`.
+- **Titles**: the title of a tutorial names the task that the viewer learns,
+  in sentence case and in the imperative, the form in which the catalog
+  states its tasks, but in a few words ("Manage an embargo" for the
+  catalog's "Manage the confidentiality of embargoed Tickets…"). A tour of a
+  screen, whose chapters are noun phrases (Chapters), takes an imperative
+  title too ("Find your way in the Ticket list").
 - **Captions**: the title of each step, which the video does not show: the
   voice and the subtitles tell the step. In English, sentence case, at most
   about eight words, in the imperative for an action ("Select Sign in") and as a statement for what a

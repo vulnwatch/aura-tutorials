@@ -1194,10 +1194,10 @@
       ]
     },
     "ticket-list-for-analysts": {
-      "title": "The Ticket list for analysts",
+      "title": "Find your work in the Ticket list",
       "subtitle": "The queues, your Tickets, and the embargoes",
       "aura": "v0.11.0",
-      "script": "sha256:6672f9770611494ec1b7706444a40feb94c2a476e310784eb13e9f860790298e",
+      "script": "sha256:fca151cccb00d6ce939c71052c2333e7995462d34b085655021a4f894d69b6c7",
       "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:18255f52d1e0ca21e593e98fed1365e9223a47499001f381a983533caf2b7dac",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",

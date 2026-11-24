@@ -147,8 +147,8 @@ Aura belongs to `@accuracy-reviewer`; omit it here.
 tutorial already written departs from it, the change is right: list that
 tutorial under Drift outside the change.
 
-**Details that the Style leaves open**, such as the form of a title or the
-verb of a step that opens a Ticket: when the change and a tutorial already
+**Details that the Style leaves open**, such as the form of a subtitle or
+of an outro: when the change and a tutorial already
 written treat the same detail in different ways, recommend aligning the
 change with the tutorial already written. Making a detail a rule for every
 tutorial changes `docs/authoring.md` first, with the user's confirmation:
