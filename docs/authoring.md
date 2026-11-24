@@ -378,9 +378,12 @@ request changes. A finding is fixed in its script, and no step is exempt: a
 lower `zoom` or a smaller `target` for a target or a ring out of view, a
 shorter caption.
 
-The ring surrounds its target with the same margin on every side. For a cell
-of a table, the capture takes the box of what the cell holds, its text and
-its images, since a cell is as wide as its column (`src/capture.mjs`).
+The ring surrounds its target with the same margin on every side, in amber,
+a color that Aura's palette lacks, so that it never reads as Aura's own focus
+ring, which is blue and which a screen keeps, such as on the Cancel of a
+confirmation. For a cell of a table, the capture takes the box of what the
+cell holds, its text and its images, since a cell is as wide as its column
+(`src/capture.mjs`).
 
 ### Frames
 

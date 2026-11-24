@@ -70,8 +70,11 @@ const FOCUS = { x: CANVAS.width / 2, y: 470 };
 // The host that the address bar shows, fictional.
 const HOST = "sentinel.example.com";
 
-// Aura's accent (Aura docs/design-system.md, Colors).
-const ACCENT = "#0969DA";
+// The color of the ring and of the ripple of a click: amber, which Aura's
+// palette lacks, so that the ring does not read as Aura's focus ring, which
+// is blue (Aura docs/design-system.md, Colors), such as that of the Cancel of
+// a confirmation, which holds the focus as it opens.
+const ACCENT = "#F59E0B";
 
 // The timing of the film, in seconds.
 const INTRO = 3.6;
@@ -523,7 +526,7 @@ const CHAPTER_STYLES = `${CARD_STYLES}
       box-sizing: border-box;
       border: ${RING.border}px solid ${ACCENT};
       border-radius: 10px;
-      box-shadow: 0 0 0 ${RING.halo}px rgba(9, 105, 218, 0.18);
+      box-shadow: 0 0 0 ${RING.halo}px rgba(245, 158, 11, 0.25);
       opacity: 0;
     }
     .ripple {
@@ -531,7 +534,7 @@ const CHAPTER_STYLES = `${CARD_STYLES}
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: rgba(9, 105, 218, 0.45);
+      background: rgba(245, 158, 11, 0.45);
       opacity: 0;
     }
     .keycap {
