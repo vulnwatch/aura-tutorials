@@ -5,7 +5,7 @@
       "subtitle": "Search for its Ticket, read its packages, and open a shared link",
       "aura": "v0.11.0",
       "script": "sha256:593e1caa54ba777d846f895528c6b8f828e7537d6b2b7bef5596313537e492b0",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:d4d2bf692d1b233931a5aff63cdd4bec6e8eaeb9ff23db3cc7196f5fe939d451",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 69.383,
@@ -133,29 +133,33 @@
     },
     "manage-an-embargo": {
       "title": "Manage an embargo",
-      "subtitle": "Confidentiality, access grants, and the Coordinated Release Date",
+      "subtitle": "Confidentiality, who sees a Ticket, access grants, and the Coordinated Release Date",
       "aura": "v0.11.0",
-      "script": "sha256:d02a3b878dc95c4d5e431654e669e1e63db794611e588b833bf9f141d2d000f0",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
-      "narration": "sha256:be981882aa05671f8a556b11cc003afb8610cc7dab8a24f36fb7404ab4543be0",
+      "script": "sha256:d0a193936adf346fbf199daad466194fb8a9e07ea2459e7db3e909c4a939e4c1",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
+      "narration": "sha256:cded6262ed279d4d2782f0f96479dda58eb91773e75f33bed79a9fe5be421af3",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 161.547,
+      "duration": 221.931,
       "chapters": [
         {
           "title": "Make a Ticket confidential",
           "start": 0
         },
         {
+          "title": "Check who sees it",
+          "start": 45.064
+        },
+        {
           "title": "Grant access",
-          "start": 40.234
+          "start": 90.705
         },
         {
           "title": "Move the release date",
-          "start": 74.601
+          "start": 134.985
         },
         {
           "title": "Disclose a Ticket",
-          "start": 113.131
+          "start": 173.515
         }
       ],
       "steps": [
@@ -178,168 +182,224 @@
           "chapter": 1,
           "caption": "Aura says who keeps seeing it",
           "start": 15.894,
-          "end": 23.796
+          "end": 28.626
         },
         {
           "id": "confirm-confidential",
           "chapter": 1,
           "caption": "Select Make confidential",
-          "start": 23.796,
-          "end": 28.129
+          "start": 28.626,
+          "end": 32.959
         },
         {
           "id": "confidential",
           "chapter": 1,
           "caption": "A lock marks the Ticket",
-          "start": 28.129,
-          "end": 32.329
+          "start": 32.959,
+          "end": 37.159
         },
         {
           "id": "release-field",
           "chapter": 1,
           "caption": "The details gain the release date field",
-          "start": 32.329,
-          "end": 39.534
+          "start": 37.159,
+          "end": 44.364
+        },
+        {
+          "id": "maintainers",
+          "chapter": 2,
+          "caption": "Select the maintainers of a package",
+          "start": 47.364,
+          "end": 53.269
+        },
+        {
+          "id": "maintainers-shown",
+          "chapter": 2,
+          "caption": "Maintainers see it while their package is included",
+          "start": 53.269,
+          "end": 60.429
+        },
+        {
+          "id": "maintainers-close",
+          "chapter": 2,
+          "caption": "Press Escape to close them",
+          "start": 60.429,
+          "end": 63.829
+        },
+        {
+          "id": "package-actions",
+          "chapter": 2,
+          "caption": "Select the actions of the package",
+          "start": 63.829,
+          "end": 68.991
+        },
+        {
+          "id": "exclude",
+          "chapter": 2,
+          "caption": "Select Exclude…",
+          "start": 68.991,
+          "end": 73.091
+        },
+        {
+          "id": "exclude-question",
+          "chapter": 2,
+          "caption": "Excluding a package can end their access",
+          "start": 73.091,
+          "end": 85.405
+        },
+        {
+          "id": "keep-package",
+          "chapter": 2,
+          "caption": "Select Cancel to keep the package",
+          "start": 85.405,
+          "end": 90.005
         },
         {
           "id": "access-grants",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Select Access grants",
-          "start": 42.534,
-          "end": 48.16
+          "start": 93.005,
+          "end": 98.631
+        },
+        {
+          "id": "grants-explained",
+          "chapter": 3,
+          "caption": "Every other user needs a grant",
+          "start": 98.631,
+          "end": 107.554
         },
         {
           "id": "user",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Enter the name of the user",
-          "start": 48.16,
-          "end": 51.31
+          "start": 107.554,
+          "end": 111.694
         },
         {
           "id": "users",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "The field lists the users who match",
-          "start": 51.31,
-          "end": 55.51
+          "start": 111.694,
+          "end": 115.894
         },
         {
           "id": "choose-user",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Select the user",
-          "start": 55.51,
-          "end": 59.61
+          "start": 115.894,
+          "end": 119.994
         },
         {
           "id": "grant",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Select Grant access",
-          "start": 59.61,
-          "end": 64.035
+          "start": 119.994,
+          "end": 124.419
         },
         {
           "id": "granted",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Revoke access ends a grant",
-          "start": 64.035,
-          "end": 69.801
+          "start": 124.419,
+          "end": 130.185
         },
         {
           "id": "close-grants",
-          "chapter": 2,
+          "chapter": 3,
           "caption": "Select Close",
-          "start": 69.801,
-          "end": 73.901
+          "start": 130.185,
+          "end": 134.285
         },
         {
           "id": "embargoed",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "This Ticket has a Coordinated Release Date",
-          "start": 76.901,
-          "end": 83.781
+          "start": 137.285,
+          "end": 144.165
         },
         {
           "id": "edit-release",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "Select Edit Coordinated Release Date",
-          "start": 83.781,
-          "end": 90.847
+          "start": 144.165,
+          "end": 151.231
         },
         {
           "id": "earlier",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "Press the Down arrow to move the day",
-          "start": 90.847,
-          "end": 95.871
+          "start": 151.231,
+          "end": 156.255
         },
         {
           "id": "time-zone",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "Aura gives the instant in UTC too",
-          "start": 95.871,
-          "end": 103.494
+          "start": 156.255,
+          "end": 163.878
         },
         {
           "id": "save-release",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "Select Save",
-          "start": 103.494,
-          "end": 107.455
+          "start": 163.878,
+          "end": 167.839
         },
         {
           "id": "deadlines",
-          "chapter": 3,
+          "chapter": 4,
           "caption": "The deadlines follow the new date",
-          "start": 107.455,
-          "end": 112.431
+          "start": 167.839,
+          "end": 172.815
         },
         {
           "id": "tickets",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Select Tickets",
-          "start": 115.431,
-          "end": 120.031
+          "start": 175.815,
+          "end": 180.415
         },
         {
           "id": "expired",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Select Embargo expired",
-          "start": 120.031,
-          "end": 127.468
+          "start": 180.415,
+          "end": 187.852
         },
         {
           "id": "open-ticket-select",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Open the Ticket",
-          "start": 127.468,
-          "end": 132.068
+          "start": 187.852,
+          "end": 192.452
         },
         {
           "id": "actions-expired",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Select Actions",
-          "start": 132.068,
-          "end": 136.308
+          "start": 192.452,
+          "end": 196.692
         },
         {
           "id": "make-non-confidential",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Select Make non-confidential…",
-          "start": 136.308,
-          "end": 140.908
+          "start": 196.692,
+          "end": 201.292
         },
         {
           "id": "disclosure",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "A disclosure can't be undone",
-          "start": 140.908,
-          "end": 148.717
+          "start": 201.292,
+          "end": 209.101
         },
         {
           "id": "confirm-disclosure",
-          "chapter": 4,
+          "chapter": 5,
           "caption": "Select Make non-confidential",
-          "start": 148.717,
-          "end": 156.247
+          "start": 209.101,
+          "end": 216.631
         }
       ],
       "covers": [
@@ -355,22 +415,34 @@
         "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
         "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
         "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
+        "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
+        "sha256:4bd845c563c13cf1a45b6fd4d01daa5e178dbfe5cb683c3a58f05a88012cd9b4",
+        "sha256:4bd845c563c13cf1a45b6fd4d01daa5e178dbfe5cb683c3a58f05a88012cd9b4",
+        "sha256:4bd845c563c13cf1a45b6fd4d01daa5e178dbfe5cb683c3a58f05a88012cd9b4",
+        "sha256:bb94f3f44c33ea05a01e267ff838a864edfe8535b128704b40fe8208a694a24e",
+        "sha256:bb94f3f44c33ea05a01e267ff838a864edfe8535b128704b40fe8208a694a24e",
+        "sha256:7528e1c999146a90b966dc48588e35a6b59539eebc7eec2faa740bf48b9f54a6",
+        "sha256:7528e1c999146a90b966dc48588e35a6b59539eebc7eec2faa740bf48b9f54a6",
+        "sha256:fc13ee303f0fddd79f75aaafa03cb9ed2ac16665626a252c8d5e6780bf654a8c",
+        "sha256:fc13ee303f0fddd79f75aaafa03cb9ed2ac16665626a252c8d5e6780bf654a8c",
+        "sha256:fc13ee303f0fddd79f75aaafa03cb9ed2ac16665626a252c8d5e6780bf654a8c",
+        "sha256:e4219673a780b0b3ff8a4183e5765d682ac53ae433bbfcf4839b0c90c9a71c7f",
         "sha256:79f04f76717c371ec0f758cc33782b40f0045625e8f5d61140ec48b943e7b7f0",
-        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
-        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
-        "sha256:652c87d6f5599f182b476c344af29cb8df5ffb6e01ca1c1bc56a74eb8a8a16d6",
-        "sha256:37967ccfbd6b56504af78b0d284ec1aa6d668475aa368b021a75e8f267d6e433",
-        "sha256:b6a6e7cab150c15ce7a1b9297dbbad92686f90c531d5f18198ae52b5d436151a",
-        "sha256:57c361aa8bbe6053ef4e5ae8b523f0433bd18857f5caf6e45475df66f18fff86",
-        "sha256:5cf04adf9afdf483cc9ceb407dae94611140cf4162a9d0f255d053f72a8def78",
-        "sha256:b21226caf6c3b8286f75a1112575ce2f9821b325420ae03b8e2b1c9b99699e6e",
-        "sha256:b21226caf6c3b8286f75a1112575ce2f9821b325420ae03b8e2b1c9b99699e6e",
-        "sha256:b21226caf6c3b8286f75a1112575ce2f9821b325420ae03b8e2b1c9b99699e6e",
-        "sha256:fb1acd69f6831f8d4ef9fdf7910166e7711f1008bdd4c78017eddd47a7d278e1",
-        "sha256:fb1acd69f6831f8d4ef9fdf7910166e7711f1008bdd4c78017eddd47a7d278e1",
-        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
-        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
-        "sha256:bbb8866d94f453f22706a48efd23d5f82b292ca747e579f72b3e8354127d5a50",
+        "sha256:dbb1a71c32be2ca7ea6e9fd5c2100953602c975db6b01451bbc6181a0623235f",
+        "sha256:dbb1a71c32be2ca7ea6e9fd5c2100953602c975db6b01451bbc6181a0623235f",
+        "sha256:dbb1a71c32be2ca7ea6e9fd5c2100953602c975db6b01451bbc6181a0623235f",
+        "sha256:dbb1a71c32be2ca7ea6e9fd5c2100953602c975db6b01451bbc6181a0623235f",
+        "sha256:a8cbd72c1ad4cda0279f56e16f5b2f2ac67a9e141c146f9ccbbfcb871ade8b77",
+        "sha256:2be954e817042856119b0aae8e33ea72c2c0c56acea3cec8442423177e9beb29",
+        "sha256:a384a4b8b296af4455636684ff1b5e9e169b4d66f9da1a87a7bbe907097ebf02",
+        "sha256:281da8830d6809dc4c0e4b2fce4bed27005aab9d262fdb4ca51aad6caf36b396",
+        "sha256:281da8830d6809dc4c0e4b2fce4bed27005aab9d262fdb4ca51aad6caf36b396",
+        "sha256:281da8830d6809dc4c0e4b2fce4bed27005aab9d262fdb4ca51aad6caf36b396",
+        "sha256:203c08de1c8053c0927f6a6b9298b1bcc73d838bea3107b03627bc6c6f81a863",
+        "sha256:203c08de1c8053c0927f6a6b9298b1bcc73d838bea3107b03627bc6c6f81a863",
+        "sha256:ef7463d6c1c753f7b2a380af00d7deb3921a02f654af1f5cb167c12b5eba5996",
+        "sha256:ef7463d6c1c753f7b2a380af00d7deb3921a02f654af1f5cb167c12b5eba5996",
+        "sha256:ef7463d6c1c753f7b2a380af00d7deb3921a02f654af1f5cb167c12b5eba5996",
         "sha256:42e25884a2abe73b4d551cbff164a03825837a5a379d6b0aab746faef2a5f4eb",
         "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
         "sha256:c1fae994c1ade0c0b0adcbefed7ba725b80552b1c928d298afb5f6b71c17a975",
@@ -401,7 +473,7 @@
       "subtitle": "A Ticket that an analyst shares, and your deliveries in progress",
       "aura": "v0.11.0",
       "script": "sha256:56724dd465033fd56a9d669d80502f1f2e76be200c380949794e1e713015a142",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:9a581745da993676f2679139f93e5b2ddde67453d30daccc0db01b60d499050a",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 59.448,
@@ -497,7 +569,7 @@
       "subtitle": "Override a priority, edit the SUSE assessment, and set a severity",
       "aura": "v0.11.0",
       "script": "sha256:e1f0b6519a6f88da7d697fb121e80f27bdc23867791550140998c8869b99b3cb",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:d5a3ae95b1678530fede64f3f5fcad155317ddbeda0f3b4950dd60873372108e",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 142.583,
@@ -749,7 +821,7 @@
       "subtitle": "Search and filter its audit log",
       "aura": "v0.11.0",
       "script": "sha256:da090d63d7390746feec8e7d6bed19cdb1dba112652783059828ed62976a3e2d",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:6fe95c055ee55f7b3ee0447f7430142a6d52e89df8b41551159503096e2bf702",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 69.28,
@@ -882,7 +954,7 @@
       "subtitle": "Views, search, sorting, filters, and the Tickets that need attention",
       "aura": "v0.11.0",
       "script": "sha256:e7601ee4573b0272cd51394d81f8e48f16b31066b6b446d70f7e8ff17b4d3119",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:9ef36b52266721283ab85294f2043c5a6aa59715d0bf8d917015837b773a0920",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 156.267,
@@ -1126,7 +1198,7 @@
       "subtitle": "The queues, your Tickets, and the embargoes",
       "aura": "v0.11.0",
       "script": "sha256:6672f9770611494ec1b7706444a40feb94c2a476e310784eb13e9f860790298e",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:18255f52d1e0ca21e593e98fed1365e9223a47499001f381a983533caf2b7dac",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 76.785,
@@ -1236,7 +1308,7 @@
       "subtitle": "Tracks, Products, affectedness, exclusions, and Add package",
       "aura": "v0.11.0",
       "script": "sha256:95dd7083865af3013240ab64aaf2457e42d69c7f5f18a4faf11389b825b949bc",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:c80487b459e3d409d73dcb0bc565731c6ed1fbffa394b99ef97ece51a7bd250b",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 106.786,
@@ -1434,7 +1506,7 @@
       "subtitle": "Add, edit, and delete the pages that analysts read",
       "aura": "v0.11.0",
       "script": "sha256:8e728ad14086f17ab14a0235e64bf5a4c6c3d386374219854f99c3c42182fdad",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:897a8061aa22489d752ef5946725e94928238976dce2b8163a7f67e3877e68d2",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 81.258,
@@ -1703,7 +1775,7 @@
       "subtitle": "Take a Ticket, ignore one, or mark one as a duplicate",
       "aura": "v0.11.0",
       "script": "sha256:b97777183f557966f92d567c46c873a61f0d33b19b9c007e3598c23b2ce4b2cd",
-      "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
+      "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:983855e046f2f14342b38b2bf0744ef1787880b250eaef212a4df9455f062f69",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 137.665,

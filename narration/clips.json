@@ -84,6 +84,10 @@
       "text": "Select Ignore to stop working the Ticket, with a reason.",
       "duration": 3.204
     },
+    "1de84779525af6a52e8fe867": {
+      "text": "When the package has maintainers, Aura asks first: they would stop seeing the Ticket, unless a role, an access grant, or another of their packages lets them, and Restore would give them access back.",
+      "duration": 11.564
+    },
     "1e6155e494e0a806fd1e0651": {
       "text": "Press Enter to keep the Tickets of the view that match.",
       "duration": 2.74
@@ -120,6 +124,10 @@
       "text": "The grant shows below, with who granted it and when, and Revoke access to end it.",
       "duration": 5.016
     },
+    "33855a4eed71666eb1d78091": {
+      "text": "Select the actions of the package, the three dots at the end of its band.",
+      "duration": 4.412
+    },
     "3455cb9825a48544af5e3132": {
       "text": "Open the view Embargo for the confidential Tickets, sorted by Coordinated Release Date, the earliest first.",
       "duration": 6.873
@@ -135,6 +143,14 @@
     "35b6ca9986180c1e1c6a76ba": {
       "text": "Open the tab Audit log for the history of the Ticket, the newest events first.",
       "duration": 4.876
+    },
+    "3872bc9402e8d7b5ce962d26": {
+      "text": "The maintainers of each package that is not excluded see the Ticket, and so do those of a package that you add.",
+      "duration": 6.41
+    },
+    "39c26bffbe7b9c2c721d773a": {
+      "text": "Select the maintainers of a package, the icon and the count next to its name.",
+      "duration": 5.155
     },
     "3b38e324f988843f579101f3": {
       "text": "Here, the priority is an override: the explanation shows who set it and when, and the automatic priority that it replaces.",
@@ -220,6 +236,10 @@
       "text": "This other Ticket of one of your packages has your fix submitted, and its delivery in progress.",
       "duration": 5.248
     },
+    "67eb6159a6a97a008428390c": {
+      "text": "Select Exclude.",
+      "duration": 1.3
+    },
     "687c3a80d7bd289b0340efb0": {
       "text": "Select Make confidential.",
       "duration": 1.533
@@ -244,6 +264,10 @@
       "text": "Select yourself, first in the list: the Ticket is now assigned to you.",
       "duration": 4.365
     },
+    "7093d3b77ae0f993f1227313": {
+      "text": "Every other user, such as a reader or a restricted analyst who maintains none of its packages, sees the Ticket only through an access grant.",
+      "duration": 8.173
+    },
     "709ffa983c0166a312c2ee57": {
       "text": "Select Submission, or another count, to list its Tickets in the All view.",
       "duration": 4.365
@@ -255,10 +279,6 @@
     "721d804d67cdc85baf626552": {
       "text": "Select the Ticket that matches.",
       "duration": 1.904
-    },
-    "734b34ac5985cb9ba28f7a1c": {
-      "text": "Enter the name of the user.",
-      "duration": 1.394
     },
     "7911e4883b8f1d2a340bf31a": {
       "text": "Select the package.",
@@ -303,6 +323,10 @@
     "864498c1f782ba0d68c396df": {
       "text": "The tree hides the package, and a message says so.",
       "duration": 3.019
+    },
+    "87eacffc1a8940f3b5ad124a": {
+      "text": "Enter the name of the user, here a reader without a role.",
+      "duration": 3.39
     },
     "8922c368139115ba340c996e": {
       "text": "Press Escape to close it.",
@@ -424,10 +448,6 @@
       "text": "Each reason says when it applies: Not shipped, when SUSE ships none of the affected software, or Other.",
       "duration": 7.338
     },
-    "b872c43fbabf232116739f33": {
-      "text": "Aura says who keeps seeing the Ticket: the users who see every Ticket, and the maintainers of its packages that are not excluded.",
-      "duration": 7.152
-    },
     "bbb5549ce8cbdd338fabf94e": {
       "text": "Select Save.",
       "duration": 1.161
@@ -488,6 +508,10 @@
       "text": "Each event says who changed what, and when: a user, or System for what Sentinel did by itself.",
       "duration": 6.223
     },
+    "d32d5e22b68777f27aeef0a7": {
+      "text": "Select Cancel to keep the package.",
+      "duration": 2.138
+    },
     "d336b3b73b0935df8a3c2a01": {
       "text": "Enter a value, such as a package: the search looks in the values that the events record.",
       "duration": 5.341
@@ -519,6 +543,10 @@
     "e153d5d4a735214d874fc73a": {
       "text": "Select Exclude when the package doesn't concern the Ticket.",
       "duration": 3.297
+    },
+    "e4198e22672905e2c4ac7c77": {
+      "text": "Aura says who keeps seeing the Ticket: vulnerability analysts and administrators, who see every Ticket, and the maintainers of its packages that are not excluded. Every other user loses access.",
+      "duration": 11.982
     },
     "e4d330b75f3d99737348dbc1": {
       "text": "Select Add reference.",

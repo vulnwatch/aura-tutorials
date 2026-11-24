@@ -1,6 +1,6 @@
 {
   "title": "Manage an embargo",
-  "subtitle": "Confidentiality, access grants, and the Coordinated Release Date",
+  "subtitle": "Confidentiality, who sees a Ticket, access grants, and the Coordinated Release Date",
   "outro": {
     "title": "A Ticket stays confidential until you disclose it",
     "subtitle": "Its Coordinated Release Date stays, and still decides its deadlines."
@@ -14,7 +14,8 @@
     "ticket": "SNTL-12",
     "embargoed": "SNTL-18",
     "expired": "SNTL-27",
-    "grantee": "Carol White @cwhite"
+    "grantee": "Hannah Gray @hgray",
+    "package": "fictional-openssl"
   },
   "setup": [
     {
@@ -78,7 +79,7 @@
           },
           "zoom": 1.5,
           "caption": "Aura says who keeps seeing it",
-          "narration": "Aura says who keeps seeing the Ticket: the users who see every Ticket, and the maintainers of its packages that are not excluded."
+          "narration": "Aura says who keeps seeing the Ticket: vulnerability analysts and administrators, who see every Ticket, and the maintainers of its packages that are not excluded. Every other user loses access."
         },
         {
           "id": "confirm-confidential",
@@ -154,6 +155,129 @@
       ]
     },
     {
+      "title": "Check who sees it",
+      "steps": [
+        {
+          "id": "maintainers",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "2 maintainers of {package}",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Maintainers of {package}",
+            "child": {
+              "role": "listitem"
+            }
+          },
+          "caption": "Select the maintainers of a package",
+          "narration": "Select the maintainers of a package, the icon and the count next to its name."
+        },
+        {
+          "id": "maintainers-shown",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Maintainers of {package}"
+          },
+          "zoom": 1.6,
+          "caption": "Maintainers see it while their package is included",
+          "narration": "The maintainers of each package that is not excluded see the Ticket, and so do those of a package that you add."
+        },
+        {
+          "id": "maintainers-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close them",
+          "narration": "Press Escape to close them."
+        },
+        {
+          "id": "package-actions",
+          "action": "click",
+          "target": [
+            {
+              "role": "region",
+              "name": "Packages",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Actions of {package}",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "menu",
+            "name": "Actions of {package}"
+          },
+          "zoom": 1,
+          "caption": "Select the actions of the package",
+          "narration": "Select the actions of the package, the three dots at the end of its band."
+        },
+        {
+          "id": "exclude",
+          "action": "click",
+          "target": [
+            {
+              "role": "menu",
+              "name": "Actions of {package}"
+            },
+            {
+              "role": "menuitem",
+              "name": "Exclude…",
+              "exact": true
+            }
+          ],
+          "waitFor": {
+            "role": "dialog",
+            "name": "Exclude {package}?",
+            "exact": true
+          },
+          "caption": "Select Exclude…",
+          "narration": "Select Exclude."
+        },
+        {
+          "id": "exclude-question",
+          "action": "show",
+          "target": {
+            "role": "dialog",
+            "name": "Exclude {package}?",
+            "exact": true
+          },
+          "zoom": 1.5,
+          "caption": "Excluding a package can end their access",
+          "narration": "When the package has maintainers, Aura asks first: they would stop seeing the Ticket, unless a role, an access grant, or another of their packages lets them, and Restore would give them access back."
+        },
+        {
+          "id": "keep-package",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Exclude {package}?",
+              "exact": true
+            },
+            {
+              "role": "button",
+              "name": "Cancel",
+              "exact": true
+            }
+          ],
+          "caption": "Select Cancel to keep the package",
+          "narration": "Select Cancel to keep the package."
+        }
+      ]
+    },
+    {
       "title": "Grant access",
       "steps": [
         {
@@ -183,6 +307,22 @@
           "narration": "Select Access grants, next to the participants, to let another user see the Ticket."
         },
         {
+          "id": "grants-explained",
+          "action": "show",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Access grants"
+            },
+            {
+              "text": "An access grant lets a user see this confidential Ticket."
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "Every other user needs a grant",
+          "narration": "Every other user, such as a reader or a restricted analyst who maintains none of its packages, sees the Ticket only through an access grant."
+        },
+        {
           "id": "user",
           "action": "fill",
           "target": [
@@ -195,9 +335,9 @@
               "name": "User"
             }
           ],
-          "value": "white",
+          "value": "gray",
           "caption": "Enter the name of the user",
-          "narration": "Enter the name of the user."
+          "narration": "Enter the name of the user, here a reader without a role."
         },
         {
           "id": "users",
