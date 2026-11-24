@@ -234,8 +234,9 @@ text as subtitles.
 - **Subtitles**: `out/<id>/<id>.vtt`, WebVTT, the narrations while the voice
   reads them, a long one in cues of at most 84 characters, where a player
   puts them, at the bottom of the video, or at the top during a step whose
-  target is at the bottom. The video itself shows no caption and no narration,
-  so the website turns the subtitles on.
+  target is at the bottom. The video itself shows no caption and no narration;
+  the website offers the subtitles off, and the visitor turns them on in the
+  player.
 - **The lock** records the hash of the keys, the durations, and the files of
   the clips of each video: a changed sentence makes its video stale through its
   script, and another voice, or another reading of a sentence, through its
@@ -475,8 +476,8 @@ holds:
   their title, their subtitle, and the captions of their steps;
 - a page per tutorial, at `tutorials/<id>/`, always dark, which keeps to
   its video, with a poster, a frame of its intro card, its chapters as a
-  WebVTT track, and its subtitles as another, which shows unless the visitor turns it off:
-  around it, only the link back to its role, its title, its
+  WebVTT track, and its subtitles as another, which shows once the visitor
+  turns it on: around it, only the link back to its role, its title, its
   place in the path, and the link to the next video of its role, or to the
   directory after the last one.
 

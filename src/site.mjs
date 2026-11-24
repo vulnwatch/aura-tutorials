@@ -196,7 +196,7 @@ function tutorialPage(tutorial) {
           <source src="${root}videos/${tutorial.id}.mp4" type="video/mp4" />
           <track kind="chapters" src="${root}videos/${tutorial.id}.chapters.vtt" srclang="en" label="Chapters" default />${
             tutorial.subtitles
-              ? `\n          <track kind="subtitles" src="${root}videos/${tutorial.id}.vtt" srclang="en" label="English" default />`
+              ? `\n          <track kind="subtitles" src="${root}videos/${tutorial.id}.vtt" srclang="en" label="English" />`
               : ""
           }
         </video>
@@ -428,7 +428,8 @@ async function build([out, ...videoDirs]) {
     const video = await findVideo(tutorial.id, videoDirs);
     await copyFile(video, join(out, "videos", `${tutorial.id}.mp4`));
     // The subtitles of the video, the narration that its voice reads, which a
-    // video rendered before the narration lacks.
+    // video rendered before the narration lacks. The page offers them off,
+    // and the visitor turns them on in the player.
     const subtitles = video.replace(/\.mp4$/, ".vtt");
     tutorial.subtitles = Boolean(await stat(subtitles).catch(() => null));
     if (tutorial.subtitles) await copyFile(subtitles, join(out, "videos", `${tutorial.id}.vtt`));
