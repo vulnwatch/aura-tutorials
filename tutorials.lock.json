@@ -472,18 +472,18 @@
       "title": "Find the work that waits for you",
       "subtitle": "A Ticket that an analyst shares, and your deliveries in progress",
       "aura": "v0.11.0",
-      "script": "sha256:56724dd465033fd56a9d669d80502f1f2e76be200c380949794e1e713015a142",
+      "script": "sha256:8e6c8fcee69e225a9e24690344591584a29940b7d2ad25fc83587fef674826e6",
       "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
       "narration": "sha256:9a581745da993676f2679139f93e5b2ddde67453d30daccc0db01b60d499050a",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 59.448,
       "chapters": [
         {
-          "title": "A shared Ticket",
+          "title": "Open a shared Ticket",
           "start": 0
         },
         {
-          "title": "A delivery in progress",
+          "title": "Follow a delivery",
           "start": 29.154
         }
       ],
@@ -1307,9 +1307,9 @@
       "title": "Analyze the packages of a Ticket",
       "subtitle": "Tracks, Products, affectedness, exclusions, and Add package",
       "aura": "v0.11.0",
-      "script": "sha256:95dd7083865af3013240ab64aaf2457e42d69c7f5f18a4faf11389b825b949bc",
+      "script": "sha256:5959acc0100cd725b24c73602ec6df7d806f1dedb146db6b79b7edab80ce2fcf",
       "generator": "sha256:aa015c1869544423ddc1ee721e759e2e0a8ee6337b0cbe5fba22dcc1c8def097",
-      "narration": "sha256:c80487b459e3d409d73dcb0bc565731c6ed1fbffa394b99ef97ece51a7bd250b",
+      "narration": "sha256:086e0f6cbae1176f614250d7f1525bc7f0af20be508386b766cddf05760cbb5b",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
       "duration": 106.786,
       "chapters": [

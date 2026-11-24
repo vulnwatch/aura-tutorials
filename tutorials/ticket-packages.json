@@ -204,9 +204,9 @@
             "name": "Dismiss",
             "exact": true
           },
-          "zoom": 1,
+          "zoom": 1.5,
           "caption": "Select Dismiss",
-          "narration": "Select Dismiss to close the message."
+          "narration": "Select Dismiss, the cross at the end of the message, to close it."
         },
         {
           "id": "show-hidden",

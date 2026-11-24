@@ -8,10 +8,6 @@
       "text": "The dialog shows the automatic priority and what it is based on, then each priority with its meaning.",
       "duration": 6.223
     },
-    "043f6f98bf8bbb74d9e01c45": {
-      "text": "Select Dismiss to close the message.",
-      "duration": 2.229
-    },
     "0601636641ff59bb9e55e3f3": {
       "text": "The Ticket opens on its Overview, below its status and priority: its CVE, its packages, and its details.",
       "duration": 7.802
@@ -207,6 +203,10 @@
     "52b9c24ef304916aae166621": {
       "text": "Select Close.",
       "duration": 1.3
+    },
+    "5543124c9bfb2abff1aaa222": {
+      "text": "Select Dismiss, the cross at the end of the message, to close it.",
+      "duration": 3.622
     },
     "5870d6af322e61231c76c4b3": {
       "text": "Select System for what Sentinel did by itself.",

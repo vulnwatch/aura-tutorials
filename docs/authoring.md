@@ -169,7 +169,8 @@ the example dataset. An unknown variable fails the validation.
   screen shows ("The Ticket opens on its Overview"). Name controls as the UI
   does, and use Aura's words: "select", not "click"; "Ticket", capitalized.
 - **Verbs**: one verb for each kind of action, in captions and narrations:
-  "Select" for a button or a link that the text names ("Select Sign in");
+  "Select" for a button or a link, by the name that its text gives, or that
+  the UI gives an icon button (Narration) ("Select Sign in");
   "Open" for a tab, a view, or a Ticket ("Open the tab References", "Open the
   Ticket"); "Enter" for a value typed into a field ("Enter your username");
   and "Press" for a key, with its purpose ("Press Escape to close it").
@@ -190,11 +191,19 @@ the example dataset. An unknown variable fails the validation.
   "Open", names what it selects or opens next, and gives its purpose, when
   it has one, after that ("Select Filters to narrow the list."), because the click lands early
   in the sentence (Narration, Timing); the validation fails on another
-  start.
+  start. A click on a control that shows an icon and no words, such as an
+  icon button or an icon with a count, names it as the UI does, with the
+  record that its name holds put in words or left out ("the actions of the
+  package", "Edit reference"), then, the first time the video selects it,
+  says what the viewer sees and where ("Select Edit reference, the pencil on
+  its row").
 - **One idea per step**: a step that both acts and explains becomes two, an
   action and a `show`.
 - **Chapters**: a tutorial of several chapters gives each a title of two to
-  four words, which a player lists.
+  four words, which a player lists. Its chapter titles take one form: the
+  imperative when each chapter is something that the viewer does ("Grant
+  access"), noun phrases when each is a part of one screen that the tutorial
+  tours ("The views").
 - **Users**: the user of the task's profile in the catalog, so that the
   screens show what that profile sees.
 - **Tickets**: the same Ticket across tutorials when the task allows it,

@@ -21,7 +21,7 @@
   ],
   "chapters": [
     {
-      "title": "A shared Ticket",
+      "title": "Open a shared Ticket",
       "steps": [
         {
           "id": "shared-link",
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "title": "A delivery in progress",
+      "title": "Follow a delivery",
       "steps": [
         {
           "id": "delivery",
