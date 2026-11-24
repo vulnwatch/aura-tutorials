@@ -4,11 +4,11 @@
       "title": "Find SUSE's status for a CVE",
       "subtitle": "Search for its Ticket, read its packages, and open a shared link",
       "aura": "v0.11.0",
-      "script": "sha256:cc26aac7da8d504dc1aafc78c6442c6afaaed05cccfc1d1137ee121480256947",
+      "script": "sha256:593e1caa54ba777d846f895528c6b8f828e7537d6b2b7bef5596313537e492b0",
       "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
-      "narration": "sha256:a3b2851e36c6327ec95a391267c2a4dee76c69ce9c8b440fc3ea94d0619dcc13",
+      "narration": "sha256:d4d2bf692d1b233931a5aff63cdd4bec6e8eaeb9ff23db3cc7196f5fe939d451",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 73.051,
+      "duration": 69.383,
       "chapters": [
         {
           "title": "Find the Ticket",
@@ -20,7 +20,7 @@
         },
         {
           "title": "Open a shared link",
-          "start": 53.549
+          "start": 49.881
         }
       ],
       "steps": [
@@ -57,42 +57,42 @@
           "chapter": 2,
           "caption": "The package tree shows the tracks",
           "start": 29.404,
-          "end": 40.649
+          "end": 36.981
         },
         {
           "id": "product",
           "chapter": 2,
           "caption": "Select a Product",
-          "start": 40.649,
-          "end": 45.249
+          "start": 36.981,
+          "end": 41.581
         },
         {
           "id": "released",
           "chapter": 2,
           "caption": "The fix of the Product is released",
-          "start": 45.249,
-          "end": 49.449
+          "start": 41.581,
+          "end": 45.781
         },
         {
           "id": "product-close",
           "chapter": 2,
           "caption": "Press Escape to close it",
-          "start": 49.449,
-          "end": 52.849
+          "start": 45.781,
+          "end": 49.181
         },
         {
           "id": "shared-link",
           "chapter": 3,
           "caption": "Open a link that a colleague shares",
-          "start": 55.849,
-          "end": 62.961
+          "start": 52.181,
+          "end": 59.293
         },
         {
           "id": "shared-filters",
           "chapter": 3,
           "caption": "The filters of the link apply",
-          "start": 62.961,
-          "end": 67.751
+          "start": 59.293,
+          "end": 64.083
         }
       ],
       "covers": [
@@ -1235,11 +1235,11 @@
       "title": "Analyze the packages of a Ticket",
       "subtitle": "Tracks, Products, affectedness, exclusions, and Add package",
       "aura": "v0.11.0",
-      "script": "sha256:2120b1eab88491f020dc429a9c743e8ae74f27da890888b4b11abbe268bdd985",
+      "script": "sha256:95dd7083865af3013240ab64aaf2457e42d69c7f5f18a4faf11389b825b949bc",
       "generator": "sha256:6076a6a5b50d9cc9bb51f1e534dcbb58916bcfdfdb917a3229cb6693db4e9071",
-      "narration": "sha256:c4b02fb064fef7fca9e3da5eb1aa715acce97c3dececbe86ab200f59d313c577",
+      "narration": "sha256:c80487b459e3d409d73dcb0bc565731c6ed1fbffa394b99ef97ece51a7bd250b",
       "tooling": "sha256:05a95e27cdff2b19909d1e58266efde97af5ed27b727b988dfb9a730dc08f0f8",
-      "duration": 108.272,
+      "duration": 106.786,
       "chapters": [
         {
           "title": "Read the package tree",
@@ -1369,21 +1369,21 @@
           "chapter": 4,
           "caption": "The field suggests the maintained packages",
           "start": 87.248,
-          "end": 92.688
+          "end": 92.038
         },
         {
           "id": "choose-package",
           "chapter": 4,
           "caption": "Select the package",
-          "start": 92.688,
-          "end": 96.835
+          "start": 92.038,
+          "end": 96.185
         },
         {
           "id": "add-button",
           "chapter": 4,
           "caption": "Add package adds it with its tracks",
-          "start": 96.835,
-          "end": 102.972
+          "start": 96.185,
+          "end": 101.486
         }
       ],
       "covers": [

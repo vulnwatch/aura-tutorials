@@ -173,6 +173,17 @@ the example dataset. An unknown variable fails the validation.
   "Open" for a tab, a view, or a Ticket ("Open the tab References", "Open the
   Ticket"); "Enter" for a value typed into a field ("Enter your username");
   and "Press" for a key, with its purpose ("Press Escape to close it").
+- **Systems behind Sentinel**: titles, subtitles, chapter titles, captions,
+  narrations, and outros name what the viewer sees and works with: Aura, its
+  screens, and Sentinel, whose name the sidebar shows. They don't name the
+  systems from which Sentinel takes its data, such as SMELT, even where a
+  screen's text mentions them: they say what those systems give the viewer,
+  in Aura's words where it has them, such as "the maintained packages". A
+  control or a value that carries such a name is named as the UI writes it,
+  such as Refetch NVD. The exception is IBS, and Git likewise: named only
+  where the step shows what is theirs, such as the submission and release
+  requests of IBS, and in an outro that recalls such a step; never as another
+  word for a track or a delivery, which can be of either.
 - **Narration**: one or two full sentences that the caption shortens, written
   to be read aloud, and addressed to the viewer as "you", whatever the
   profile. The narration of a click starts with its action, "Select" or

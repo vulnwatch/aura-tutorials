@@ -44,6 +44,10 @@
       "text": "Select Filters to narrow the events by actor, by kind, or by period.",
       "duration": 4.319
     },
+    "0fd26cf706a8a91f345ab25e": {
+      "text": "Add package then adds it, with the tracks and Products that Sentinel finds for it.",
+      "duration": 4.551
+    },
     "10697e1ea19c2fb39c5bf7ec": {
       "text": "The heading row gives SUSE's status for the CVE: this Ticket is Resolved.",
       "duration": 4.97
@@ -156,10 +160,6 @@
       "text": "Select Edit Coordinated Release Date, the pencil in the details, when the parties agree on another date.",
       "duration": 6.316
     },
-    "4473b9e2ee838a952e7fe7b2": {
-      "text": "Add package then adds it, with the tracks and Products that Sentinel finds for it in SMELT.",
-      "duration": 5.387
-    },
     "460e344555503fc2b8b3dabb": {
       "text": "The views are tabs, and each counts its Tickets. New and Unassigned are the queues of the Tickets that wait for an analyst; Analysis, Analyzed, and All follow.",
       "duration": 10.635
@@ -247,6 +247,10 @@
     "709ffa983c0166a312c2ee57": {
       "text": "Select Submission, or another count, to list its Tickets in the All view.",
       "duration": 4.365
+    },
+    "70bad4488b7b72472af29acb": {
+      "text": "The field suggests the maintained source packages whose names match.",
+      "duration": 4.04
     },
     "721d804d67cdc85baf626552": {
       "text": "Select the Ticket that matches.",
@@ -436,6 +440,10 @@
       "text": "Select the priority of a Ticket to see its explanation.",
       "duration": 3.204
     },
+    "be8c2ccc55cccfe4bffe8c43": {
+      "text": "The package tree shows each package of the Ticket, its tracks, and their Products: here, the track is Fixed.",
+      "duration": 6.827
+    },
     "bfe54d1683709a514add2f53": {
       "text": "Select Tickets again to return to the queue.",
       "duration": 2.368
@@ -463,10 +471,6 @@
     "c989d8bdade9e43f27d07c49": {
       "text": "Enter the CVE ID: the search finds Tickets by their identifier, their CVE, or their packages.",
       "duration": 5.944
-    },
-    "cafbc747d963a64e216d3c5e": {
-      "text": "The package tree shows each package of the Ticket, its tracks, each an IBS codestream or a Git branch, and their Products: here, the track is Fixed.",
-      "duration": 10.495
     },
     "cb68500f0966013ea9a2848d": {
       "text": "Select Delete reference to confirm, since it can't be undone.",
@@ -499,10 +503,6 @@
     "d811b7ce199165b61d8fa682": {
       "text": "A queue is sorted by priority, then by deadline, so its most urgent Ticket comes first.",
       "duration": 5.526
-    },
-    "d97be4283c95f79fca98b301": {
-      "text": "The field suggests the source packages that SMELT maintains whose names match.",
-      "duration": 4.69
     },
     "dc0854fa5408fdc2ebd16a27": {
       "text": "Select a Product to see whether its fix is released.",

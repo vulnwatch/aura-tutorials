@@ -362,7 +362,7 @@
           },
           "zoom": 1.6,
           "caption": "The field suggests the maintained packages",
-          "narration": "The field suggests the source packages that SMELT maintains whose names match."
+          "narration": "The field suggests the maintained source packages whose names match."
         },
         {
           "id": "choose-package",
@@ -397,7 +397,7 @@
           ],
           "zoom": 1.6,
           "caption": "Add package adds it with its tracks",
-          "narration": "Add package then adds it, with the tracks and Products that Sentinel finds for it in SMELT."
+          "narration": "Add package then adds it, with the tracks and Products that Sentinel finds for it."
         }
       ]
     }
