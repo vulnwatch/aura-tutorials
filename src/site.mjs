@@ -112,7 +112,7 @@ function layout({ root, title, description, main, theater = false, script = fals
 ${main}
     </main>
     <footer class="site-footer">
-      <p class="wrap">The videos show Sentinel's example dataset, whose data is fictional.</p>
+      <p class="wrap">The videos show Sentinel's example dataset, whose data is fictional. Sentinel is an internal, non-commercial project of the SUSE Security Team, not related to other products named Sentinel.</p>
     </footer>${script ? `\n    <script src="${root}assets/site.js" defer></script>` : ""}
   </body>
 </html>

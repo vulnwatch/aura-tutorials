@@ -13,6 +13,14 @@ container image of the website, `ghcr.io/vulnwatch/aura-tutorials:<tag of
 the release>`, with its SBOM and signed build provenance, to host it
 elsewhere (`docs/deployment.md`).
 
+> [!NOTE]
+> **Internal, non-commercial project.** These tutorials show Sentinel Aura,
+> the web interface of Sentinel, an internal tool of the SUSE Security Team,
+> published as open source. Neither is a commercial product: SUSE does not
+> sell, market, or offer them as a product or service. They are not related
+> to, affiliated with, or endorsed by any other product or company that uses
+> the name Sentinel. All trademarks belong to their respective owners.
+
 ## Approach
 
 A tutorial is a script of steps, in chapters. Each step names an action in the
