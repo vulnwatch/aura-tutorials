@@ -1,4 +1,4 @@
 [submodule "aura"]
 	path = aura
 	url = https://github.com/vulnwatch/sentinel-aura.git
-	branch = v0.11.0
+	branch = v0.13.0
