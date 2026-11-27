@@ -1,6 +1,6 @@
 {
   "title": "Find your work in the Ticket list",
-  "subtitle": "The queues, your Tickets, and the embargoes",
+  "subtitle": "The queues, your Tickets, the embargoes, and the ignored Tickets",
   "outro": {
     "title": "Start from the queues",
     "subtitle": "New and Unassigned first, then the Tickets assigned to you."
@@ -13,7 +13,8 @@
   ],
   "vars": {
     "ticket": "SNTL-12",
-    "confidential": "SNTL-18"
+    "confidential": "SNTL-18",
+    "ignored": "SNTL-28"
   },
   "setup": [
     {
@@ -146,7 +147,7 @@
           "target": [
             {
               "role": "list",
-              "name": "Tickets that need attention"
+              "name": "Needs attention"
             },
             {
               "role": "link",
@@ -238,7 +239,7 @@
           "target": [
             {
               "role": "list",
-              "name": "Tickets that need attention"
+              "name": "Needs attention"
             },
             {
               "role": "link",
@@ -265,6 +266,120 @@
           ],
           "caption": "Select Embargo expired",
           "narration": "Select Embargo expired to list the Tickets whose Coordinated Release Date has passed, and that are still confidential.",
+          "hold": 3.5
+        }
+      ]
+    },
+    {
+      "title": "The ignored Tickets",
+      "steps": [
+        {
+          "id": "all",
+          "action": "click",
+          "target": [
+            {
+              "role": "tablist",
+              "name": "Views"
+            },
+            {
+              "role": "tab",
+              "name": "All"
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "tablist",
+              "name": "Views",
+              "child": {
+                "role": "tab"
+              },
+              "allHaveText": "\\s\\d[\\d,]*$"
+            },
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              }
+            }
+          ],
+          "caption": "Open the view All",
+          "narration": "Open the view All, whose filters include the ignore reason."
+        },
+        {
+          "id": "filters",
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Filters",
+            "exact": true
+          },
+          "zoom": 1,
+          "waitFor": {
+            "role": "dialog",
+            "name": "Filters"
+          },
+          "caption": "Select Filters",
+          "narration": "Select Filters to narrow the list."
+        },
+        {
+          "id": "cna-policy",
+          "action": "click",
+          "target": [
+            {
+              "role": "dialog",
+              "name": "Filters"
+            },
+            {
+              "role": "group",
+              "name": "Ignore reason"
+            },
+            {
+              "text": "CNA policy",
+              "exact": true
+            }
+          ],
+          "waitFor": [
+            {
+              "role": "grid",
+              "name": "Tickets",
+              "child": {
+                "role": "rowheader"
+              },
+              "allHaveText": "^{ignored}\\b"
+            }
+          ],
+          "caption": "Select CNA policy, an ignore reason",
+          "narration": "Select CNA policy, a value of the ignore reason filter, for the Tickets that the auto-ignore policy of their CNA ignored without review, so that you review them."
+        },
+        {
+          "id": "filters-close",
+          "action": "press",
+          "key": "Escape",
+          "caption": "Press Escape to close the filters",
+          "narration": "Press Escape to close the filters."
+        },
+        {
+          "id": "ignored",
+          "action": "show",
+          "target": [
+            {
+              "role": "grid",
+              "name": "Tickets"
+            },
+            {
+              "role": "row",
+              "name": "{ignored}"
+            },
+            {
+              "role": "gridcell",
+              "name": "Ignored",
+              "exact": true
+            }
+          ],
+          "zoom": 1.6,
+          "caption": "The row shows Ignored, not the reason",
+          "narration": "The row shows the status, Ignored; the details of the Ticket show its reason.",
           "hold": 3.5
         }
       ]
