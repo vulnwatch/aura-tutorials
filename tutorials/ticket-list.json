@@ -347,7 +347,7 @@
           "action": "show",
           "target": {
             "role": "list",
-            "name": "Tickets that need attention"
+            "name": "Needs attention"
           },
           "zoom": 1.7,
           "caption": "The attention summary counts urgent Tickets",
@@ -359,7 +359,7 @@
           "target": [
             {
               "role": "list",
-              "name": "Tickets that need attention"
+              "name": "Needs attention"
             },
             {
               "role": "link",
