@@ -23,9 +23,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
 readonly DEV_ENV="${REPO_ROOT}/aura/scripts/dev-env.sh"
 readonly LOG_FILE="${REPO_ROOT}/out/dev-env.log"
-# Whether the backend holds the dataset as loaded: "clean" once this script
-# creates it, "dirty" once scripts/tutorials.sh captures a tutorial that
-# changes data on it.
+# Whether the backend holds the dataset as loaded: "clean" and the version of
+# Aura that it runs, such as "clean v0.13.0", once this script creates it,
+# "dirty" once scripts/tutorials.sh captures a tutorial that changes data on
+# it. A backend of another version holds that version's dataset and Sentinel,
+# while the development server serves the files of the submodule.
 readonly STATE_FILE="${REPO_ROOT}/out/.backend-state"
 readonly UI_URL="http://localhost:${DEV_PORT}/login"
 # The first start downloads the images of the backend and installs Aura's
@@ -77,7 +79,7 @@ cmd_start() {
     # dev-env.sh reuses a running backend whose configuration is current, so a
     # backend of unknown state stays so.
     if ! grep -q 'reusing the running backend' "${LOG_FILE}"; then
-        echo clean >"${STATE_FILE}"
+        echo "clean $(aura_version)" >"${STATE_FILE}"
     fi
     echo "backend.sh: the UI answers on http://localhost:${DEV_PORT}" >&2
 }

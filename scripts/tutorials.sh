@@ -95,7 +95,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
 readonly TOOLING="${REPO_ROOT}/scripts/tooling.sh"
 readonly BACKEND="${REPO_ROOT}/scripts/backend.sh"
-# Whether the running backend holds the dataset as loaded (scripts/backend.sh).
+# Whether the running backend holds the dataset as loaded, and the version of
+# Aura that it runs (scripts/backend.sh).
 readonly BACKEND_STATE="${REPO_ROOT}/out/.backend-state"
 
 # What the capture of every tutorial depends on: Aura, the tooling, the code
@@ -156,9 +157,9 @@ cmd_affected() {
     affected_ids "$1"
 }
 
-# A backend with the dataset as loaded, new if needed.
+# A backend of the pinned Aura with the dataset as loaded, new if needed.
 clean_backend() {
-    if [[ "$(cat "${BACKEND_STATE}" 2>/dev/null || true)" == clean ]] && "${BACKEND}" status 2>/dev/null; then
+    if [[ "$(cat "${BACKEND_STATE}" 2>/dev/null || true)" == "clean $(aura_version)" ]] && "${BACKEND}" status 2>/dev/null; then
         return 0
     fi
     "${BACKEND}" fresh
