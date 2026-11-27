@@ -194,11 +194,19 @@
             },
             {
               "role": "list",
-              "name": "Tickets that need attention",
+              "name": "Needs attention",
               "child": {
                 "role": "link"
               },
               "allHaveText": "^\\d[\\d,]*\\s"
+            },
+            {
+              "role": "list",
+              "name": "Needs attention",
+              "child": {
+                "role": "listitem"
+              },
+              "allHaveText": "^(\\d[\\d,]*\\s|– |Overdue)"
             },
             {
               "role": "grid",
@@ -422,11 +430,19 @@
             },
             {
               "role": "list",
-              "name": "Tickets that need attention",
+              "name": "Needs attention",
               "child": {
                 "role": "link"
               },
               "allHaveText": "^\\d[\\d,]*\\s"
+            },
+            {
+              "role": "list",
+              "name": "Needs attention",
+              "child": {
+                "role": "listitem"
+              },
+              "allHaveText": "^(\\d[\\d,]*\\s|– |Overdue)"
             },
             {
               "role": "grid",

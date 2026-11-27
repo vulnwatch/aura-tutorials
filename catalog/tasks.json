@@ -1,6 +1,6 @@
 {
   "description": "The tasks that the tutorials cover: the frequent tasks of each profile of Aura's docs/screen-map.md (Users and Frequent Tasks), and the basics that every task needs. A tutorial names the tasks that it shows in its covers; scripts/tutorials.sh coverage lists the tasks without one. The status of a task says how much of it the pinned Aura can show: available, partial (the notes say what is missing), or not-in-aura; scripts and the aura-bump skill update it with each version of Aura.",
-  "aura": "v0.11.0",
+  "aura": "v0.13.0",
   "profiles": [
     { "id": "every-user", "name": "Every user", "source": "aura/docs/screen-map.md#every-user", "user": "hgray" },
     { "id": "analysts", "name": "Vulnerability analysts", "source": "aura/docs/screen-map.md#vulnerability-analysts", "user": "asmith" },
@@ -97,6 +97,14 @@
       "source": "aura/docs/screen-map.md#vulnerability-analysts",
       "status": "partial",
       "notes": "Refetch is on the Ticket, but the example dataset disables every fetcher, so it never shows; creating a Ticket is not in Aura yet."
+    },
+    {
+      "id": "answer-bugzilla-needinfo",
+      "profile": "analysts",
+      "task": "Answer the requests for information that SUSE Bugzilla bugs address to the security team",
+      "source": "aura/docs/screen-map.md#vulnerability-analysts",
+      "status": "partial",
+      "notes": "The attention summary of the Ticket list counts the requests and links to their search in Bugzilla, where analysts answer them, but the backend of the example dataset cannot reach Bugzilla, so the count shows as not available, without its link."
     },
     {
       "id": "check-pending-work",

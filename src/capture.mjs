@@ -23,7 +23,11 @@ const DEVICE_SCALE_FACTOR = 2;
 // Where the pointer rests while a screenshot is taken: the empty part of the
 // sidebar, as in Aura's end-to-end tests, so that it marks nothing.
 const POINTER_REST = { x: 100, y: 500 };
-const TIMEOUT = 15_000;
+// How long a wait of a step lasts at most: as long as Aura's end-to-end tests
+// wait for the Bugzilla needinfo count to show as not available, the slowest
+// read of the landing, since the backend cannot reach Bugzilla (Aura
+// test/e2e/fixtures.ts, NEEDINFO_TIMEOUT; keep in sync).
+const TIMEOUT = 20_000;
 // How long the page has sent and received no request before a screenshot:
 // longer than the pause after which a field of Aura that searches as the user
 // types sends its search, 250 ms (Aura docs/design-system.md, Forms), so that

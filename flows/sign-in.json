@@ -1,5 +1,5 @@
 {
-  "description": "Sign in on Sign in as the user of the tutorial, and wait for the landing, the Ticket list, once the counts of its views and of its attention summary have arrived.",
+  "description": "Sign in on Sign in as the user of the tutorial, and wait for the landing, the Ticket list, once the counts of its views and of its attention summary have arrived: the Bugzilla needinfo count of an analyst shows as not available, since the backend cannot reach Bugzilla.",
   "steps": [
     {
       "id": "open",
@@ -33,7 +33,8 @@
       "waitFor": [
         { "role": "heading", "level": 1, "name": "Tickets" },
         { "role": "tablist", "name": "Views", "child": { "role": "tab" }, "allHaveText": "\\s\\d[\\d,]*$" },
-        { "role": "list", "name": "Tickets that need attention", "child": { "role": "link" }, "allHaveText": "^\\d[\\d,]*\\s" },
+        { "role": "list", "name": "Needs attention", "child": { "role": "link" }, "allHaveText": "^\\d[\\d,]*\\s" },
+        { "role": "list", "name": "Needs attention", "child": { "role": "listitem" }, "allHaveText": "^(\\d[\\d,]*\\s|– |Overdue)" },
         { "role": "grid", "name": "Tickets", "child": { "role": "rowheader" } }
       ],
       "caption": "Select Sign in",
